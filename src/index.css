@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
 @import "tailwindcss";
 
@@ -8,11 +8,10 @@
 
 @theme {
   /* font */
-  --font-poppins: Poppins, sans-serif;
-
+  --font-poppins: DM Sans, sans-serif;
   /* color */
-
-  --color-primary: green;
+  --color-custom-black: #252525;
+  --color-customSecondary:#7E7E7E;
   --color-bg-custom: linear-gradient(red, yellow);
 
   /* breakpoint */
@@ -177,6 +176,13 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+body {
+  font-family: "DM Sans", sans-serif;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -208,8 +214,8 @@
 
 @media screen and (min-width: 1460px) {
   .section-padding-x {
-    padding-left: 120px;
-    padding-right: 120px;
+    padding-left: 160px;
+    padding-right: 160px;
   }
   .section-padding-y {
     padding-top: 100px;
