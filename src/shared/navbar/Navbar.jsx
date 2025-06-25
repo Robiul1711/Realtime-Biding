@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SubLinkSection from "./SubLinkSection";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
-import { Title12, Title26 } from "@/components/common/Titles";
+import { Title12, Title26 } from "@/components/common/Title";
 const Navbar = () => {
   const navItems = [
     {
