@@ -5,6 +5,7 @@ import SelectComponent from "@/components/common/SelectComponent";
 import { LocationIcon, ManIcon } from "@/components/common/CustomIcon";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Navbar2 = () => {
   const options = [
@@ -59,10 +60,12 @@ const Navbar2 = () => {
           </div>
           <p className="text-customSecondary cursor-pointer">Cart</p>
         </div>
-        <div className="relative flex items-center gap-0.5  ">
-          <ManIcon className="text-[1.5rem] cursor-pointer" />
-          <p className="text-customSecondary cursor-pointer">Account</p>
-        </div>
+        <Link to={"/join"}>
+          <div className="relative flex items-center gap-0.5 cursor-pointer">
+            <ManIcon className="text-[1.5rem]" />
+            <p className="text-customSecondary">Account</p>
+          </div>
+        </Link>
       </div>
     </div>
   );
