@@ -17,7 +17,7 @@ import google from "../../assets/images/googlestore.png";
 
 const Footer = () => {
   return (
-    <div className="section-padding-x section-padding-y">
+    <div className="section-padding-x ">
       <div className="flex justify-between gap-10 md:gap-24 lg:gap-36">
         <div className="w-full md:w-[74%]">
           <CardIcon />

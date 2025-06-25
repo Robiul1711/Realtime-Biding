@@ -56,7 +56,7 @@ const Navbar = () => {
 
   const location = useLocation();
   return (
-    <header className=" section-padding-x w-full sticky top-0 py-4 border-b border-[#ECECEC] flex justify-between items-center">
+    <header className=" section-padding-x w-full sticky top-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50 flex justify-between items-center">
       <nav className="xlg:flex hidden items-center xl:gap-8 gap-4 whitespace-nowrap">
         {navItems.map((item, index) =>
           item?.sublinks ? (
