@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SubLinkSection from "./SubLinkSection";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
-import { Title12, Title26 } from "@/components/common/Titles";
+import Title from "@/components/common/Title";
 const Navbar = () => {
   const navItems = [
     {
@@ -111,8 +111,8 @@ const Navbar = () => {
           <HeadphoneIcon />
         </span>
         <div className=" flex flex-col items-start gap-1">
-          <Title26>1900 - 888</Title26>
-          <Title12>24/7 Support Center</Title12>
+          <Title level="title12">1900 - 888</Title>
+          <Title level="title12">24/7 Support Center</Title>
         </div>
       </div>
     </header>
