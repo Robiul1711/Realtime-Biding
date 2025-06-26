@@ -3,7 +3,7 @@ import { Popover } from "antd";
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SubLinkSection from "./SubLinkSection";
-import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
+import { IoMdArrowDropdown, } from "react-icons/io";
 import Title from "@/components/common/Title";
 const Navbar = () => {
   const navItems = [
@@ -97,7 +97,7 @@ const Navbar = () => {
               to={item.path}
               className={({ isActive }) =>
                 `${
-                  isActive ? "font-bold" : "text-[#282828]"
+                  isActive ? "font-bold underline" : "text-[#282828]"
                 } text-lg font-normal`
               }
             >
