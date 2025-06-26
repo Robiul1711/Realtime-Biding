@@ -2,6 +2,7 @@ import Dashboard from "@/components/admin/Dashboard";
 import AdminLayout from "@/layout/AdminLayout";
 import Layout from "@/layout/Layout";
 import About from "@/pages/about/About";
+import AuctionList from "@/pages/auction/AuctionList";
 import Join from "@/pages/auth/Join";
 import NewPassword from "@/pages/auth/NewPassword";
 import ProfileSetup1 from "@/pages/auth/ProfileSetup1";
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "/recent-won-bids",
         element: <RecentWonBids />,
+      },
+  {
+        path: "/auction-list",
+        element: <AuctionList />,
       },
     ],
   },
