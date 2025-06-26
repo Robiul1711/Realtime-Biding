@@ -1,6 +1,7 @@
 import React from "react";
 import resetImage from "../../assets/images/reset.png";
 import Title from "@/components/common/Title";
+import { Link } from "react-router-dom";
 
 const ResetPassword = () => {
   return (
@@ -11,7 +12,10 @@ const ResetPassword = () => {
           <h2 className="text-lg md:text-[32px] font-semibold mb-8 text-[#363636]">
             Reset password
           </h2>
-          <label className="mb-3 text-[#001767]" htmlFor="email">
+          <label
+            className="mb-3 text-[#585858] font-medium md:text-[17px]"
+            htmlFor="email"
+          >
             Email Address
           </label>
           <input
@@ -20,9 +24,11 @@ const ResetPassword = () => {
             placeholder="Enter email your address"
             className="border px-4 py-2 md:py-3 rounded-md mb-6 mt-1 text-sm w-full outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="bg-[#0D1C51] text-white py-2 md:py-3 rounded-lg w-full hover:bg-[#1f2e6e] transition-all duration-300 text-sm font-medium cursor-pointer">
-            Reset Password
-          </button>
+          <Link to={"/verification"}>
+            <button className="bg-[#001767] text-white py-2 md:py-3 rounded-lg w-full hover:bg-[#001787] transition-all duration-300 text-sm font-medium cursor-pointer">
+              Reset Password
+            </button>
+          </Link>
         </div>
       </div>
       {/* right */}

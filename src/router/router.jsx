@@ -2,9 +2,12 @@ import Dashboard from "@/components/admin/Dashboard";
 import AdminLayout from "@/layout/AdminLayout";
 import Layout from "@/layout/Layout";
 import Join from "@/pages/auth/Join";
+import NewPassword from "@/pages/auth/NewPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import ResetSuccessfull from "@/pages/auth/ResetSuccessfull";
 import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
+import Verification from "@/pages/auth/Verification";
 import Home from "@/pages/home/Home";
 
 import { createBrowserRouter } from "react-router-dom";
@@ -46,6 +49,18 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "/verification",
+    element: <Verification />,
+  },
+  {
+    path: "/new-password",
+    element: <NewPassword />,
+  },
+  {
+    path: "/reset-successfull",
+    element: <ResetSuccessfull />,
   },
 ]);
 
