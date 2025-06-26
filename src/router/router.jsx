@@ -2,6 +2,7 @@ import Dashboard from "@/components/admin/Dashboard";
 import AdminLayout from "@/layout/AdminLayout";
 import Layout from "@/layout/Layout";
 import Join from "@/pages/auth/Join";
+import ResetPassword from "@/pages/auth/ResetPassword";
 import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
 import Home from "@/pages/home/Home";
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/sign-up",
     element: <SignUp />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
 ]);
 

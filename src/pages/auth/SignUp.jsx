@@ -88,16 +88,14 @@ const SignUp = () => {
             </div>
 
             {/* Checkbox + Forgot Password */}
-            <div className="flex justify-between items-center text-sm">
-              <label className="flex items-center gap-2 text-gray-400">
-                <input
-                  type="checkbox"
-                  {...register("agree")}
-                  className="w-4 h-4 text-[#ebedf4]"
-                />
-                I agree to the Terms & Conditions
-              </label>
-            </div>
+            <label className="flex items-center gap-2 text-gray-400 my-4">
+              <input
+                type="checkbox"
+                {...register("agree")}
+                className="w-4 h-4 text-[#ebedf4]"
+              />
+              I agree to the Terms & Conditions
+            </label>
 
             {/* Submit Button */}
             <button
