@@ -97,7 +97,7 @@ const Navbar = () => {
               to={item.path}
               className={({ isActive }) =>
                 `${
-                  isActive ? "font-bold" : "text-[#282828]"
+                  isActive ? "font-bold underline" : "text-[#282828]"
                 } text-lg font-normal`
               }
             >

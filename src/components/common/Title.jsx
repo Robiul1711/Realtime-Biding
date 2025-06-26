@@ -11,7 +11,7 @@ const sizeMap = {
   title24: "text-base md:text-[24px] font-medium",
   title22: "lg:text-base xl:text-[22px] font-medium",
   title20: " text-base  xl:text-xl font-normal",
-  title18: "text-sm  font-normal",
+  title18: "text-sm xl:text-[18px]  font-normal",
   title16: "text-sm md:text-[16px] font-normal",
   title14: "text-sm sm:text-base font-normal",
   title12: "text-xs sm:text-sm font-normal",

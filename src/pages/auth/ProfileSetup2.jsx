@@ -56,7 +56,7 @@ const ProfileSetup2 = () => {
                 />
               </div>
               <div className="mt-4">
-                <label className="block mb-1 font-medium text-[#132235]">
+                <label className="block mb-1 font-semibold   text-[#132235] text-[17px]">
                   Card Number
                 </label>
                 <input
@@ -68,7 +68,7 @@ const ProfileSetup2 = () => {
               </div>
               <div className="flex w-full gap-4 mt-4">
                 <div className="w-1/2">
-                  <label className="block mb-1 font-medium text-[#132235]">
+                  <label className="block mb-1 font-semibold   text-[#132235] text-[17px]">
                     CVV
                   </label>
                   <input
@@ -79,7 +79,7 @@ const ProfileSetup2 = () => {
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block mb-1 font-medium text-[#132235]">
+                  <label className="block mb-1 font-semibold   text-[#132235] text-[17px]">
                     Expiration Date
                   </label>
                   <input
