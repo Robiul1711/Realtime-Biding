@@ -13,6 +13,7 @@ import SignIn from "@/pages/auth/SignIn";
 import SignUp from "@/pages/auth/SignUp";
 import Verification from "@/pages/auth/Verification";
 import Home from "@/pages/home/Home";
+import RecentWonBids from "@/pages/recent_Won_Bids/RecentWonBids";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         element: <About />,
       },
       {
+        path: "/recent-won-bids",
+        element: <RecentWonBids />,
+      },
+  {
         path: "/auction-list",
         element: <AuctionList />,
       },
