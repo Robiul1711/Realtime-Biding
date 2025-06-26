@@ -12,7 +12,7 @@ const SignUp = () => {
   return (
     <div className="h-screen flex items-center justify-center section-padding-x">
       <ScrollRestoration />
-      <div className="w-full flex justify-between gap-8">
+      <div className="w-full flex justify-between gap-2">
         {/* Left Content */}
         <div className="p-8 md:p-16 flex flex-col justify-center w-full md:w-[60%]">
           <h2 className="text-2xl md:text-5xl font-bold text-[#363636] leading-20 mb-2">
@@ -98,12 +98,14 @@ const SignUp = () => {
             </label>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg mt-4 cursor-pointer"
-            >
-              Sign Up
-            </button>
+            <Link to="/profile-setup-1">
+              <button
+                type="submit"
+                className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg mt-4 cursor-pointer"
+              >
+                Sign Up
+              </button>
+            </Link>
 
             {/* Signup Text */}
             <p className="text-sm text-center text-gray-400 pt-2">

@@ -3,6 +3,8 @@ import AdminLayout from "@/layout/AdminLayout";
 import Layout from "@/layout/Layout";
 import Join from "@/pages/auth/Join";
 import NewPassword from "@/pages/auth/NewPassword";
+import ProfileSetup1 from "@/pages/auth/ProfileSetup1";
+import ProfileSetup2 from "@/pages/auth/ProfileSetup2";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import ResetSuccessfull from "@/pages/auth/ResetSuccessfull";
 import SignIn from "@/pages/auth/SignIn";
@@ -61,6 +63,14 @@ const router = createBrowserRouter([
   {
     path: "/reset-successfull",
     element: <ResetSuccessfull />,
+  },
+  {
+    path: "/profile-setup-1",
+    element: <ProfileSetup1 />,
+  },
+  {
+    path: "/profile-setup-2",
+    element: <ProfileSetup2 />,
   },
 ]);
 
