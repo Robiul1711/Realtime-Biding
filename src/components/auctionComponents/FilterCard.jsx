@@ -232,12 +232,12 @@ const FilterCard = () => {
         </Title>
         <div className="flex items-center gap-5 w-full mt-3">
           <input
-            type="text"
+            type="number"
             placeholder="Min"
             className="px-4 py-2 md:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
           />
           <input
-            type="text"
+            type="number"
             placeholder="Max"
             className="px-4 py-2 md:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
           />
@@ -250,7 +250,7 @@ const FilterCard = () => {
         </Title>
         <div className="my-4 flex items-center flex-col gap-5 justify-center w-full">
           <button
-            className="bg-[#fff] dark:border-slate-600 dark:bg-transparent dark:text-[#6f7478] border-2 border-[#d1d1d1] rounded-md w-full justify-between px-3 py-2 md:py-3 flex items-center  relative cursor-pointer dropdown"
+            className="bg-[#fff] dark:border-slate-600 dark:bg-transparent dark:text-[#76797c] border-2 border-[#d1d1d1] rounded-md w-full justify-between px-3 py-2 md:py-3 flex items-center  relative cursor-pointer dropdown"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedItem}
@@ -280,9 +280,11 @@ const FilterCard = () => {
               ))}
             </div>
           </button>
-          <button className="px-4 py-2 md:py-3 rounded-md border-2 border-[#d9d3d3] w-full text-start cursor-pointer">
-            City/Region
-          </button>
+          <input
+            placeholder="City/Region"
+            tyte="text"
+            className="px-4 py-2 md:py-3 rounded-md border-2 border-[#d9d3d3] w-full text-start cursor-pointer"
+          />
         </div>
       </div>
       <hr className="border-[1px] border-[#ddd] my-8" />

@@ -1,5 +1,6 @@
 import FilterCard from "@/components/auctionComponents/FilterCard";
 import ProductCard from "@/components/auctionComponents/ProductCard";
+import BigDeal from "@/components/home_components/BigDeal";
 import React from "react";
 import { ScrollRestoration } from "react-router-dom";
 
@@ -8,13 +9,14 @@ const AuctionList = () => {
     <div>
       <ScrollRestoration />
       <div className="flex gap-10 section-padding-x section-padding-y">
-        <div className="w-full md:w-[35%]">
+        <div className="w-full md:w-[30%]">
           <FilterCard />
         </div>
         <div className="w-full md:flex-1">
           <ProductCard />
         </div>
       </div>
+      <BigDeal />
     </div>
   );
 };

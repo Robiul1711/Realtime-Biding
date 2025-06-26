@@ -3,7 +3,7 @@ import { Popover } from "antd";
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import SubLinkSection from "./SubLinkSection";
-import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
+import { IoMdArrowDropdown, } from "react-icons/io";
 import Title from "@/components/common/Title";
 const Navbar = () => {
   const navItems = [
