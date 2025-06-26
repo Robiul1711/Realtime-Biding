@@ -13,7 +13,7 @@ const SignIn = () => {
   return (
     <div className="h-screen flex items-center justify-center section-padding-x">
       <ScrollRestoration />
-      <div className="w-full flex justify-between gap-8">
+      <div className="w-full flex justify-between gap-6">
         {/* Left Content */}
         <div className="p-8 md:p-16 flex flex-col justify-center w-full md:w-[60%]">
           <h2 className="text-2xl md:text-5xl font-bold text-[#363636] leading-20 mb-2">
@@ -23,11 +23,11 @@ const SignIn = () => {
             Glad to have you back! Browse new listings, connect with traders,
             and swap items easily. Log in to continue your trading journey!
           </p>
-          <div className="bg-[#F3F3F1] p-16 rounded-lg mt-6">
+          <div className="bg-[#F3F3F1] p-12 rounded-lg mt-6">
             <img
               src={image}
               alt="Sign In Illustration"
-              className="rounded-md w-full max-w-sm mx-auto"
+              className="rounded-md w-full max-w-md mx-auto"
             />
           </div>
         </div>
@@ -74,7 +74,7 @@ const SignIn = () => {
                 I agree to the Terms & Conditions
               </label>
               <Link
-                to="/forgot-password"
+                to="/reset-password"
                 className="text-[#e1e3eb] font-medium hover:underline"
               >
                 Forgot Password?
