@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { User, Settings, LogOut } from "lucide-react";
-
+import { PiUserSwitch } from "react-icons/pi";
+import { FaChevronDown } from "react-icons/fa";
 const UserDropdown = ({
   user,
   onSignOut,
@@ -52,8 +53,9 @@ const UserDropdown = ({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       {/* Avatar Button */}
+      <div className="flex items-center gap-4 cursor-pointer ">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+       
         className={`flex items-center justify-center w-10 h-10 rounded-xl font-medium cursor-pointer
           hover:opacity-90 transition-opacity ${avatarBgColor} ${avatarTextColor}
           ${scrolled ? "ring-2 ring-white" : ""}`}
@@ -67,8 +69,13 @@ const UserDropdown = ({
         ) : (
           getUserInitial()
         )}
-
       </button>
+<div className="flex flex-col">
+    <p className="font-semibold text-black">Andrew Sebastian</p>
+    <p className="text-sm text-gray-500 flex items-center gap-2">Switch to seller <PiUserSwitch className="text-lg text-black" /></p>
+</div>
+<FaChevronDown  onClick={() => setIsOpen(!isOpen)} className="text-xl text-black"/>
+      </div>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -110,6 +117,7 @@ const UserDropdown = ({
               )
             )}
           </div>
+
         </div>
       )}
     </div>

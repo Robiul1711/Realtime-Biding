@@ -22,6 +22,7 @@ import UserDashboardLayout from "@/layout/UserDashboardLayout";
 import SellerDashboardLayout from "@/layout/SellerDashboardLayout";
 import SellerDashboard from "@/components/sellerDashboard/SellerDashboard";
 import UserDashboard from "@/components/userDashboard/UserDashboard";
+import MyAuction from "@/components/userDashboard/MyAuction";
 
 const router = createBrowserRouter([
   {
@@ -65,7 +66,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/user-dashboard",
-        element: <UserDashboard />, // ✅ Fixed typo
+        element: <UserDashboard />, 
+      },
+      {
+        path: "/user-dashboard/my-auction",
+        element: <MyAuction />, 
       },
     ],
   },

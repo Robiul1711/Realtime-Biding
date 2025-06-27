@@ -77,7 +77,7 @@ Back to website
                 }}
                 className={`flex items-center gap-3 px-4 py-2 rounded-lg text-base font-medium transition-colors duration-200 ${
                   isActive(item?.activePaths)
-                    ? "bg-[#FFF] text-[#6D6E75]"
+                    ? "bg-[#4275F6] text-[#ffffff]"
                     : "text-[#6D6E75] hover:bg-[#4275F6] hover:text-[#ffffff]"
                 }`}
               >

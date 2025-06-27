@@ -1,7 +1,7 @@
 import { AuthContext } from "@/context";
 
 const AuthProvider = ({ children }) => {
-  return <AuthContext.Provider>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
