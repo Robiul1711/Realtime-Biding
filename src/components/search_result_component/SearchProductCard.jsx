@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import today from "../../assets/images/cap.png";
 import Title from "../common/Title";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const data = [
   {
@@ -139,45 +140,47 @@ const SearchProductCard = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {visibleData.map((item, index) => (
-          <div key={index} className="border border-[#E5E5E5] rounded-lg">
-            <img
-              src={item.image}
-              alt={item.title}
-              className="w-full object-cover"
-            />
-            <div className="p-3 flex flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <Title level="title12">{item.title}</Title>
-                <Title
-                  level="title14"
-                  className="font-bold ml-2 text-[#B0B0B0]"
-                >
-                  {item.price}
-                </Title>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="flex">{renderStars(item.ratting)}</div>
-                <Title level="title12" className="text-sm text-[#7E7E7E]">
-                  {item.review}
-                </Title>
+      <Link to={"/search-product-details"}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {visibleData.map((item, index) => (
+            <div key={index} className="border border-[#E5E5E5] rounded-lg">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="w-full object-cover"
+              />
+              <div className="p-3 flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <Title level="title12">{item.title}</Title>
+                  <Title
+                    level="title14"
+                    className="font-bold ml-2 text-[#B0B0B0]"
+                  >
+                    {item.price}
+                  </Title>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="flex">{renderStars(item.ratting)}</div>
+                  <Title level="title12" className="text-sm text-[#7E7E7E]">
+                    {item.review}
+                  </Title>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {!showAll && data.length > 5 && (
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={() => setShowAll(true)}
-            className="px-4 py-2 bg-[#4275F6] text-white rounded hover:bg-gray-800 transition"
-          >
-            See More
-          </button>
+          ))}
         </div>
-      )}
+
+        {!showAll && data.length > 5 && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={() => setShowAll(true)}
+              className="px-4 py-2 bg-[#4275F6] text-white rounded hover:bg-gray-800 transition"
+            >
+              See More
+            </button>
+          </div>
+        )}
+      </Link>
     </div>
   );
 };

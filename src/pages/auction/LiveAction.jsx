@@ -1,6 +1,7 @@
 import LiveBid from "@/components/auctionComponents/LiveBid";
 import LiveDetails from "@/components/auctionComponents/LiveDetails";
 import BigDeal from "@/components/home_components/BigDeal";
+import RelatedAuctionCard from "@/components/recentWon_components/RelatedAuctionCard";
 import React from "react";
 import { ScrollRestoration } from "react-router-dom";
 
@@ -16,6 +17,7 @@ const LiveAction = () => {
           <LiveBid />
         </div>
       </div>
+      <RelatedAuctionCard />
       <BigDeal />
     </div>
   );

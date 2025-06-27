@@ -1,6 +1,7 @@
 import BigDeal from "@/components/home_components/BigDeal";
 import RecentWonCardBid from "@/components/recentWon_components/RecentWonCardBid";
 import RecentWonCardDetails from "@/components/recentWon_components/RecentWonCardDetails";
+import RelatedAuctionCard from "@/components/recentWon_components/RelatedAuctionCard";
 import React from "react";
 import { ScrollRestoration } from "react-router-dom";
 
@@ -16,6 +17,7 @@ const RcentWonBid = () => {
           <RecentWonCardBid />
         </div>
       </div>
+      <RelatedAuctionCard />
       <BigDeal />
     </div>
   );
