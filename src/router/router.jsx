@@ -2,6 +2,8 @@ import Dashboard from "@/components/userDashboard/UserDashboard";
 import Layout from "@/layout/Layout";
 import About from "@/pages/about/About";
 import AuctionList from "@/pages/auction/AuctionList";
+import LiveAction from "@/pages/auction/LiveAction";
+import RcentWonBid from "@/pages/auction/RcentWonBid_Details";
 import Join from "@/pages/auth/Join";
 import NewPassword from "@/pages/auth/NewPassword";
 import ProfileSetup1 from "@/pages/auth/ProfileSetup1";
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
         element: <AuctionList />,
       },
       {
+        path: "/auction-details",
+        element: <LiveAction />,
+      },
+      {
+        path: "/recent-won-details",
+        element: <RcentWonBid />,
+      },
+  {
         path: "/search-result",
         element: <SearchResult />,
       },

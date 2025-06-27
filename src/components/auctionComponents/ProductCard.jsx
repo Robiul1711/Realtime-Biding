@@ -12,6 +12,7 @@ import card9 from "../../assets/images/card8.png";
 import card10 from "../../assets/images/card10.png";
 import { HeartShape } from "../common/CustomIcon";
 import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 const dummyItems = [
   {
     id: 1,
@@ -212,9 +213,11 @@ const ProductCard = () => {
               </p>
               <p className="text-[12px] text-[#161515] my-1">{item.delivery}</p>
               <p className="text-[12px] text-[#161515] my-1">{item.location}</p>
-              <button className="bg-[#4275F6] text-white py-2 md:py-3 rounded-2xl w-full hover:bg-[#4275F9] cursor-pointer transition-all duration-300 font-medium my-2">
-                Quick Bid
-              </button>
+              <Link to={`/auction-details`}>
+                <button className="bg-[#4275F6] text-white py-2 md:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2">
+                  Quick Bid
+                </button>
+              </Link>
             </div>
           </div>
         ))}
