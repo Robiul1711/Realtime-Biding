@@ -1,32 +1,29 @@
 import { IoIosNotifications } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
-import React, { use } from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { Link, useLocation } from "react-router-dom";
-
+import React from "react";
+import { LuMessageCircleMore } from "react-icons/lu";
+import { IoNotificationsOutline } from "react-icons/io5";
+import UserDropdown from "@/components/userDashboard/UserDropdown";
 const CommonNavbar = ({ open, setOpen }) => {
-  const { pathname } = useLocation();
-  return (
-    <div className="flex items-center gap-5 justify-between w-full py-3 md:py-6 px-0  rounded-2xl">
-      <div className="flex items-center gap-4">
-        <span
-          onClick={() => setOpen(!open)}
-          className="xlg:hidden block cursor-pointer"
-        >
-          <GiHamburgerMenu color="black" size={26} />
-        </span>
-        <div className="flex items-center gap-4">
-          <p className=" text-black text-3xl font-bold">Admin Header</p>
-        </div>
-      </div>
 
-      <div className="flex items-start md:gap-4 gap-2">
+  return (
+    <div className="flex items-center gap-5 justify-end w-full py-3 md:py-6 px-0  rounded-2xl">
+
+      <div className="flex items-center md:gap-4 gap-2">
         <span>
-          <IoIosNotifications color="black" size={24} />
+        <LuMessageCircleMore className="text-2xl text-[#6D6E75]"/>
         </span>
         <span>
-          <CgProfile color="black" size={24} />
+          <IoNotificationsOutline className="text-2xl text-[#6D6E75]"/>
         </span>
+       <UserDropdown
+  user={{
+    name: "user.name",
+    email: "user.email",
+    avatar: "user.avatar",
+  }}
+
+/>
       </div>
     </div>
   );

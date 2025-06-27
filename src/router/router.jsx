@@ -1,5 +1,4 @@
-import Dashboard from "@/components/admin/Dashboard";
-import AdminLayout from "@/layout/AdminLayout";
+import Dashboard from "@/components/userDashboard/UserDashboard";
 import Layout from "@/layout/Layout";
 import About from "@/pages/about/About";
 import AuctionList from "@/pages/auction/AuctionList";
@@ -16,8 +15,13 @@ import SignUp from "@/pages/auth/SignUp";
 import Verification from "@/pages/auth/Verification";
 import Home from "@/pages/home/Home";
 import RecentWonBids from "@/pages/recent_Won_Bids/RecentWonBids";
+import SearchResult from "@/pages/search_result/SearchResult";
 
 import { createBrowserRouter } from "react-router-dom";
+import UserDashboardLayout from "@/layout/UserDashboardLayout";
+import SellerDashboardLayout from "@/layout/SellerDashboardLayout";
+import SellerDashboard from "@/components/sellerDashboard/SellerDashboard";
+import UserDashboard from "@/components/userDashboard/UserDashboard";
 
 const router = createBrowserRouter([
   {
@@ -48,16 +52,30 @@ const router = createBrowserRouter([
         path: "/recent-won-details",
         element: <RcentWonBid />,
       },
+  {
+        path: "/search-result",
+        element: <SearchResult />,
+      },
     ],
   },
   // Admin routes
   {
-    path: "/dashboard",
-    element: <AdminLayout />,
+    path: "/user-dashboard",
+    element: <UserDashboardLayout />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        path: "/user-dashboard",
+        element: <UserDashboard />, // ✅ Fixed typo
+      },
+    ],
+  },
+  {
+    path: "/seller-dashboard",
+    element: <SellerDashboardLayout />,
+    children: [
+      {
+        path: "/seller-dashboard",
+        element: <SellerDashboard />, // ✅ Fixed typo
       },
     ],
   },

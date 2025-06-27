@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
-const AdminLayout = () => {
+const SellerDashboardLayout = () => {
   const [Open, setOpen] = useState(false);
 
   const sideBar = [
@@ -60,4 +60,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default SellerDashboardLayout;
