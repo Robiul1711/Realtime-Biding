@@ -5,10 +5,11 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { IoNotificationsOutline } from "react-icons/io5";
 import UserDropdown from "@/components/userDashboard/UserDropdown";
 import { TiThMenu } from "react-icons/ti";
+import { useLocation } from "react-router-dom";
 const CommonNavbar = ({ open, setOpen }) => {
-
+const {pathname} = useLocation();
   return (
-    <div className="flex items-center gap-5 justify-between w-full py-3 md:py-6 px-0  rounded-2xl">
+    <div className={`${pathname==='/user-dashboard/messages' ? "hidden" : "flex items-center gap-5 justify-between w-full py-3 md:py-6 px-0  rounded-2xl"}`}>
       <div className="flex items-center gap-4">
         <span
           onClick={() => setOpen(!open)}

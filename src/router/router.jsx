@@ -24,6 +24,10 @@ import SellerDashboard from "@/components/sellerDashboard/SellerDashboard";
 import UserDashboard from "@/components/userDashboard/UserDashboard";
 import MyAuction from "@/components/userDashboard/MyAuction";
 import SearchProductDetails from "@/components/search_result_component/SearchProductDetails";
+import WishList from "@/components/userDashboard/WishList";
+import UserSetting from "@/components/userDashboard/UserSetting";
+import BidHistory from "@/components/userDashboard/BidHistory";
+import UserMessaging from "@/components/userDashboard/UserMessaging";
 
 
 const router = createBrowserRouter([
@@ -77,6 +81,22 @@ const router = createBrowserRouter([
       {
         path: "/user-dashboard/my-auction",
         element: <MyAuction />, 
+      },
+      {
+        path: "/user-dashboard/wishlist",
+        element: <WishList />, 
+      },
+      {
+        path: "/user-dashboard/messages",
+        element: <UserMessaging />, 
+      },
+      {
+        path: "/user-dashboard/bid-history",
+        element: <BidHistory />, 
+      },
+      {
+        path: "/user-dashboard/setting",
+        element: <UserSetting />, 
       },
     ],
   },
