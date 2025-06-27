@@ -4,11 +4,20 @@ import React from "react";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { IoNotificationsOutline } from "react-icons/io5";
 import UserDropdown from "@/components/userDashboard/UserDropdown";
+import { TiThMenu } from "react-icons/ti";
 const CommonNavbar = ({ open, setOpen }) => {
 
   return (
-    <div className="flex items-center gap-5 justify-end w-full py-3 md:py-6 px-0  rounded-2xl">
-
+    <div className="flex items-center gap-5 justify-between w-full py-3 md:py-6 px-0  rounded-2xl">
+      <div className="flex items-center gap-4">
+        <span
+          onClick={() => setOpen(!open)}
+          className="xlg:hidden block cursor-pointer"
+        >
+         <TiThMenu  className="text-2xl text-[#000]"/>
+        </span>
+  
+      </div>
       <div className="flex items-center md:gap-4 gap-2">
         <span>
         <LuMessageCircleMore className="text-2xl text-[#6D6E75]"/>

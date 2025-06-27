@@ -7,6 +7,7 @@ import { MdDashboard } from "react-icons/md";
 import { HiOutlineMailOpen } from "react-icons/hi";
 import { IoMdSettings } from "react-icons/io";
 import { MdHistory } from "react-icons/md";
+import { RiAuctionFill } from "react-icons/ri";
 const UserDashboardLayout = () => {
   const [Open, setOpen] = useState(false);
 
@@ -15,16 +16,16 @@ const UserDashboardLayout = () => {
         id: 1,
         icon: <MdDashboard />,
         text: "Dashboard",
-        path: "/dashboard", // main path (optional, if you still want to keep it)
-        // activePaths: ["/dashboard", "/dashboard/settings", "/dashboard/analytics"], // all paths that should make this item active
+        path: "/user-dashboard", // main path (optional, if you still want to keep it)
+        activePaths: ["/user-dashboard"], // all paths that should make this item active
         sublink: false,
       },
     {
         id: 1,
-        icon: <MdDashboard />,
+        icon: <RiAuctionFill />,
         text: "My Auction",
-        path: "/my-auction", // main path (optional, if you still want to keep it)
-        // activePaths: ["/dashboard", "/dashboard/settings", "/dashboard/analytics"], // all paths that should make this item active
+        path: "/user-dashboard/my-auction", // main path (optional, if you still want to keep it)
+        activePaths: ["/user-dashboard/my-auction"], // all paths that should make this item active
         sublink: false,
       },
     {
