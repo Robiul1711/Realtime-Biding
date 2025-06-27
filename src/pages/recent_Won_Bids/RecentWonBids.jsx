@@ -1,8 +1,11 @@
+import BigDeal from "@/components/home_components/BigDeal";
 import RecentBidCard from "@/components/recentWon_components/RecentBidCard";
+import RelatedAuctionCard from "@/components/recentWon_components/RelatedAuctionCard";
 import React from "react";
 
 const RecentWonBids = () => {
   return (
+    <>
     <div className="section-padding-x space-y-16">
       <div>
         <div className="flex items-center justify-center my-6 w-full gap-2">
@@ -21,6 +24,9 @@ const RecentWonBids = () => {
         <RecentBidCard />
       </div>
     </div>
+    <RelatedAuctionCard />
+      <BigDeal />
+    </>
   );
 };
 
