@@ -23,6 +23,8 @@ import SellerDashboardLayout from "@/layout/SellerDashboardLayout";
 import SellerDashboard from "@/components/sellerDashboard/SellerDashboard";
 import UserDashboard from "@/components/userDashboard/UserDashboard";
 import MyAuction from "@/components/userDashboard/MyAuction";
+import SearchProductDetails from "@/components/search_result_component/SearchProductDetails";
+
 
 const router = createBrowserRouter([
   {
@@ -53,9 +55,13 @@ const router = createBrowserRouter([
         path: "/recent-won-details",
         element: <RcentWonBid />,
       },
-  {
+      {
         path: "/search-result",
         element: <SearchResult />,
+      },
+      {
+        path: "/search-product-details",
+        element: <SearchProductDetails />,
       },
     ],
   },
