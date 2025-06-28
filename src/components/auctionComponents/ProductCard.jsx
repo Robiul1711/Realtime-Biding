@@ -137,6 +137,28 @@ const dummyItems = [
 ];
 
 const ProductCard = () => {
+  const [likedItems, setLikedItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const totalItems = dummyItems.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const paginatedItems = dummyItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   const options = [
     {
       label: "Current Bid",
@@ -151,7 +173,7 @@ const ProductCard = () => {
       value: "next bid",
     },
   ];
-  const [likedItems, setLikedItems] = useState([]);
+
   const toggleLike = (id) => {
     setLikedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -221,6 +243,75 @@ const ProductCard = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t pt-4 gap-4">
+        {/* Left */}
+        <div className="flex items-center gap-3 text-sm text-[#595858]">
+          <span>
+            {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
+          </span>
+          <select
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className="border px-3 py-1 rounded-md bg-white"
+          >
+            {[5, 10, 20].map((num) => (
+              <option key={num} value={num}>
+                {num} per page
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Middle (Page Numbers) */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-2 py-1 rounded hover:bg-gray-200 disabled:opacity-40"
+          >
+            &lt;
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((page) => {
+              // Show first, last, current, and nearby pages
+              return (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 2 && page <= currentPage + 2)
+              );
+            })
+            .map((page, i, arr) => {
+              const prevPage = arr[i - 1];
+              const isEllipsis = prevPage && page - prevPage > 1;
+
+              return isEllipsis ? (
+                <span key={`ellipsis-${i}`} className="px-2">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={page}
+                  onClick={() => goToPage(page)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-[#4275F6] text-white"
+                      : "hover:bg-gray-200"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-2 py-1 rounded hover:bg-gray-200 disabled:opacity-40"
+          >
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
   );
