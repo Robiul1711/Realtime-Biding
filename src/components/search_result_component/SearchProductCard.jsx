@@ -140,10 +140,10 @@ const SearchProductCard = () => {
 
   return (
     <div>
-      <Link to={"/search-product-details"}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {visibleData.map((item, index) => (
-            <div key={index} className="border border-[#E5E5E5] rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {visibleData.map((item, index) => (
+          <Link to="/search-product-details" key={index}>
+            <div className="border border-[#E5E5E5] rounded-lg hover:shadow cursor-pointer">
               <img
                 src={item.image}
                 alt={item.title}
@@ -167,20 +167,20 @@ const SearchProductCard = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          </Link>
+        ))}
+      </div>
 
-        {!showAll && data.length > 5 && (
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={() => setShowAll(true)}
-              className="px-4 py-2 bg-[#4275F6] text-white rounded hover:bg-gray-800 transition"
-            >
-              See More
-            </button>
-          </div>
-        )}
-      </Link>
+      {!showAll && data.length > 5 && (
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={() => setShowAll(true)}
+            className="px-4 py-2 bg-[#4275F6] text-white rounded hover:bg-gray-800 transition"
+          >
+            See More
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -49,40 +49,40 @@ const RecentBidCard = () => {
 
   return (
     <div>
-      <Link to={"/recent-won-details"}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {visibleData.map((item, index) => (
-            <div key={index} className="border border-[#E5E5E5] rounded-lg">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full object-cover"
-              />
-              <div className="p-3 flex flex-col gap-1">
-                <Title level="title12">{item.title}</Title>
-                <Title level="title14" className="text-[#A8A8A8]">
-                  Last bid{" "}
-                  <span className="font-bold ml-2 text-black">
-                    {item.price}
-                  </span>
-                </Title>
-                <Title level="title12">{item.location}</Title>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        {visibleData.map((item, index) => (
+          <Link
+            to={"/recent-won-details"}
+            key={index}
+            className="border border-[#E5E5E5] rounded-lg"
+          >
+            <img
+              src={item.image}
+              alt={item.title}
+              className="w-full object-cover"
+            />
+            <div className="p-3 flex flex-col gap-1">
+              <Title level="title12">{item.title}</Title>
+              <Title level="title14" className="text-[#A8A8A8]">
+                Last bid{" "}
+                <span className="font-bold ml-2 text-black">{item.price}</span>
+              </Title>
+              <Title level="title12">{item.location}</Title>
             </div>
-          ))}
-        </div>
+          </Link>
+        ))}
+      </div>
 
-        {!showAll && data.length > 5 && (
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={() => setShowAll(true)}
-              className="px-4 py-2 bg-[#4275F6] text-white rounded hover:bg-gray-800 transition"
-            >
-              See More
-            </button>
-          </div>
-        )}
-      </Link>
+      {!showAll && data.length > 5 && (
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={() => setShowAll(true)}
+            className="px-4 py-2 bg-[#4275F6] text-white rounded hover:bg-gray-800 transition"
+          >
+            See More
+          </button>
+        </div>
+      )}
     </div>
   );
 };
