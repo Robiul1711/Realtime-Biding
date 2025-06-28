@@ -12,7 +12,9 @@ const Layout = () => {
         <Navbar2 />
       </div>
       <MobileNavbar />
-      <div className="pt-[64px] md:pt-0">{/* <Outlet /> */}</div>
+      <div className="pt-[64px] md:pt-0">
+        <Outlet />
+      </div>
       <Footer />
     </>
   );
