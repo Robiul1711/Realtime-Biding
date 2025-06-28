@@ -10,15 +10,16 @@ const SignUp = () => {
     console.log(data);
   };
   return (
-    <div className="h-screen flex items-center justify-center section-padding-x">
+    <div className="min-h-screen flex items-center justify-center section-padding-x">
       <ScrollRestoration />
-      <div className="w-full flex justify-between gap-2">
+      <div className="w-full flex flex-col lg:flex-row justify-between gap-2">
         {/* Left Content */}
-        <div className="p-8 md:p-16 flex flex-col justify-center w-full md:w-[60%]">
-          <h2 className="text-2xl md:text-5xl font-bold text-[#363636] leading-20 mb-2">
-            Welcome Back! Bid & Win with <br /> Your Community.
+        <div className="p-4 lg:p-16 flex flex-col justify-center w-full lg:w-[60%]">
+          <h2 className="text-2xl md:text-5xl font-bold text-[#363636] md:leading-12  lg:leading-16 mb-2">
+            Welcome Back! Bid & Win with <br className="hidden xl:block" /> Your
+            Community.
           </h2>
-          <p className="text-[#4B5563] text-sm md:text-[17px] mb-12">
+          <p className="text-[#4B5563] text-sm md:text-[17px] mb-6 lg:mb-12">
             Glad to have you back! Browse new listings, connect with traders,
             and swap items easily. Log in to continue your trading journey!
           </p>
@@ -26,13 +27,16 @@ const SignUp = () => {
           <img
             src={image}
             alt="Sign In Illustration"
-            className="w-full h-full object-contain"
+            className="w-full h-[300px] lg:h-full object-cover"
           />
         </div>
 
         {/* Right Form */}
-        <div className="p-8 md:p-16 bg-[#001767] rounded-lg text-white mt-24 h-full w-full md:flex-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-8">
+        <div className="p-8 md:p-12  xl:p-16 bg-[#001767] rounded-lg text-white mt-2 xl:mt-24 h-full w-full md:flex-1">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4 my-4 md:my-8"
+          >
             <h3 className="text-lg md:text-3xl font-semibold mb-6">
               Signup now
             </h3>
@@ -101,7 +105,7 @@ const SignUp = () => {
             <Link to="/profile-setup-1">
               <button
                 type="submit"
-                className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg mt-4 cursor-pointer"
+                className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg lg:mt-4 cursor-pointer"
               >
                 Sign Up
               </button>

@@ -27,7 +27,7 @@ const OtpInput = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-[10px] w-full md:w-[45%]">
+      <div className="grid grid-cols-4 gap-[10px] w-full xl:w-[50%]">
         {Array.from({ length }).map((_, index) => (
           <input
             key={index}

@@ -11,19 +11,20 @@ const SignIn = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center section-padding-x">
+    <div className="min-h-screen flex items-center justify-center section-padding-x">
       <ScrollRestoration />
-      <div className="w-full flex justify-between gap-6">
+      <div className="w-full flex flex-col lg:flex-row justify-between gap-6">
         {/* Left Content */}
-        <div className="p-8 md:p-16 flex flex-col justify-center w-full md:w-[60%]">
-          <h2 className="text-2xl md:text-5xl font-bold text-[#363636] leading-20 mb-2">
-            Welcome Back! Bid & Win with <br /> Your Community.
+        <div className="pt-4 lg:p-16 flex flex-col justify-center w-full lg:w-[60%]">
+          <h2 className="text-2xl md:text-5xl font-bold text-[#363636] md:leading-16 lg:leading-20 mb-2">
+            Welcome Back! Bid & Win with <br className="hidden xl:block" /> Your
+            Community.
           </h2>
           <p className="text-[#4B5563] text-sm md:text-[17px] mb-6">
             Glad to have you back! Browse new listings, connect with traders,
             and swap items easily. Log in to continue your trading journey!
           </p>
-          <div className="bg-[#F3F3F1] p-12 rounded-lg mt-6">
+          <div className="bg-[#F3F3F1] p-4 lg:p-12 rounded-lg mt-2 lg:mt-6">
             <img
               src={image}
               alt="Sign In Illustration"
@@ -33,8 +34,11 @@ const SignIn = () => {
         </div>
 
         {/* Right Form */}
-        <div className="p-8 md:p-16 bg-[#001767] rounded-lg text-white my-10 w-full md:flex-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-16">
+        <div className="p-6 lg:p-10 xl:p-16 bg-[#001767] rounded-lg text-white my-2 lg:my-10 w-full md:flex-1">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6 mt-4 md:mt-16"
+          >
             <h3 className="text-lg md:text-3xl font-semibold">Welcome Back</h3>
 
             {/* Email Input */}
@@ -64,7 +68,7 @@ const SignIn = () => {
             </div>
 
             {/* Checkbox + Forgot Password */}
-            <div className="flex justify-between items-center text-sm">
+            <div className="flex flex-col xl:flex-row  justify-between xl:items-center text-sm space-y-2">
               <label className="flex items-center gap-2 text-gray-400">
                 <input
                   type="checkbox"
@@ -84,7 +88,7 @@ const SignIn = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg mt-4 cursor-pointer"
+              className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg xl:mt-4 cursor-pointer"
             >
               Sign In
             </button>
