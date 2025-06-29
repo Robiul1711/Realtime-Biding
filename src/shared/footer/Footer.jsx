@@ -22,7 +22,7 @@ const Footer = () => {
       <div className="flex flex-col lg:flex-row justify-between gap-10 md:gap-24 lg:gap-36">
         {/* Left Column */}
         <div className="w-full lg:w-[74%]">
-          <CardIcon />
+          <CardIcon className="w-32 h-32 md:h-auto" />
           <p className="text-[#253D4E] text-lg mb-2">
             Awesome grocery store website <br /> template
           </p>
