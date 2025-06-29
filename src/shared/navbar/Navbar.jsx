@@ -40,8 +40,13 @@ const Navbar = () => {
       sublinks: [
         {
           id: 1,
-          name: "Action One",
-          path: "#",
+          name: "Fashion",
+          path: "/auction-list",
+        },
+        {
+          id: 2,
+          name: "Video Games",
+          path: "/auction-list",
         },
       ],
     },
@@ -77,8 +82,8 @@ const Navbar = () => {
                   <NavLink
                     className={({ isActive }) =>
                       `${
-                        isActive ? " font-bold" : "text-[#282828]"
-                      } text-lg font-normal`
+                        isActive ? "font-bold" : "text-[#282828]"
+                      } lg:text-lg font-normal`
                     }
                     to={item.path}
                   >
@@ -102,7 +107,7 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   `${
                     isActive ? "font-bold underline" : "text-[#282828]"
-                  } text-lg font-normal`
+                  } lg:text-lg font-normal`
                 }
               >
                 {item.name}
@@ -111,7 +116,7 @@ const Navbar = () => {
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="lg:flex items-center gap-3 hidden">
           <span>
             <HeadphoneIcon />
           </span>

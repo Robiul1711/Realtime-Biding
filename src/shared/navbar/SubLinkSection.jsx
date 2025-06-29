@@ -1,18 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const SubLinkSection = () => {
+const SubLinkSection = ({ items }) => {
   return (
-    <div className="flex flex-col gap-2 p-2">
-      <Link className="text-lg" to={"/auction-list"}>
-        Fashion
-      </Link>
-      <Link className="text-lg" to={"/auction-list"}>
-        Video game 
-      </Link>
-      <Link className="text-lg" to={"/auction-list"}>
-        Refurbished
-      </Link>
+    <div className="rounded w-36">
+      {items?.map((link) => (
+        <NavLink
+          key={link.id}
+          to={link.path}
+          className={({ isActive }) =>
+            `block py-2 px-4 rounded-md font-medium transition-colors duration-200 ${
+              isActive
+                ? "text-black font-medium bg-gray-100"
+                : "text-black hover:text-black hover:bg-gray-100"
+            }`
+          }
+          style={{ color: "black" }}
+        >
+          {link.name}
+        </NavLink>
+      ))}
     </div>
   );
 };

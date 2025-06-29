@@ -43,13 +43,15 @@ const Banner = () => {
               <img
                 src={slide.image}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-auto rounded-2xl"
+                className="w-full h-[400px] md:h-auto rounded-2xl"
               />
               <div className="absolute top-1/2 left-[10%] transform -translate-y-1/2">
-                <h1 className="text-[72px] max-w-[700px] w-full leading-[0.8] font-bold text-white">
+                <h1 className="text-[40px] md:text-[50px] lg:text-[60px] xl:text-[72px] max-w-[700px] w-full leading-[0.8] font-bold text-white">
                   {slide.title}
                 </h1>
-                <p className="text-[30px] mt-5 text-white">{slide.subtitle}</p>
+                <p className="text-[20px] md:text-[24px] lg:text-[28px] xl:text-[30px] mt-5 text-white">
+                  {slide.subtitle}
+                </p>
                 <button className="bg-white text-black py-2 px-4 mt-4 rounded-full cursor-pointer">
                   Learn More
                 </button>

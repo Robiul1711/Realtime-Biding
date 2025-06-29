@@ -46,29 +46,33 @@ const TrendingOn = () => {
       <div>
         <Link
           to={"/auction-list"}
-          className="flex justify-between  gap-4 flex-wrap"
+          className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-4"
         >
           {data.map((item, index) => (
             <div
               key={index}
-              className="flex justify-center border  p-10 rounded-2xl items-center flex-col gap-3"
+              className="flex justify-center border p-10 rounded-2xl items-center flex-col gap-3"
             >
-              <img src={item.image} alt={item.title} />
+              <img
+                className="w-full h-full object-contain"
+                src={item.image}
+                alt={item.title}
+              />
               <Title level="title18">{item.title}</Title>
             </div>
           ))}
         </Link>
       </div>
 
-      <div className="flex justify-between items-center mt-10 bg-[#EAEAEA] p-10 rounded-2xl">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mt-10 bg-[#EAEAEA] p-10 rounded-2xl">
         <div>
           <Title level="title48">Bid Smart, Win Big!</Title>
           <Title level="title16" className="text-gray-600 mt-2">
             Experience secure auctions, reliable deals, and hassle-free bidding.
           </Title>
         </div>
-        <Link to={"/auction-list"}>
-          <button className="bg-[#FB0000] text-white px-8 cursor-pointer py-4 rounded-full">
+        <Link to={"/auction-list"} className="mt-6 md:mt-0">
+          <button className="bg-[#FB0000] text-white px-8 cursor-pointer py-3 md:py-4 rounded-full">
             Start now
           </button>
         </Link>

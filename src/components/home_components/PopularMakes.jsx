@@ -36,9 +36,12 @@ const PopularMakes = () => {
           modules={[Navigation]}
           loop
           spaceBetween={16}
-          slidesPerView={2}
+          slidesPerView={1}
           breakpoints={{
-            768: { slidesPerView: 4 },
+            375: { slidesPerView: 1 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
           }}
           navigation={{
             prevEl: prevRef.current,

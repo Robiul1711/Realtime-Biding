@@ -90,7 +90,7 @@ const Footer = () => {
       <div className="flex flex-col lg:flex-row gap-8 items-start justify-between my-4">
         {/* Left Text */}
         <div className="text-customSecondary">
-          <p>© 2022, HTML Ecommerce Template</p>
+          <p>© 2025, HTML Ecommerce Template</p>
           <p>All rights reserved</p>
         </div>
 

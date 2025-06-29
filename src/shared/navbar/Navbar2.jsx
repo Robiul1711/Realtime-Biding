@@ -16,21 +16,23 @@ const Navbar2 = () => {
   ];
 
   return (
-    <div className="hidden md:flex flex-col lg:flex-row w-full items-center gap-10 section-padding-x">
-      <div className="flex gap-6 xl:gap-[70px] items-center w-full md:w-[80%]">
-        <div className="w-[166px] h-[85px]">
-          <img src={Logo} className="w-full h-full object-contain" />
+    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center gap-6 xmd:gap-10 section-padding-x">
+      <div className="flex gap-6 items-center">
+        <div className="flex flex-col sm:flex-row gap-4 xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
+          <div className="w-[100px] sm:w-[120px] lg:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0">
+            <img src={Logo} className="w-full h-full object-contain" />
+          </div>
+          <div className="w-full sm:w-auto">
+            <SearchContainer />
+          </div>
         </div>
-        <div className="w-full">
-          <SearchContainer />
+
+        <div className="flex flex-wrap items-center justify-start gap-4 xmd:gap-[57px] w-full xmd:w-auto">
+          <SelectComponent options={options} icon={<LocationIcon />} />
         </div>
       </div>
 
-      <div className="flex items-center gap-[57px]">
-        <SelectComponent options={options} icon={<LocationIcon />} />
-      </div>
-
-      <div className="flex justify-between items-center gap-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-8 w-full xmd:w-auto">
         <p className="text-customSecondary cursor-pointer">Sell</p>
 
         <div className="relative flex items-center gap-3">

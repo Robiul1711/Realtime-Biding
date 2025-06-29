@@ -13,7 +13,18 @@ const navItems = [
     id: 6,
     name: "Auction",
     path: "",
-    sublinks: [{ id: 1, name: "Action One", path: "#" }],
+    sublinks: [
+      {
+        id: 1,
+        name: "Fashion",
+        path: "/auction-list",
+      },
+      {
+        id: 2,
+        name: "Video Games",
+        path: "/auction-list",
+      },
+    ],
   },
   { id: 7, name: "Contact", path: "/content" },
 ];
@@ -26,7 +37,7 @@ const MobileNavbar = () => {
       {/* Top bar */}
       <div className="flex justify-between items-center px-4 py-3">
         <Link to="/">
-          <img src={logo} alt="Logo" className="h-8" />
+          <img src={logo} alt="Logo" className="h-8 sm:h-10" />
         </Link>
         <button onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -40,13 +51,15 @@ const MobileNavbar = () => {
         }`}
       >
         <div className="p-4">
-          <h2 className="text-lg font-semibold mb-4">Menu</h2>
-          <nav className="flex flex-col gap-4">
+          <Link to="/">
+            <img src={logo} alt="Logo" className="h-8 sm:h-10" />
+          </Link>
+          <nav className="flex flex-col gap-y-2 mt-6">
             {navItems.map((item) => (
               <div key={item.id}>
                 <Link
                   to={item.path}
-                  className="block py-2 px-3 rounded hover:bg-gray-100 text-sm font-medium"
+                  className="block py-2 px-3 rounded hover:bg-gray-100 font-medium"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}

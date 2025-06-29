@@ -8,8 +8,8 @@ const Layout = () => {
   return (
     <>
       <div className="hidden md:block">
-        <Navbar />
-        <Navbar2 />
+        {/* <Navbar />
+        <Navbar2 /> */}
       </div>
       <MobileNavbar />
       <div className="pt-[64px] md:pt-0">

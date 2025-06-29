@@ -10,7 +10,7 @@ const SearchContainer = () => {
   ];
 
   return (
-    <div className="px-3 py-2 md:px-5 md:py-4 flex items-center gap-2 md:gap-4 border border-[#ddd] rounded-[5px] w-full max-w-full md:max-w-[700px]">
+    <div className="w-full px-3 py-2 md:px-5 md:py-4 flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-4 border border-[#ddd] rounded-[5px] md:w-[300px] 2xl:w-[700px]">
       <select
         className="bg-transparent px-2 md:px-3 text-sm md:text-base border-none outline-none text-gray-700 w-[110px] md:w-[140px]"
         defaultValue=""
