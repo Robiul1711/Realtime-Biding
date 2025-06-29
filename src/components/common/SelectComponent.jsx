@@ -8,7 +8,7 @@ const SelectComponent = ({
 }) => {
   return (
     <div
-      className={`flex items-center gap-2 px-3 py-2 rounded-[5px] shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)] border border-[#ECECEC] bg-white ${className}`}
+      className={`flex items-center gap-2 px-3 py-2 md:py-3 rounded-[5px] shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)] border border-[#ECECEC] bg-white ${className}`}
     >
       {icon && <div className="text-gray-500">{icon}</div>}
       <select

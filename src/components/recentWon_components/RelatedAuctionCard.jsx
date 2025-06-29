@@ -18,20 +18,24 @@ const RelatedAuctionCard = () => {
     );
   };
   return (
-    <div className="section-padding-x py-20  text-white">
-      <div className="flex justify-between items-center mb-5">
-        <Title level="title40" className="text-black">Related Auction</Title>
-    
+    <div className="section-padding-x py-10 md:py-20 text-white">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <Title level="title40" className="text-black">
+          Related Auction
+        </Title>
       </div>
 
-      <div className="relative my-6">
+      <div className="relative my-4 md:my-6">
         <Swiper
           modules={[Navigation]}
           loop
           spaceBetween={16}
-          slidesPerView={2}
+          slidesPerView={1}
           breakpoints={{
-            768: { slidesPerView: 4 },
+            375: { slidesPerView: 1 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
           }}
           navigation={{
             prevEl: prevRef.current,
@@ -45,18 +49,18 @@ const RelatedAuctionCard = () => {
               swiper.navigation.update();
             });
           }}
-          className="pb-10"
+          className="pb-14"
         >
           {Array(8)
             .fill(null)
             .map((_, i) => (
               <SwiperSlide key={i}>
-                <div className="bg-[#001767] rounded-lg shadow">
+                <div className="bg-[#001767] rounded-lg shadow overflow-hidden h-full">
                   <div className="relative">
                     <img
                       src={car2}
                       alt="Car"
-                      className="w-full h-auto rounded-lg mb-2"
+                      className="w-full h-auto rounded-t-lg object-cover"
                     />
                     <button
                       onClick={() => toggleBookmark(i)}
@@ -71,15 +75,17 @@ const RelatedAuctionCard = () => {
                       />
                     </button>
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold">
+                  <div className="p-4 flex flex-col justify-between h-full">
+                    <h3 className="text-base sm:text-lg font-semibold mb-1">
                       Yugioh Speed Duel Battle City FINALS Brand New Factory
                       Sealed
                     </h3>
-                    <p className="text-xs text-red-700 font-bold">Pre-Owned</p>
-                    <div className="flex justify-between items-center mt-3 mb-1">
-                      <p className="text-lg font-bold">$15,000</p>
-                      <p className="text-sm text-gray-300">
+                    <p className="text-xs text-red-700 font-bold mb-1">
+                      Pre-Owned
+                    </p>
+                    <div className="flex justify-between items-center mt-2 mb-1 text-xs sm:text-sm">
+                      <p className="text-base font-bold">$15,000</p>
+                      <p className="text-gray-300">
                         lostrav_6599.5% positive (595)
                       </p>
                     </div>
@@ -87,16 +93,18 @@ const RelatedAuctionCard = () => {
                       <span className="text-red-700">0 bids </span>· Time Ended
                       (Today 11:50 AM)
                     </p>
-                    <div className="flex flex-col gap-2 text-xs">
-                      <p className="text-gray-300">+$19.15 delivery</p>
-                      <p className="text-gray-300">from Australia</p>
+                    <div className="flex flex-col gap-1 text-xs text-gray-300">
+                      <p>+$19.15 delivery</p>
+                      <p>from Australia</p>
                     </div>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
         </Swiper>
-        <div className="absolute -bottom-16 left-2 flex gap-3 z-10">
+
+        {/* Navigation Arrows */}
+        <div className="absolute -bottom-14 left-2 flex gap-3 z-10">
           <button
             ref={prevRef}
             className="bg-white p-2.5 border border-black rounded-full shadow hover:bg-gray-200 cursor-pointer"

@@ -32,7 +32,7 @@ const LiveAuctions = () => {
   ];
 
   return (
-    <div className="bg-[#efeeee]">
+    <div className="bg-[#efeeee] mb-5">
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
@@ -46,37 +46,48 @@ const LiveAuctions = () => {
               <img
                 src={slide.image}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-auto rounded-2xl"
+                className="w-full h-[450px] lg:h-auto rounded-2xl object-cover"
               />
-              <div className="absolute top-1/2 left-[10%] transform -translate-y-1/2">
-                <h1 className="text-[72px] max-w-[700px] w-full leading-[1.2] font-bold">
+
+              <div className="absolute top-1/2 left-[5%] sm:left-[10%] transform -translate-y-1/2 px-4 sm:px-0">
+                <h1 className="text-[32px] sm:text-[48px] lg:text-[60px] xl:text-[72px] max-w-[90%] sm:max-w-[700px] w-full leading-tight font-bold">
                   {slide.title}
                 </h1>
+
                 <Title
                   level="title16"
-                  className="text-[30px] max-w-[700px] w-full mt-5 text-[#7C7C7C]"
+                  className="text-[16px] sm:text-[20px] md:text-[24px] xl:text-[30px] max-w-[90%] sm:max-w-[700px] w-full mt-4 sm:mt-5 text-[#7C7C7C]"
                 >
                   {slide.subtitle}
                 </Title>
-                <div className="py-8 flex gap-4 items-center">
-                  <div className="px-10 py-4 bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg">
-                    <h1 className="text-[40px]">30</h1>
-                    <p className="text-sm">Hours</p>
+
+                <div className="py-6 sm:py-8 flex flex-wrap gap-4 items-center">
+                  <div className="px-6 sm:px-10 py-3 sm:py-4 bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg min-w-[80px]">
+                    <h1 className="text-[24px] sm:text-[32px] md:text-[40px]">
+                      30
+                    </h1>
+                    <p className="text-xs sm:text-sm">Hours</p>
                   </div>
-                  <span className="h-10 w-1 bg-[#2c2b2b]"></span>
-                  <div className="px-10 py-4 bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg">
-                    <h1 className="text-[40px]">45</h1>
-                    <p className="text-sm">Minutes</p>
+                  <span className="h-10 w-[2px] bg-[#2c2b2b] hidden sm:inline-block"></span>
+
+                  <div className="px-6 sm:px-10 py-3 sm:py-4 bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg min-w-[80px]">
+                    <h1 className="text-[24px] sm:text-[32px] md:text-[40px]">
+                      45
+                    </h1>
+                    <p className="text-xs sm:text-sm">Minutes</p>
                   </div>
-                  <span className="h-10 w-1 bg-[#2c2b2b]"></span>
-                  <div className="px-10 py-4 bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg">
-                    <h1 className="text-[40px]">20</h1>
-                    <p className="text-sm">Seconds</p>
+                  <span className="h-10 w-[2px] bg-[#2c2b2b] hidden sm:inline-block"></span>
+
+                  <div className="px-6 sm:px-10 py-3 sm:py-4 bg-white flex flex-col justify-center items-center rounded-2xl shadow-lg min-w-[80px]">
+                    <h1 className="text-[24px] sm:text-[32px] md:text-[40px]">
+                      20
+                    </h1>
+                    <p className="text-xs sm:text-sm">Seconds</p>
                   </div>
                 </div>
 
-                <button className="bg-[#FB0000] text-white py-2 px-4 mt-4 rounded-full cursor-pointer flex items-center gap-2">
-                  Learn More <FiArrowUpRight className="text-xl" />
+                <button className="bg-[#FB0000] text-white py-2 px-4 sm:px-6 mt-4 rounded-full cursor-pointer flex items-center gap-2 text-sm sm:text-base">
+                  Learn More <FiArrowUpRight className="text-lg sm:text-xl" />
                 </button>
               </div>
             </div>
