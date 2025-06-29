@@ -61,7 +61,7 @@ const Navbar = () => {
 
   const location = useLocation();
   return (
-    <header className="section-padding-x w-full sticky top-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50">
+    <header className="section-padding-x w-full  fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50">
       {/* Only show on large and up */}
       <div className="hidden md:flex justify-between items-center">
         <nav className="flex items-center xl:gap-8 gap-4 whitespace-nowrap">

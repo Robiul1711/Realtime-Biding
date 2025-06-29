@@ -87,7 +87,7 @@ const Footer = () => {
       <hr className="mt-12 mb-6" />
 
       {/* Bottom Section */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start justify-between my-4">
+      <div className="flex flex-col lg:flex-row gap-8 items-start justify-between mt-4  mb-16 lg:mb-4">
         {/* Left Text */}
         <div className="text-customSecondary">
           <p>© 2025, HTML Ecommerce Template</p>
