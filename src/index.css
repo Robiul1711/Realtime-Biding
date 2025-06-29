@@ -222,6 +222,11 @@ body {
     padding-bottom: 100px;
   }
 }
+html,
+body {
+  height: auto;
+  overflow-y: auto;
+}
 
 .bg-custom {
   background: var(--color-bg-custom);

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import product from "../../assets/images/product.png";
-import product1 from "../../assets/images/product1.png";
+import product2 from "../../assets/images/product2.png";
+import product3 from "../../assets/images/product3.png";
 import { FaAngleRight } from "react-icons/fa6";
 
 const SearchProductImages = () => {
   const [images, setImages] = useState([
     product,
-    product1,
-    product1,
-    product1,
-    product1,
+    product3,
+    product2,
+    product3,
+    product2,
   ]);
   const handleImageClick = (index) => {
     if (index === 0) return;
