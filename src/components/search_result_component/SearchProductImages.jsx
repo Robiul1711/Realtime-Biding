@@ -45,7 +45,7 @@ const SearchProductImages = () => {
             onClick={() => handleImageClick(i + 1)}
           >
             <img
-              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-full"
+              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[300px] md:h-full"
               src={img}
               alt={`Thumbnail ${i + 1}`}
             />
