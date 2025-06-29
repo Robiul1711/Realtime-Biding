@@ -181,11 +181,11 @@ const ProductCard = () => {
   };
   return (
     <div>
-      <div className="flex justify-between items-center border-2 border-[#cac3c3] px-4 py-2 md:py-3 rounded-md w-full">
-        <div className="flex items-center gap-6 w-[60%]">
-          <p>Sort By :</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-[60%]">
+          <p className="text-sm sm:text-base">Sort By :</p>
 
-          <div className="relative w-full max-w-[160px]">
+          <div className="relative w-full sm:max-w-[160px]">
             <select
               className="appearance-none w-full p-3 border-none outline-none text-gray-700 bg-[#F0F0F0] rounded"
               defaultValue=""
@@ -205,12 +205,18 @@ const ProductCard = () => {
             </div>
           </div>
         </div>
-        <p className="text-[#595858]">24 items per page</p>
+
+        <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         {dummyItems.map((item) => (
           <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
-            <img className="w-full" src={item.image} alt="image" />
+            <img
+              className="w-full h-[280px] md:h-auto"
+              src={item.image}
+              alt="image"
+            />
             <div className="p-4">
               <div className="flex justify-between items-center">
                 <div className="my-1">
@@ -236,7 +242,7 @@ const ProductCard = () => {
               <p className="text-[12px] text-[#161515] my-1">{item.delivery}</p>
               <p className="text-[12px] text-[#161515] my-1">{item.location}</p>
               <Link to={`/auction-details`}>
-                <button className="bg-[#4275F6] text-white py-2 md:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2">
+                <button className="bg-[#4275F6] text-white py-2 lg:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2">
                   Quick Bid
                 </button>
               </Link>

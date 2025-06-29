@@ -6,6 +6,7 @@ import { LocationIcon, ManIcon } from "@/components/common/CustomIcon";
 import { FaRegHeart } from "react-icons/fa6";
 import { IoCartOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import UserActions from "@/components/common/UserAction";
 
 const Navbar2 = () => {
   const options = [
@@ -19,7 +20,7 @@ const Navbar2 = () => {
     <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center gap-6 xmd:gap-10 section-padding-x">
       <div className="flex gap-6 items-center">
         <div className="flex flex-col sm:flex-row gap-4 xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
-          <div className="w-[100px] sm:w-[120px] lg:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0">
+          <div className="w-[80px] md:w-[120px] lg:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0">
             <img src={Logo} className="w-full h-full object-contain" />
           </div>
           <div className="w-full sm:w-auto">
@@ -32,7 +33,7 @@ const Navbar2 = () => {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-8 w-full xmd:w-auto">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-8 w-full xmd:w-auto">
         <p className="text-customSecondary cursor-pointer">Sell</p>
 
         <div className="relative flex items-center gap-3">
@@ -61,6 +62,9 @@ const Navbar2 = () => {
             <p className="text-customSecondary">Account</p>
           </div>
         </Link>
+      </div> */}
+      <div className="hidden 3xl:block">
+        <UserActions />
       </div>
     </div>
   );

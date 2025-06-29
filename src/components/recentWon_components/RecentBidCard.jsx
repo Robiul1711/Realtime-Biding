@@ -59,7 +59,7 @@ const RecentBidCard = () => {
             <img
               src={item.image}
               alt={item.title}
-              className="w-full object-cover"
+              className="w-full h-[280px] rounded-lg md:h-auto object-cover"
             />
             <div className="p-3 flex flex-col gap-1">
               <Title level="title12">{item.title}</Title>

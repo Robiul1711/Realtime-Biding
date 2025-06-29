@@ -55,7 +55,7 @@ const FilterCard = () => {
   };
 
   return (
-    <div className="border rounded-xl px-6 py-12">
+    <div className="border rounded-xl px-4 md:px-6 py-6 md:py-12">
       <Title level="title24">Filters</Title>
       <div className="mt-4">
         {filterOptions.map((option) => (
@@ -69,9 +69,7 @@ const FilterCard = () => {
               onChange={() => handleInputChange(option.value)}
             />
 
-            {/* Custom Styled Checkbox */}
             <div className="relative">
-              {/* Checked state */}
               <span
                 className={`${
                   checkedOptions[option.value]
@@ -79,7 +77,6 @@ const FilterCard = () => {
                     : "opacity-0 scale-[0.4] z-[-1]"
                 } transition-all duration-200 absolute top-0 left-0`}
               >
-                {/* Checked SVG */}
                 <svg
                   width="20"
                   height="20"
@@ -102,8 +99,6 @@ const FilterCard = () => {
                   </g>
                 </svg>
               </span>
-
-              {/* Unchecked state */}
               <span
                 className={`${
                   !checkedOptions[option.value]
@@ -130,9 +125,7 @@ const FilterCard = () => {
                 </svg>
               </span>
             </div>
-
-            {/* Label Text */}
-            <span className="text-[1.2rem] dark:text-[#abc2d3] text-[#424242]">
+            <span className="text-[1rem] lg:text-[1.2rem] dark:text-[#abc2d3] text-[#424242]">
               {option.label}
             </span>
           </label>
@@ -154,10 +147,7 @@ const FilterCard = () => {
               className="hidden"
               onChange={() => handleInputChange1(option.value)}
             />
-
-            {/* Custom Styled Checkbox */}
             <div className="relative">
-              {/* Checked state */}
               <span
                 className={`${
                   checkedOptions1[option.value]
@@ -165,7 +155,6 @@ const FilterCard = () => {
                     : "opacity-0 scale-[0.4] z-[-1]"
                 } transition-all duration-200 absolute top-0 left-0`}
               >
-                {/* Checked SVG */}
                 <svg
                   width="20"
                   height="20"
@@ -188,8 +177,6 @@ const FilterCard = () => {
                   </g>
                 </svg>
               </span>
-
-              {/* Unchecked state */}
               <span
                 className={`${
                   !checkedOptions1[option.value]
@@ -216,9 +203,7 @@ const FilterCard = () => {
                 </svg>
               </span>
             </div>
-
-            {/* Label Text */}
-            <span className="text-[1.2rem] dark:text-[#abc2d3] text-[#424242]">
+            <span className="text-[1rem] lg:text-[1.2rem] dark:text-[#abc2d3] text-[#424242]">
               {option.label}
             </span>
           </label>
@@ -230,16 +215,16 @@ const FilterCard = () => {
         <Title level="title18" className="font-semibold">
           Price
         </Title>
-        <div className="flex items-center gap-5 w-full mt-3">
+        <div className="flex flex-col lg:flex-row items-center gap-5 w-full mt-3">
           <input
             type="number"
             placeholder="Min"
-            className="px-4 py-2 md:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
+            className="px-4 py-2 lg:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
           />
           <input
             type="number"
             placeholder="Max"
-            className="px-4 py-2 md:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
+            className="px-4 py-2 lg:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
           />
         </div>
       </div>
@@ -271,7 +256,7 @@ const FilterCard = () => {
             >
               {options?.map((option, index) => (
                 <p
-                  className="py-2 px-4 dark:hover:bg-slate-900/40 hover:bg-[#ececec] transition-all duration-200 flex items-center gap-2"
+                  className="py-2 lg:py-3 px-4 dark:hover:bg-slate-900/40 hover:bg-[#ececec] transition-all duration-200 flex items-center gap-2"
                   key={index}
                   onClick={(e) => setSelectedItem(e.target.textContent)}
                 >
@@ -283,16 +268,16 @@ const FilterCard = () => {
           <input
             placeholder="City/Region"
             tyte="text"
-            className="px-4 py-2 md:py-3 rounded-md border-2 border-[#d9d3d3] w-full text-start cursor-pointer"
+            className="px-4 py-2 lg:py-3 rounded-md border-2 border-[#d9d3d3] w-full text-start cursor-pointer"
           />
         </div>
       </div>
       <hr className="border-[1px] border-[#ddd] my-8" />
       <div className="mt-6 flex justify-between items-center">
-        <p className="text-[17px] font-semibold cursor-pointer hover:underline">
+        <p className="lg:text-[17px] font-semibold cursor-pointer hover:underline">
           Clear All
         </p>
-        <button className="bg-[#4275F6] text-lg px-5 py-2 md:py-3 rounded-md  hover:bg-[#425af9] text-white cursor-pointer">
+        <button className="bg-[#4275F6] lg:text-lg px-5 py-2 lg:py-3 rounded-md  hover:bg-[#425af9] text-white cursor-pointer">
           Apply
         </button>
       </div>

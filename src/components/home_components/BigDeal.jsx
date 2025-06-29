@@ -14,10 +14,10 @@ const BigDeal = () => {
           <div className="relative w-full max-w-md mt-5">
             <input
               type="email"
-              className="outline-none bg-white rounded-full w-full py-3 md:py-4 pr-36 pl-4 "
+              className="outline-none bg-white rounded-full w-full py-2 lg:py-4 pr-36 pl-4 "
               placeholder="Enter your email"
             />
-            <button className="absolute top-1/2 right-0 -translate-y-1/2 bg-[#FB0000] text-white px-6 py-3 md:py-4 rounded-full hover:bg-red-700 transition">
+            <button className="absolute top-1/2 right-0 -translate-y-1/2 bg-[#FB0000] text-white px-6 py-2 lg:py-4 rounded-full hover:bg-red-700 transition">
               Subscribe
             </button>
           </div>

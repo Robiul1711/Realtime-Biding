@@ -147,7 +147,7 @@ const SearchProductCard = () => {
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-full object-cover"
+                className="w-full h-[300px] md:h-auto object-cover"
               />
               <div className="p-3 flex flex-col gap-1">
                 <div className="flex items-center justify-between">

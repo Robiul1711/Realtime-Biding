@@ -45,7 +45,7 @@ const RecentWonCardDetails = () => {
         Vintage Rolex Submariner 1680
       </p>
 
-      <p className="text-[#878787] text-lg md:text-xl">
+      <p className="text-[#878787] md:text-lg lg:text-xl">
         A rare opportunity to own a piece of horological history. This vintage
         Rolex Submariner 1680 from 1978 is in exceptional condition, featuring
         the original dial and bezel. The watch has been professionally serviced

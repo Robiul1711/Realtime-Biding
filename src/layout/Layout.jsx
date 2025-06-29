@@ -1,3 +1,4 @@
+import UserActions from "@/components/common/UserAction";
 import Footer from "@/shared/footer/Footer";
 import MobileNavbar from "@/shared/navbar/MobileNavbar";
 import Navbar from "@/shared/navbar/Navbar";
@@ -8,14 +9,17 @@ const Layout = () => {
   return (
     <>
       <div className="hidden md:block">
-        {/* <Navbar />
-        <Navbar2 /> */}
+        <Navbar />
+        <Navbar2 />
       </div>
       <MobileNavbar />
       <div className="pt-[64px] md:pt-0">
         <Outlet />
       </div>
       <Footer />
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white">
+        <UserActions />
+      </div>
     </>
   );
 };

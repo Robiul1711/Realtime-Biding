@@ -244,6 +244,15 @@ body {
   font-size: 20px !important;
 }
 
+@media (max-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+}
+
 .swiper-button-prev {
   left: 30px !important;
 }
@@ -254,13 +263,13 @@ body {
 
 .swiper-pagination {
   text-align: left !important;
-  left: 10% !important; /* adjust as needed */
-  bottom: 40px !important; /* or your preferred distance from the bottom */
+  left: 10% !important;
+  bottom: 40px !important;
   width: auto !important;
 }
 .swiper-pagination-bullet {
-  width: 30px !important; /* length of the line */
-  height: 4px !important; /* thickness of the line */
+  width: 30px !important;
+  height: 4px !important;
   border-radius: 2px !important;
   background: rgb(219, 216, 216) !important;
   opacity: 0.5;
