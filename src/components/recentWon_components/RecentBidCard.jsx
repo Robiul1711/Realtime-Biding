@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import today from "../../assets/images/today.png";
+import today1 from "../../assets/images/today2.png";
+import today2 from "../../assets/images/today3.png";
+import today3 from "../../assets/images/today4.png";
+import today4 from "../../assets/images/today5.png";
+import today5 from "../../assets/images/today1.png";
 import Title from "../common/Title";
 import { Link } from "react-router-dom";
 
@@ -11,31 +16,31 @@ const data = [
     location: "from Australia",
   },
   {
-    image: today,
+    image: today1,
     title: "Vintage Collection Item 2",
     price: "$18,300",
     location: "from USA",
   },
   {
-    image: today,
+    image: today2,
     title: "Vintage Collection Item 3",
     price: "$32,100",
     location: "from UK",
   },
   {
-    image: today,
+    image: today3,
     title: "Vintage Collection Item 4",
     price: "$25,000",
     location: "from Germany",
   },
   {
-    image: today,
+    image: today4,
     title: "Vintage Collection Item 5",
     price: "$21,700",
     location: "from France",
   },
   {
-    image: today,
+    image: today5,
     title: "Vintage Collection Item 6",
     price: "$29,400",
     location: "from Italy",

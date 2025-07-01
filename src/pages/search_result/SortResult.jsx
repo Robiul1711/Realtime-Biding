@@ -1,5 +1,4 @@
 import React from "react";
-import { IoSearch } from "react-icons/io5";
 const SortResult = () => {
   const options = [
     {
@@ -36,7 +35,6 @@ const SortResult = () => {
           </option>
         ))}
       </select>
-
     </div>
   );
 };
