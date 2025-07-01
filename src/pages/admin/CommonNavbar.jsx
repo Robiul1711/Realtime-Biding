@@ -7,6 +7,9 @@ import { useLocation } from "react-router-dom";
 const CommonNavbar = ({ open, setOpen }) => {
   const { pathname } = useLocation();
   return (
+
+    <div className={`${pathname==='/user-dashboard/messages' || pathname==='/seller-dashboard/messages' ? "hidden" : "flex items-center gap-5 justify-between w-full py-3 md:py-6 px-0  rounded-2xl"}`}>
+
     <div
       className={`${
         pathname === "/user-dashboard/messages"
@@ -14,6 +17,7 @@ const CommonNavbar = ({ open, setOpen }) => {
           : "flex items-center gap-5 justify-between w-full py-3 md:py-6 px-0  rounded-2xl"
       }`}
     >
+
       <div className="flex items-center gap-4">
         <span
           onClick={() => setOpen(!open)}
