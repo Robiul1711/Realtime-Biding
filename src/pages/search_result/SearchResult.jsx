@@ -3,9 +3,11 @@ import React from "react";
 import { CiFilter } from "react-icons/ci";
 import SortResult from "./SortResult";
 import { FaAngleRight } from "react-icons/fa6";
+import { ScrollRestoration } from "react-router-dom";
 const SearchResult = () => {
   return (
     <div className="section-padding-x pb-6">
+      <ScrollRestoration />
       <div className="flex flex-col gap-2 my-6 md:my-10">
         <div className="flex items-center gap-1 text-gray-500">
           <span>Home</span>
