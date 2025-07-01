@@ -2,6 +2,9 @@ import React, { useRef, useState } from "react";
 import Title from "../common/Title";
 import { FiArrowUpRight } from "react-icons/fi";
 import car2 from "../../assets/images/car2.png";
+import car3 from "../../assets/images/carr.png";
+import car4 from "../../assets/images/carr1.png";
+import car5 from "../../assets/images/carr2.png";
 import { CiBookmark } from "react-icons/ci";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -36,9 +39,12 @@ const PopularMakes = () => {
           modules={[Navigation]}
           loop
           spaceBetween={16}
-          slidesPerView={2}
+          slidesPerView={1}
           breakpoints={{
-            768: { slidesPerView: 4 },
+            375: { slidesPerView: 1 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 3 },
+            1024: { slidesPerView: 4 },
           }}
           navigation={{
             prevEl: prevRef.current,

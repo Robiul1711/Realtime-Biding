@@ -137,6 +137,28 @@ const dummyItems = [
 ];
 
 const ProductCard = () => {
+  const [likedItems, setLikedItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const totalItems = dummyItems.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const paginatedItems = dummyItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   const options = [
     {
       label: "Current Bid",
@@ -151,7 +173,7 @@ const ProductCard = () => {
       value: "next bid",
     },
   ];
-  const [likedItems, setLikedItems] = useState([]);
+
   const toggleLike = (id) => {
     setLikedItems((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
@@ -159,11 +181,11 @@ const ProductCard = () => {
   };
   return (
     <div>
-      <div className="flex justify-between items-center border-2 border-[#cac3c3] px-4 py-2 md:py-3 rounded-md w-full">
-        <div className="flex items-center gap-6 w-[60%]">
-          <p>Sort By :</p>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-[60%]">
+          <p className="text-sm sm:text-base">Sort By :</p>
 
-          <div className="relative w-full max-w-[160px]">
+          <div className="relative w-full sm:max-w-[160px]">
             <select
               className="appearance-none w-full p-3 border-none outline-none text-gray-700 bg-[#F0F0F0] rounded"
               defaultValue=""
@@ -183,12 +205,18 @@ const ProductCard = () => {
             </div>
           </div>
         </div>
-        <p className="text-[#595858]">24 items per page</p>
+
+        <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
         {dummyItems.map((item) => (
           <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
-            <img className="w-full" src={item.image} alt="image" />
+            <img
+              className="w-full h-[280px] md:h-auto"
+              src={item.image}
+              alt="image"
+            />
             <div className="p-4">
               <div className="flex justify-between items-center">
                 <div className="my-1">
@@ -214,13 +242,82 @@ const ProductCard = () => {
               <p className="text-[12px] text-[#161515] my-1">{item.delivery}</p>
               <p className="text-[12px] text-[#161515] my-1">{item.location}</p>
               <Link to={`/auction-details`}>
-                <button className="bg-[#4275F6] text-white py-2 md:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2">
+                <button className="bg-[#4275F6] text-white py-2 lg:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2">
                   Quick Bid
                 </button>
               </Link>
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t pt-4 gap-4">
+        {/* Left */}
+        <div className="flex items-center gap-3 text-sm text-[#595858]">
+          <span>
+            {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
+          </span>
+          <select
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className="border px-3 py-1 rounded-md bg-white"
+          >
+            {[5, 10, 20].map((num) => (
+              <option key={num} value={num}>
+                {num} per page
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Middle (Page Numbers) */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-2 py-1 rounded hover:bg-gray-200 disabled:opacity-40"
+          >
+            &lt;
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((page) => {
+              // Show first, last, current, and nearby pages
+              return (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 2 && page <= currentPage + 2)
+              );
+            })
+            .map((page, i, arr) => {
+              const prevPage = arr[i - 1];
+              const isEllipsis = prevPage && page - prevPage > 1;
+
+              return isEllipsis ? (
+                <span key={`ellipsis-${i}`} className="px-2">
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={page}
+                  onClick={() => goToPage(page)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-[#4275F6] text-white"
+                      : "hover:bg-gray-200"
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-2 py-1 rounded hover:bg-gray-200 disabled:opacity-40"
+          >
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
   );

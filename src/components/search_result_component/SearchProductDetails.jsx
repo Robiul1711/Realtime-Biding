@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollRestoration } from "react-router-dom";
 import SearchProductImages from "./SearchProductImages";
 import SearchProductText from "./SearchProductText";
+import SimilarProduct from "./SimilarProduct";
 
 const SearchProductDetails = () => {
   return (
@@ -15,6 +16,7 @@ const SearchProductDetails = () => {
           <SearchProductText />
         </div>
       </div>
+      <SimilarProduct />
     </div>
   );
 };

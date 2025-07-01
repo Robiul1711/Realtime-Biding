@@ -1,35 +1,42 @@
 import React from "react";
 import car from "@/assets/images/car.png";
+import car1 from "@/assets/images/car1.png";
+import car2 from "@/assets/images/car3.png";
+import car3 from "@/assets/images/car4.png";
+import car4 from "@/assets/images/car5.png";
 import Title from "../common/Title";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+
 const data = [
   {
     image: car,
     title: "Electronics",
   },
   {
-    image: car,
+    image: car1,
     title: "Home & Kitchen",
   },
   {
-    image: car,
+    image: car2,
     title: "Sports & Outdoors",
   },
   {
-    image: car,
+    image: car3,
     title: "Health & Beauty",
   },
   {
-    image: car,
+    image: car4,
     title: "Health & Beauty",
   },
   {
-    image: car,
+    image: car2,
     title: "Health & Beauty",
   },
   {
-    image: car,
+    image: car3,
     title: "Health & Beauty",
   },
 ];
@@ -44,31 +51,46 @@ const TrendingOn = () => {
       </div>
 
       <div>
-        <Link
-          to={"/auction-list"}
-          className="flex justify-between  gap-4 flex-wrap"
+        <Swiper
+          spaceBetween={16}
+          slidesPerView={6}
+          loop
+          grabCursor={true}
+          breakpoints={{
+            320: { slidesPerView: 2 },
+            640: { slidesPerView: 3 },
+            768: { slidesPerView: 4 },
+            1024: { slidesPerView: 5 },
+            1280: { slidesPerView: 6 },
+          }}
+          className="w-full"
         >
           {data.map((item, index) => (
-            <div
-              key={index}
-              className="flex justify-center border  p-10 rounded-2xl items-center flex-col gap-3"
-            >
-              <img src={item.image} alt={item.title} />
-              <Title level="title18">{item.title}</Title>
-            </div>
+            <SwiperSlide key={index}>
+              <Link to="/auction-list">
+                <div className="flex justify-center border p-10 rounded-2xl items-center flex-col gap-3">
+                  <img
+                    className="w-full h-full object-contain"
+                    src={item.image}
+                    alt={item.title}
+                  />
+                  <Title level="title18">{item.title}</Title>
+                </div>
+              </Link>
+            </SwiperSlide>
           ))}
-        </Link>
+        </Swiper>
       </div>
 
-      <div className="flex justify-between items-center mt-10 bg-[#EAEAEA] p-10 rounded-2xl">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mt-10 bg-[#EAEAEA] p-10 rounded-2xl">
         <div>
           <Title level="title48">Bid Smart, Win Big!</Title>
           <Title level="title16" className="text-gray-600 mt-2">
             Experience secure auctions, reliable deals, and hassle-free bidding.
           </Title>
         </div>
-        <Link to={"/auction-list"}>
-          <button className="bg-[#FB0000] text-white px-8 cursor-pointer py-4 rounded-full">
+        <Link to={"/auction-list"} className="mt-6 md:mt-0">
+          <button className="bg-[#FB0000] text-white px-8 cursor-pointer py-3 md:py-4 rounded-full">
             Start now
           </button>
         </Link>

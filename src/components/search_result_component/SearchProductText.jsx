@@ -27,7 +27,7 @@ const SearchProductText = () => {
         </div>
         <p>100 reviews</p>
       </div>
-      <div className="my-4 flex items-center gap-6 w-full">
+      <div className="my-4 flex flex-col md:flex-row items-center gap-6 w-full">
         <button className="px-6 py-2 md:py-3 w-full text-center hover:bg-[#0046F9] hover:text-[#F3F6FE] border text-[#000000] rounded-full flex items-center gap-2">
           <IoIosHeartEmpty size={24} className="hover:fill-[#FFF] " /> Add to
           wishlist

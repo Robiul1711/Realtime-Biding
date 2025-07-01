@@ -9,7 +9,7 @@ const RcentWonBid = () => {
   return (
     <div>
       <ScrollRestoration />
-      <div className="flex gap-8  w-full section-padding-x py-10 md:py-16">
+      <div className="flex flex-col md:flex-row gap-8  w-full section-padding-x py-10 md:py-16">
         <div className="w-full md:w-[65%]">
           <RecentWonCardDetails />
         </div>

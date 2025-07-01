@@ -1,29 +1,18 @@
 import React from "react";
 import { IoSearch } from "react-icons/io5";
+
 const SearchContainer = () => {
   const options = [
-    {
-      label: "All Categories",
-      value: "all_categories",
-    },
-    {
-      label: "Men's Wear",
-      value: "mens_wear",
-    },
-    {
-      label: "Women's Wear",
-      value: "womens_wear",
-    },
-    {
-      label: "Kids",
-      value: "kids",
-    },
+    { label: "All Categories", value: "all_categories" },
+    { label: "Men's Wear", value: "mens_wear" },
+    { label: "Women's Wear", value: "womens_wear" },
+    { label: "Kids", value: "kids" },
   ];
 
   return (
-    <div className="px-5 py-4 flex items-center gap-4 border-[1px] border-[#ddd] rounded-[5px] max-w-[700px] w-full">
+    <div className="w-full px-3 py-2 md:px-5 md:py-4 flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-4 border border-[#ddd] rounded-[5px] md:w-[400px] lg:w-[500px] 2xl:w-[700px]">
       <select
-        className="bg-transparent px-3 border-none outline-none text-gray-700"
+        className="bg-transparent px-2 md:px-3 text-sm md:text-base border-none outline-none text-gray-700 w-[110px] md:w-[140px]"
         defaultValue=""
       >
         {options.map((option) => (
@@ -39,10 +28,11 @@ const SearchContainer = () => {
 
       <input
         type="text"
-        className=" px-3 w-full text-custom-black placeholder-[#838383] text-base bg-transparent border-none outline-none"
-        placeholder="Search for items...."
+        className="w-full text-sm md:text-base text-custom-black placeholder-[#838383] bg-transparent border-none outline-none px-2 md:px-3"
+        placeholder="Search for items..."
       />
-      <span>
+
+      <span className="text-gray-700">
         <IoSearch size={20} />
       </span>
     </div>

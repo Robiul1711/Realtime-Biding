@@ -31,11 +31,11 @@ const sections = [
 
 const FairAndSimple = () => {
   return (
-    <section className="section-padding-x pb-14 bg-white">
+    <section className="section-padding-x pb-6 md:pb-14 bg-white">
       {sections.map((section, index) => (
         <div
           key={section.id}
-          className={`flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 mb-16 ${
+          className={`flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 mb-6 md:mb-16 ${
             index % 2 === 1 ? "md:flex-row-reverse" : ""
           }`}
         >
