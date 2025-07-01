@@ -28,7 +28,7 @@ import WishList from "@/components/userDashboard/WishList";
 import UserSetting from "@/components/userDashboard/UserSetting";
 import BidHistory from "@/components/userDashboard/BidHistory";
 import UserMessaging from "@/components/userDashboard/UserMessaging";
-
+import CreateListingForm from "@/components/sellerDashboard/CreateListingForm";
 
 const router = createBrowserRouter([
   {
@@ -76,27 +76,27 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/user-dashboard",
-        element: <UserDashboard />, 
+        element: <UserDashboard />,
       },
       {
         path: "/user-dashboard/my-auction",
-        element: <MyAuction />, 
+        element: <MyAuction />,
       },
       {
         path: "/user-dashboard/wishlist",
-        element: <WishList />, 
+        element: <WishList />,
       },
       {
         path: "/user-dashboard/messages",
-        element: <UserMessaging />, 
+        element: <UserMessaging />,
       },
       {
         path: "/user-dashboard/bid-history",
-        element: <BidHistory />, 
+        element: <BidHistory />,
       },
       {
         path: "/user-dashboard/setting",
-        element: <UserSetting />, 
+        element: <UserSetting />,
       },
     ],
   },
@@ -107,6 +107,30 @@ const router = createBrowserRouter([
       {
         path: "/seller-dashboard",
         element: <SellerDashboard />, // ✅ Fixed typo
+      },
+      {
+        path: "/seller-dashboard/my-auction",
+        element: <MyAuction />,
+      },
+      {
+        path: "/seller-dashboard/wishlist",
+        element: <WishList />,
+      },
+      {
+        path: "/seller-dashboard/messages",
+        element: <UserMessaging />,
+      },
+      {
+        path: "/seller-dashboard/auction-history",
+        element: <BidHistory />,
+      },
+      {
+        path: "/seller-dashboard/setting",
+        element: <UserSetting />,
+      },
+      {
+        path: "/seller-dashboard/create-listing",
+        element: <CreateListingForm />,
       },
     ],
   },

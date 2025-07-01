@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronDown, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const sampleData = Array.from({ length: 12 }, (_, i) => ({
   name: ["Guy Hawkins", "Jane Cooper", "Jacob Jones", "Annette Black", "Esther Howard", "Wade Warren", "Courtney Henry", "Jerome Bell", "Floyd Miles", "Eleanor Pena", "Devon Lane", "Christopher Colombus"][i],
@@ -23,10 +24,11 @@ const sampleData = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 const BidsTable = () => {
+  const {pathname} = useLocation();
   return (
     <div className="p-6 bg-white rounded-md shadow-sm">
       <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">456 Bids</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{pathname==='/user-dashboard/bid-history'?'456 Bids':'456 Auction'}</h2>
         <div className="flex items-center gap-3 flex-wrap">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 text-gray-400 size-4" />
