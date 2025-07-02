@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import Title from "../common/Title";
 import MyOwnBid from "./MyOwnBid";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import OnGoing from "../sellerDashboard/OnGoing";
 import Completed from "../sellerDashboard/Completed";
 
 const MyAuction = () => {
-   const [activeTab, setActiveTab] = useState("ongoing"); // default tab
+  const [activeTab, setActiveTab] = useState("ongoing"); // default tab
   const { pathname } = useLocation();
   return (
     <div>
@@ -24,8 +24,8 @@ const MyAuction = () => {
           </Title>
         </div>
       ) : (
-        <div className="flex justify-between items-center mb-8">
-          <div>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-900">
               My Auction History
             </h1>
@@ -34,15 +34,22 @@ const MyAuction = () => {
               your auction activity and outcomes.
             </p>
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          <Link
+            to="/seller-dashboard/create-listing"
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-center"
+          >
             Create an auction
-          </button>
+          </Link>
         </div>
       )}
- <div className="flex gap-4 text-black border-b border-[#E5E5E5] mb-10 ">
+      {
+        pathname === "/seller-dashboard/my-auction" && (
+              <div className="flex gap-4 text-black border-b  border-[#E5E5E5] mb-10 ">
         <p
           className={`cursor-pointer font-semibold  ${
-            activeTab === "ongoing" ? "text-blue-600 border-b border-blue-600" : ""
+            activeTab === "ongoing"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : ""
           }`}
           onClick={() => setActiveTab("ongoing")}
         >
@@ -50,13 +57,21 @@ const MyAuction = () => {
         </p>
         <p
           className={`cursor-pointer font-semibold ${
-            activeTab === "completed" ? "text-blue-600 border-b border-blue-600" : ""
+            activeTab === "completed"
+              ? "text-blue-600 border-b-2 border-blue-600"
+              : ""
           }`}
           onClick={() => setActiveTab("completed")}
         >
           Completed
         </p>
       </div>
+        )
+      }
+  
+        {
+          pathname === "/user-dashboard/my-auction" && <MyOwnBid />
+        }
 
       <div>
         {activeTab === "ongoing" && <OnGoing />}

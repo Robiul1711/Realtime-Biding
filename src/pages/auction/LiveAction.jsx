@@ -9,11 +9,11 @@ const LiveAction = () => {
   return (
     <div>
       <ScrollRestoration />
-      <div className="flex flex-col md:flex-row  gap-8  w-full section-padding-x py-10 md:py-16">
-        <div className="w-full md:w-[65%]">
+      <div className="flex flex-col lg:flex-row  gap-8  w-full section-padding-x py-10 lg:py-16">
+        <div className="w-full lg:w-[70%]">
           <LiveDetails />
         </div>
-        <div className="w-full md:w-[35%]">
+        <div className="w-full lg:w-[30%]">
           <LiveBid />
         </div>
       </div>

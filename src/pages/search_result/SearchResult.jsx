@@ -14,17 +14,17 @@ const SearchResult = () => {
           <FaAngleRight />
           <span>Search Results</span>
         </div>
-        <h1 className="text-lg md:text-xl lg:text-2xl font-bold mb-4 text-[#C3C3C3]">
+        <h1 className="sm:text-lg md:text-xl lg:text-2xl font-bold mb-4 text-[#C3C3C3]">
           Showing <span className="text-black">20</span> results for{" "}
           <span className="text-black">"“Hats & Caps”"</span>
         </h1>
       </div>
-      <div className="flex flex-col md:flex-row justify-between gap-4 md:items-center border-dashed my-6 md:my-10 border-b border-t border-[#E5E5E5] p-3">
+      <div className="flex items-start  justify-between gap-4 md:items-center border-dashed my-6 md:my-10 border-b border-t border-[#E5E5E5] p-3">
         <p className="py-2 px-3 border border-[#E5E5E5] rounded-full items-center gap-2 inline-flex text-sm sm:text-base">
           <CiFilter /> Filter
         </p>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm sm:text-base">
+        <div className="flex  items-center justify-between gap-2 text-sm sm:text-base">
           <p>Sort by:</p>
           <SortResult />
         </div>

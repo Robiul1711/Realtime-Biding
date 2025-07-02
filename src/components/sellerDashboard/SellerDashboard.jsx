@@ -49,21 +49,26 @@ const SellerDashboard = () => {
 
   return (
     <div>
-         <div className="rounded-2xl bg-gray-50 p-6">
+         <div className="rounded-2xl sm:bg-gray-50  sm:p-6">
       <div className="">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Auction History</h1>
-            <p className="text-gray-600 mt-1">Review all your past auction in one place. Stay informed about your auction activity and outcomes.</p>
-          </div>
-          <Link to="/seller-dashboard/create-listing" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-            Create an auction
-          </Link>
-        </div>
+<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+  <div className="flex-1">
+    <h1 className="text-2xl font-bold text-gray-900">My Auction History</h1>
+    <p className="text-gray-600 mt-1">
+      Review all your past auction in one place. Stay informed about your auction activity and outcomes.
+    </p>
+  </div>
+  <Link
+    to="/seller-dashboard/create-listing"
+    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-center"
+  >
+    Create an auction
+  </Link>
+</div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           <StatCard 
             icon={ShoppingBag} 
             title="Total Auction Listings" 

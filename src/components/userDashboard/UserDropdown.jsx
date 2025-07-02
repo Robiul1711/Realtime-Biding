@@ -56,7 +56,7 @@ const UserDropdown = ({
       <div className="flex items-center gap-4 cursor-pointer ">
       <button
        
-        className={`flex items-center justify-center w-10 h-10 rounded-xl font-medium cursor-pointer
+        className={`flex items-center justify-center sm:w-10 sm:h-10 size-8 rounded-xl font-medium cursor-pointer
           hover:opacity-90 transition-opacity ${avatarBgColor} ${avatarTextColor}
           ${scrolled ? "ring-2 ring-white" : ""}`}
       >
@@ -64,17 +64,17 @@ const UserDropdown = ({
           <img
             src={user.avatar}
             alt={user.name}
-            className="w-full h-full rounded-xl object-cover"
+            className="w-full h-full  rounded-xl object-cover"
           />
         ) : (
           getUserInitial()
         )}
       </button>
 <div className="flex flex-col">
-    <p className="font-semibold text-black">Andrew Sebastian</p>
+    <p className="font-semibold text-sm sm:text-base text-black">Andrew Sebastian</p>
     <p className="text-sm text-gray-500 flex items-center gap-2">Switch to seller <PiUserSwitch className="text-lg text-black" /></p>
 </div>
-<FaChevronDown  onClick={() => setIsOpen(!isOpen)} className="text-xl text-black"/>
+<FaChevronDown  onClick={() => setIsOpen(!isOpen)} className="sm:text-xl text-black"/>
       </div>
 
       {/* Dropdown Menu */}

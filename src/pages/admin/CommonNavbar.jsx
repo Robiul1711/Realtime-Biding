@@ -28,10 +28,10 @@ const CommonNavbar = ({ open, setOpen }) => {
       </div>
       <div className="flex items-center md:gap-4 gap-2">
         <span>
-          <LuMessageCircleMore className="text-2xl text-[#6D6E75]" />
+          <LuMessageCircleMore className="sm:text-2xl text-xl text-[#6D6E75]" />
         </span>
         <span>
-          <IoNotificationsOutline className="text-2xl text-[#6D6E75]" />
+          <IoNotificationsOutline className="sm:text-2xl text-xl text-[#6D6E75]" />
         </span>
         <UserDropdown
           user={{
@@ -40,6 +40,7 @@ const CommonNavbar = ({ open, setOpen }) => {
             avatar: "user.avatar",
           }}
         />
+      </div>
       </div>
     </div>
   );

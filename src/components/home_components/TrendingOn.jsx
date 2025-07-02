@@ -42,7 +42,7 @@ const data = [
 ];
 const TrendingOn = () => {
   return (
-    <div className="section-padding-x py-10">
+    <div className="section-padding-x py-6 sm:py-10">
       <div className="flex justify-between items-center mb-5">
         <Title level="title40">Trending On</Title>
         <p className="text-red-500  flex items-center gap-2">
@@ -68,9 +68,9 @@ const TrendingOn = () => {
           {data.map((item, index) => (
             <SwiperSlide key={index}>
               <Link to="/auction-list">
-                <div className="flex justify-center border p-10 rounded-2xl items-center flex-col gap-3">
+                <div className="flex justify-center border p-5 sm:p-10 rounded-2xl items-center flex-col gap-3">
                   <img
-                    className="w-full h-full object-contain"
+                    className=" size-12 sm:size-16 md:size-20 object-contain"
                     src={item.image}
                     alt={item.title}
                   />
@@ -82,7 +82,7 @@ const TrendingOn = () => {
         </Swiper>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between md:items-center mt-10 bg-[#EAEAEA] p-10 rounded-2xl">
+      <div className="flex flex-col md:flex-row justify-between md:items-center mt-5 sm:mt-10 bg-[#EAEAEA] p-6 sm:p-10 rounded-2xl">
         <div>
           <Title level="title48">Bid Smart, Win Big!</Title>
           <Title level="title16" className="text-gray-600 mt-2">
@@ -90,7 +90,7 @@ const TrendingOn = () => {
           </Title>
         </div>
         <Link to={"/auction-list"} className="mt-6 md:mt-0">
-          <button className="bg-[#FB0000] text-white px-8 cursor-pointer py-3 md:py-4 rounded-full">
+          <button className="bg-[#FB0000] text-white px-8 cursor-pointer py-2 sm:py-3 md:py-4 rounded-full">
             Start now
           </button>
         </Link>
