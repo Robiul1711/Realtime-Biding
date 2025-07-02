@@ -1,9 +1,27 @@
 import React from "react";
-import { ChevronDown, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronDown,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useLocation } from "react-router-dom";
 
 const sampleData = Array.from({ length: 12 }, (_, i) => ({
-  name: ["Guy Hawkins", "Jane Cooper", "Jacob Jones", "Annette Black", "Esther Howard", "Wade Warren", "Courtney Henry", "Jerome Bell", "Floyd Miles", "Eleanor Pena", "Devon Lane", "Christopher Colombus"][i],
+  name: [
+    "Guy Hawkins",
+    "Jane Cooper",
+    "Jacob Jones",
+    "Annette Black",
+    "Esther Howard",
+    "Wade Warren",
+    "Courtney Henry",
+    "Jerome Bell",
+    "Floyd Miles",
+    "Eleanor Pena",
+    "Devon Lane",
+    "Christopher Colombus",
+  ][i],
   category: i % 2 === 0 ? "Large Enterprise" : "MSV",
   owner: "Brooklyn Simmons",
   location: [
@@ -24,21 +42,29 @@ const sampleData = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 const BidsTable = () => {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
+
   return (
-    <div className="p-6 bg-white rounded-md shadow-sm">
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">{pathname==='/user-dashboard/bid-history'?'456 Bids':'456 Auction'}</h2>
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative">
+    <div className="p-4 sm:p-6 bg-white rounded-md shadow-sm">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">
+          {pathname === "/user-dashboard/bid-history" ? "456 Bids" : "456 Auction"}
+        </h2>
+
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          {/* Search */}
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-2 top-2.5 text-gray-400 size-4" />
             <input
               type="text"
               placeholder="Search Bids"
-              className="pl-8 pr-4 py-2 text-sm border border-gray-300 rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-8 pr-4 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="text-sm text-gray-500">
+
+          {/* Items per page */}
+          <div className="text-sm text-gray-500 flex items-center">
             Showing{" "}
             <select className="border border-gray-300 px-2 py-1 rounded ml-1">
               <option>20</option>
@@ -51,15 +77,17 @@ const BidsTable = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto">
-        <table className="w-full text-sm text-left text-gray-700">
+      <div className="overflow-x-auto">
+        <table className="min-w-[700px] w-full text-sm text-left text-gray-700">
           <thead className="bg-gray-50 border-b text-gray-600 font-medium">
             <tr>
               <th className="p-3">
                 <input type="checkbox" />
               </th>
-              <th className="p-3 flex items-center gap-1">
-                Product Name <ChevronDown className="w-4 h-4" />
+              <th className="p-3">
+                <div className="flex items-center gap-1">
+                  Product Name <ChevronDown className="w-4 h-4" />
+                </div>
               </th>
               <th className="p-3">Categories</th>
               <th className="p-3">Owner</th>
@@ -83,7 +111,7 @@ const BidsTable = () => {
                 <td className="p-3 text-gray-500">{item.location}</td>
                 <td className="p-3 font-semibold">{item.price}</td>
                 <td className="p-3">
-                  <button className="text-sm text-white bg-blue-600 text-blue-700 px-3 py-1 rounded hover:bg-blue-200">
+                  <button className="text-sm text-black px-3 py-1 rounded-sm bg-[#D6E5EE] hover:bg-blue-500 hover:text-white transition">
                     Download
                   </button>
                 </td>
@@ -94,9 +122,10 @@ const BidsTable = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4 text-sm text-gray-600">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 text-sm text-gray-600 gap-3">
         <div>
-          Showing <select className="border px-2 py-1 rounded mx-1">
+          Showing{" "}
+          <select className="border px-2 py-1 rounded mx-1">
             <option>10</option>
           </select>
           of 124

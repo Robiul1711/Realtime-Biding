@@ -5,6 +5,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import SubLinkSection from "./SubLinkSection";
 import { IoMdArrowDropdown } from "react-icons/io";
 import Title from "@/components/common/Title";
+
 const Navbar = () => {
   const navItems = [
     {
@@ -36,7 +37,7 @@ const Navbar = () => {
     {
       id: 6,
       name: "Auction",
-      path: "",
+      path: "/auction-list", // use first sublink path for detection
       sublinks: [
         {
           id: 1,
@@ -58,15 +59,23 @@ const Navbar = () => {
   ];
 
   const [openPopover, setOpenPopover] = useState(null);
-
   const location = useLocation();
+
+  const isAuctionActive = navItems
+    .find((item) => item.name === "Auction")
+    ?.sublinks.some((link) => location.pathname.startsWith(link.path));
+
   return (
-    <header className="section-padding-x w-full  fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50">
-      {/* Only show on large and up */}
+    <header className="section-padding-x w-full fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50">
       <div className="hidden md:flex justify-between items-center">
         <nav className="flex items-center xl:gap-8 gap-4 whitespace-nowrap">
-          {navItems.map((item, index) =>
-            item?.sublinks ? (
+          {navItems.map((item, index) => {
+            const isActive =
+              item.name === "Auction"
+                ? isAuctionActive
+                : location.pathname === item.path;
+
+            return item?.sublinks ? (
               <Popover
                 key={index}
                 content={<SubLinkSection items={item.sublinks} />}
@@ -78,17 +87,14 @@ const Navbar = () => {
                 }
                 overlayClassName="z-[9999]"
               >
-                <div className="cursor-pointer font-normal flex items-center gap-1 text-lg text-[#282828] hover-link relative group">
-                  <NavLink
-                    className={({ isActive }) =>
-                      `${
-                        isActive ? "font-bold" : "text-[#282828]"
-                      } lg:text-lg font-normal`
-                    }
-                    to={item.path}
-                  >
-                    {item.name}
-                  </NavLink>
+                <div
+                  className={`cursor-pointer font-normal flex items-center gap-1 text-lg relative group px-1 border-b-2 ${
+                    isActive
+                      ? "border-blue-600 text-blue-600"
+                      : "border-transparent text-[#282828] group-hover:border-blue-600 group-hover:text-blue-600"
+                  } transition duration-200`}
+                >
+                  <span>{item.name}</span>
                   <span
                     className={`transform transition-transform duration-300 ${
                       openPopover === index
@@ -105,15 +111,17 @@ const Navbar = () => {
                 key={index}
                 to={item.path}
                 className={({ isActive }) =>
-                  `${
-                    isActive ? "font-bold underline" : "text-[#282828]"
-                  } lg:text-lg font-normal`
+                  `lg:text-lg font-medium px-1 border-b-2 ${
+                    isActive
+                      ? "border-blue-600 text-blue-600"
+                      : "border-transparent text-[#282828] hover:border-blue-600 hover:text-blue-600"
+                  } transition duration-200`
                 }
               >
                 {item.name}
               </NavLink>
-            )
-          )}
+            );
+          })}
         </nav>
 
         <div className="lg:flex items-center gap-3 hidden">

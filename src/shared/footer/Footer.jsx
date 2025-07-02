@@ -99,20 +99,20 @@ const Footer = () => {
           <div className="flex items-center gap-x-4">
             <CallIcon />
             <div>
-              <h2 className="text-[20px] lg:text-[26px] font-semibold">
+              <h2 className="sm:text-[20px] lg:text-[26px] font-semibold">
                 1900 - 6666
               </h2>
-              <p className="text-customSecondary">Working 8:00 - 22:00</p>
+              <p className="text-customSecondary text-sm sm:text-base">Working 8:00 - 22:00</p>
             </div>
           </div>
 
           <div className="flex items-center gap-x-4">
             <CallIcon />
             <div>
-              <h2 className="text-[20px] lg:text-[26px] font-semibold">
+              <h2 className="sm:text-[20px] lg:text-[26px] font-semibold">
                 1900 - 8888
               </h2>
-              <p className="text-customSecondary">Working 8:00 - 22:00</p>
+              <p className="text-customSecondary text-sm sm:text-base">Working 8:00 - 22:00</p>
             </div>
           </div>
         </div>

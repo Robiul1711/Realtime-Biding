@@ -22,7 +22,7 @@ const LiveDetails = () => {
       <div className="overflow-hidden rounded-lg">
         <img
           onClick={() => handleImageClick(0)}
-          className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-auto md:h-[550px]  cursor-pointer"
+          className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-auto md:h-[400px] xl:h-[550px] object-cover  cursor-pointer"
           src={images[0]}
           alt="Main image"
         />
@@ -35,7 +35,7 @@ const LiveDetails = () => {
             onClick={() => handleImageClick(i + 1)}
           >
             <img
-              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-full"
+              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[100px] cursor-pointer object-cover"
               src={img}
               alt={`Thumbnail ${i + 1}`}
             />

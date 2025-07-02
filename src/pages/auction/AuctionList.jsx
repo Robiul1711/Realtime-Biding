@@ -8,7 +8,7 @@ const AuctionList = () => {
   return (
     <div>
       <ScrollRestoration />
-      <div className="flex flex-col md:flex-row gap-10 section-padding-x section-padding-y">
+      <div className="flex flex-col md:flex-row gap-10 section-padding-x py-6 sm:py-10 xl:py-20">
         <div className="w-full md:w-[30%]">
           <FilterCard />
         </div>

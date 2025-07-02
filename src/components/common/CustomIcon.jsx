@@ -730,7 +730,7 @@ export const ClockIcon = (props) => {
 
 export const CallIcon = (props) => {
   return (
-    <svg
+    <svg className="size-6 sm:size-auto"
       xmlns="http://www.w3.org/2000/svg"
       width="31"
       height="31"

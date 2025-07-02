@@ -182,10 +182,10 @@ const ProductCard = () => {
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-[60%]">
-          <p className="text-sm sm:text-base">Sort By :</p>
+        <div className="flex   items-center  gap-4 w-full md:w-[60%]">
+          <p className="text-sm t sm:text-base">Sort By :</p>
 
-          <div className="relative w-full sm:max-w-[160px]">
+          <div className="relative w-full max-w-[180px]">
             <select
               className="appearance-none w-full p-3 border-none outline-none text-gray-700 bg-[#F0F0F0] rounded"
               defaultValue=""

@@ -3,8 +3,8 @@ import Title from "../common/Title";
 import banner2 from "../../assets/images/banner2.png";
 const WelcomeTo = () => {
   return (
-    <div className="section-padding-x py-14 flex flex-col items-center justify-center text-center">
-      <Title level="title64">Welcome to The Hobby Nexus</Title>
+    <div className="section-padding-x py-8 md:py-12 flex flex-col items-center justify-center text-center">
+      <Title level="title64" >Welcome to The Hobby Nexus</Title>
       <Title level="title16" className="mt-4 max-w-[780px]">
         At The Hobby Nexus, we're more than just an auction site—we're a
         community built for hobbyists, collectors, and enthusiasts who are
