@@ -17,18 +17,18 @@ const Navbar2 = () => {
   ];
 
   return (
-    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center gap-6 xmd:gap-10 section-padding-x mt-20">
-      <div className="flex gap-6 items-center">
-        <div className="flex flex-col sm:flex-row gap-4 xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
-          <div className="w-[80px] md:w-[120px] lg:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0">
-            <img src={Logo} className="w-full h-full object-contain" />
+    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center   section-padding-x mt-20">
+      <div className="flex flex-col xxs:flex-row gap-2 sm:gap-6 md:items-center">
+        <div className="flex flex-col sm:flex-row xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
+          <div className="w-[80px] md:w-[120px] lg:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0 hidden md:block">
+            <img src={Logo} className="w-full h-full object-contain " />
           </div>
           <div className="w-full sm:w-auto">
             <SearchContainer />
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-start gap-4 xmd:gap-[57px] w-full xmd:w-auto">
+        <div className="">
           <SelectComponent options={options} icon={<LocationIcon />} />
         </div>
       </div>
@@ -63,7 +63,7 @@ const Navbar2 = () => {
           </div>
         </Link>
       </div> */}
-      <div className="hidden 3xl:block">
+      <div className="hidden lg:block xlg:ml-5">
         <UserActions />
       </div>
     </div>

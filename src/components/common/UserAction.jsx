@@ -6,7 +6,7 @@ import { ManIcon } from "./CustomIcon";
 
 const UserActions = () => {
   return (
-    <div className="flex flex-row justify-between items-start sm:items-center gap-4 sm:gap-8 w-full xmd:w-auto bg-white py-4 px-6 2xl:px-0">
+    <div className="flex flex-row justify-between items-start sm:items-center gap-4 xl:gap-8 w-full xmd:w-auto bg-white py-4 px-6 2xl:px-0">
       <p className="text-customSecondary cursor-pointer text-[15px] xl:text-base">
         Sell
       </p>

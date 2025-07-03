@@ -32,7 +32,7 @@ const LiveAuctions = () => {
   ];
 
   return (
-    <div className="bg-[#efeeee] mb-5">
+    <div className="bg-black  xl:bg-[#efeeee] mb-5">
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
@@ -46,11 +46,11 @@ const LiveAuctions = () => {
               <img
                 src={slide.image}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-[450px] lg:h-auto rounded-2xl object-cover"
+                className="w-full h-[450px] md:h-[600px] xmd:h-[700px] xl:h-auto rounded-2xl object-cover"
               />
 
               <div className="absolute top-1/2 left-[5%] sm:left-[10%] transform -translate-y-1/2 px-4 sm:px-0">
-                <h1 className="text-[32px] sm:text-[48px] lg:text-[60px] xl:text-[72px] max-w-[90%] sm:max-w-[700px] w-full leading-tight font-bold">
+                <h1 className="text-[32px] text-white xl:text-black sm:text-[48px] lg:text-[60px] xl:text-[72px] max-w-[90%] sm:max-w-[700px] w-full leading-tight font-bold">
                   {slide.title}
                 </h1>
 

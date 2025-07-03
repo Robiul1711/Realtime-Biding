@@ -8,12 +8,12 @@ import { Outlet } from "react-router-dom";
 const Layout = () => {
   return (
     <>
-      <div className="hidden md:block">
+      <div className="">
         <Navbar />
         <Navbar2 />
       </div>
       <MobileNavbar />
-      <div className="pt-[64px] md:pt-0">
+      <div className="">
         <Outlet />
       </div>
       <Footer />

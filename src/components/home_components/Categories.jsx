@@ -2,8 +2,8 @@ import React from "react";
 
 const Categories = () => {
   return (
-    <div className="section-padding-x py-10 text-[#7E7E7E]">
-      <div className="overflow-x-auto overflow-visible">
+    <div className="section-padding-x py-6 md:py-10  text-[#7E7E7E]">
+      <div className="overflow-x-auto overflow-visible flex items-center justify-center pb-3">
         <ul className="flex gap-6 sm:gap-8 md:gap-10 whitespace-nowrap">
           {[
             "Explore (New!)",
