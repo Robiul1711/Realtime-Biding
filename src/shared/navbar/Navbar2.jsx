@@ -17,11 +17,13 @@ const Navbar2 = () => {
   ];
 
   return (
-    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center   section-padding-x mt-20">
+    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center section-padding-x mt-20 2xl:gap-12">
       <div className="flex flex-col xxs:flex-row gap-2 sm:gap-6 md:items-center">
-        <div className="flex flex-col sm:flex-row xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
-          <div className="w-[80px] md:w-[120px] lg:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0 hidden md:block">
-            <img src={Logo} className="w-full h-full object-contain " />
+        <div className="flex flex-col sm:flex-row gap-5 xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
+          <div className="w-[60px] md:w-[80px] lg:w-[126px] xl:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0 hidden md:block">
+            <Link to={"/"}>
+              <img src={Logo} className="w-full h-full object-contain " />
+            </Link>
           </div>
           <div className="w-full sm:w-auto">
             <SearchContainer />
@@ -32,37 +34,6 @@ const Navbar2 = () => {
           <SelectComponent options={options} icon={<LocationIcon />} />
         </div>
       </div>
-
-      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-8 w-full xmd:w-auto">
-        <p className="text-customSecondary cursor-pointer">Sell</p>
-
-        <div className="relative flex items-center gap-3">
-          <FaRegHeart className="text-[1.5rem] cursor-pointer" />
-          <div className="absolute top-[-50%] left-[17%] text-white min-w-[20px] min-h-[20px] text-center">
-            <span className="text-[0.8rem] bg-[#FB0000] py-0.5 px-1 rounded-full w-full h-full">
-              6
-            </span>
-          </div>
-          <p className="text-customSecondary cursor-pointer">Wishlist</p>
-        </div>
-
-        <div className="relative flex items-center gap-3">
-          <IoCartOutline className="text-[1.5rem] cursor-pointer" />
-          <div className="absolute top-[-50%] left-[17%] text-white min-w-[20px] min-h-[20px] text-center">
-            <span className="text-[0.8rem] bg-[#FB0000] py-0.5 px-1 rounded-full w-full h-full">
-              8
-            </span>
-          </div>
-          <p className="text-customSecondary cursor-pointer">Cart</p>
-        </div>
-
-        <Link to={"/join"}>
-          <div className="relative flex items-center gap-0.5 cursor-pointer">
-            <ManIcon className="text-[1.5rem]" />
-            <p className="text-customSecondary">Account</p>
-          </div>
-        </Link>
-      </div> */}
       <div className="hidden lg:block xlg:ml-5">
         <UserActions />
       </div>
