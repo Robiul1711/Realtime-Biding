@@ -302,7 +302,7 @@ body {
 .swiper-pagination {
   text-align: left !important;
   left: 10% !important;
-  bottom: 40px !important;
+  bottom: 20px !important;
   width: auto !important;
 }
 .swiper-pagination-bullet {

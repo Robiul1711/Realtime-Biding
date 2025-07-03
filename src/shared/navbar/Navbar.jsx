@@ -124,8 +124,8 @@ const Navbar = () => {
           })}
         </nav>
 
-        <div className="lg:flex items-center gap-3 hidden">
-          <span>
+        <div className="lg:flex items-center gap-3 ">
+          <span className="hidden lg:block">
             <HeadphoneIcon />
           </span>
           <div className="flex flex-col items-start gap-1">
