@@ -8,7 +8,7 @@ const SearchProductDetails = () => {
   return (
     <div>
       <ScrollRestoration />
-      <div className="flex flex-col md:flex-row justify-between gap-8 w-full section-padding-x section-padding-y">
+      <div className="flex flex-col md:flex-row justify-between gap-8 w-full section-padding-x py-10">
         <div className="w-full md:w-[60%]">
           <SearchProductImages />
         </div>
