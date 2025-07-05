@@ -1,6 +1,6 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -56,7 +56,7 @@ const LiveAuctions = () => {
 
                 <Title
                   level="title16"
-                  className="text-[16px] sm:text-[20px] md:text-[24px] xl:text-[30px] max-w-[90%] sm:max-w-[700px] w-full mt-4 sm:mt-5 text-[#7C7C7C]"
+                  className="text-[16px] sm:text-[20px] md:text-[24px] xl:text-[30px] max-w-[90%] sm:max-w-[700px] w-full mt-4 sm:mt-5 text-white xl:text-[#7C7C7C]"
                 >
                   {slide.subtitle}
                 </Title>

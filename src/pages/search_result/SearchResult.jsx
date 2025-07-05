@@ -8,7 +8,7 @@ const SearchResult = () => {
   return (
     <div className="section-padding-x pb-6">
       <ScrollRestoration />
-      <div className="flex flex-col gap-2 my-6 md:my-10">
+      <div className="flex flex-col gap-2 my-4 md:my-6 lg:my-10">
         <div className="flex items-center gap-1 text-gray-500">
           <span>Home</span>
           <FaAngleRight />
@@ -19,7 +19,7 @@ const SearchResult = () => {
           <span className="text-black">"“Hats & Caps”"</span>
         </h1>
       </div>
-      <div className="flex items-start  justify-between gap-4 md:items-center border-dashed my-6 md:my-10 border-b border-t border-[#E5E5E5] p-3">
+      <div className="flex items-start  justify-between gap-4 md:items-center border-dashed my-4 md:my-6 lg:my-10 border-b border-t border-[#E5E5E5] p-3">
         <p className="py-2 px-3 border border-[#E5E5E5] rounded-full items-center gap-2 inline-flex text-sm sm:text-base">
           <CiFilter /> Filter
         </p>

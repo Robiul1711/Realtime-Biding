@@ -2,7 +2,7 @@ import React from "react";
 import bigdeal from "../../assets/images/bigdeal.png";
 const BigDeal = () => {
   return (
-    <div className="section-padding-x py-6 sm:py-10 ">
+    <div className="section-padding-x py-6 md:py-10 ">
       <div className=" flex flex-col-reverse md:flex-row justify-between bg-[#E9E9E9] py-10 px-5 sm:px-10 rounded-2xl">
         <div>
           <h2 className="sm:text-xl md:text-3xl lg:text-[40px] text-[#253D4E] max-w-[750px] font-bold mb-4">
@@ -22,7 +22,11 @@ const BigDeal = () => {
             </button>
           </div>
         </div>
-        <img src={bigdeal} alt="Big Deal" className="w-1/2 mx-auto pb-5 md:pb-0 lg:w-auto" />
+        <img
+          src={bigdeal}
+          alt="Big Deal"
+          className="w-1/2 mx-auto pb-5 md:pb-0 lg:w-auto"
+        />
       </div>
     </div>
   );

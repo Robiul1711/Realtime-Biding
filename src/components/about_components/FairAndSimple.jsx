@@ -31,7 +31,7 @@ const sections = [
 
 const FairAndSimple = () => {
   return (
-    <section className="section-padding-x pb-6 md:pb-14 bg-white">
+    <section className="section-padding-x md:pb-14 bg-white">
       {sections.map((section, index) => (
         <div
           key={section.id}

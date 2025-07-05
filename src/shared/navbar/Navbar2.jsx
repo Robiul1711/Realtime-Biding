@@ -25,7 +25,7 @@ const Navbar2 = () => {
               <img src={Logo} className="w-full h-full object-contain " />
             </Link>
           </div>
-          <div className="w-full sm:w-auto">
+          <div className="w-full md:w-auto">
             <SearchContainer />
           </div>
         </div>

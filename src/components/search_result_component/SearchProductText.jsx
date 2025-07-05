@@ -11,7 +11,7 @@ const SearchProductText = () => {
       <p className="text-[#000000] border py-1 mb-2 rounded-full uppercase w-[150px] text-center">
         baseball
       </p>
-      <h3 className="text-[#000000] text-2xl md:text-4xl lg:text-[60px] font-semibold my-2">
+      <h3 className="text-[#000000] text-2xl md:text-4xl lg:text-[42px] xl:text-[60px] font-semibold my-2">
         1981 Pro Bowl Golfer Hat
       </h3>
       <div className="flex items-center gap-4">
@@ -27,7 +27,7 @@ const SearchProductText = () => {
         </div>
         <p>100 reviews</p>
       </div>
-      <div className="my-4 flex flex-col md:flex-row items-center gap-6 w-full">
+      <div className="my-4 flex flex-col cl:flex-row items-center gap-6 w-full">
         <button className="px-6 py-2 md:py-3 w-full text-center hover:bg-[#0046F9] hover:text-[#F3F6FE] border text-[#000000] rounded-full flex items-center gap-2">
           <IoIosHeartEmpty size={24} className="hover:fill-[#FFF] " /> Add to
           wishlist

@@ -19,7 +19,7 @@ const Footer = () => {
   return (
     <div className="section-padding-x">
       {/* Top Section */}
-      <div className="flex flex-col lg:flex-row justify-between gap-10 md:gap-24 lg:gap-36">
+      <div className="flex flex-col lg:flex-row justify-between gap-10 lg:gap-24 xl:gap-36">
         {/* Left Column */}
         <div className="w-full lg:w-[74%]">
           <CardIcon className="w-32 h-32 md:h-auto" />

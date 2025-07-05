@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/images/logo.png";
@@ -31,6 +31,25 @@ const navItems = [
 
 const MobileNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const isMobile = window.innerWidth < 768;
+
+    if (isOpen && isMobile) {
+      html.style.overflow = "hidden";
+      body.style.overflow = "hidden";
+    } else {
+      html.style.overflow = "";
+      body.style.overflow = "";
+    }
+
+    return () => {
+      html.style.overflow = "";
+      body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   return (
     <div className="md:hidden fixed top-0 left-0 w-full z-50 bg-white border-b shadow-sm">

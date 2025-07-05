@@ -2,9 +2,6 @@ import React, { useRef, useState } from "react";
 import Title from "../common/Title";
 import { FiArrowUpRight } from "react-icons/fi";
 import car2 from "../../assets/images/car2.png";
-import car3 from "../../assets/images/carr.png";
-import car4 from "../../assets/images/carr1.png";
-import car5 from "../../assets/images/carr2.png";
 import { CiBookmark } from "react-icons/ci";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -13,6 +10,7 @@ import "swiper/css/navigation";
 const PopularMakes = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [activeCategory, setActiveCategory] = useState("All");
   const [bookmarked, setBookmarked] = useState([]);
 
   const toggleBookmark = (index) => {
@@ -21,19 +19,29 @@ const PopularMakes = () => {
     );
   };
   return (
-    <div className="section-padding-x py-20 bg-[#001767] text-white">
+    <div className="section-padding-x pb-20 pt-10 lg:py-20 bg-[#001767] text-white">
       <div className="flex justify-between items-center mb-5">
         <Title level="title40">Popular Makes</Title>
         <p className="flex items-center gap-2">
           View All <FiArrowUpRight className="text-2xl" />
         </p>
       </div>
-      <div className="border-b border-gray-600 pb-4 mb-6 flex gap-8 ">
-        <p>All</p>
-        <p>Fashion</p>
-        <p>Motors</p>
-        <p>Electronics</p>
+      <div className="border-b border-gray-600 pb-4 mb-6 flex gap-8">
+        {["All", "Fashion", "Motors", "Electronics"].map((category) => (
+          <p
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`cursor-pointer pb-1 border-b-2 transition duration-200 ${
+              activeCategory === category
+                ? "border-[#3B9DF8] text-[#3B9DF8] font-semibold"
+                : "border-transparent text-[#faf2f2]"
+            }`}
+          >
+            {category}
+          </p>
+        ))}
       </div>
+
       <div className="relative my-6">
         <Swiper
           modules={[Navigation]}
@@ -44,7 +52,7 @@ const PopularMakes = () => {
             375: { slidesPerView: 1 },
             640: { slidesPerView: 2 },
             768: { slidesPerView: 3 },
-            1024: { slidesPerView: 4 },
+            1280: { slidesPerView: 4 },
           }}
           navigation={{
             prevEl: prevRef.current,
@@ -90,7 +98,7 @@ const PopularMakes = () => {
                       Sealed
                     </h3>
                     <p className="text-xs text-red-700 font-bold">Pre-Owned</p>
-                    <div className="flex justify-between items-center mt-3 mb-1">
+                    <div className="flex justify-between items-center gap-2 mt-3 mb-1">
                       <p className="text-lg font-bold">$15,000</p>
                       <p className="text-sm text-gray-300">
                         lostrav_6599.5% positive (595)

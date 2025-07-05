@@ -116,7 +116,7 @@ const SimilarProduct = () => {
   };
   return (
     <div className="section-padding-x">
-      <div className="bg-[#F9F9F9] py-12 mb-6 px-6">
+      <div className="bg-[#F9F9F9] py-8 lg:py-12 mb-6 px-2 lg:px-6">
         <h2 className="text-2xl md:text-3xl lg:text-[40px] text-[#253D4E] font-bold mb-4">
           You may also like
         </h2>
@@ -133,7 +133,7 @@ const SimilarProduct = () => {
         >
           {data.map((item, index) => (
             <SwiperSlide key={item.id}>
-              <div className="border border-[#E5E5E5] rounded-xl bg-white hover:shadow cursor-pointer relative group">
+              <div className="border border-[#E5E5E5] rounded-2xl bg-white hover:shadow cursor-pointer relative group">
                 <div className="absolute top-3 right-3 z-10">
                   <button
                     onClick={(e) => {
