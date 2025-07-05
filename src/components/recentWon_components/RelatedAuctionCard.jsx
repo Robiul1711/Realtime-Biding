@@ -18,7 +18,7 @@ const RelatedAuctionCard = () => {
     );
   };
   return (
-    <div className="section-padding-x py-10 md:py-20 text-white">
+    <div className="section-padding-x pb-8 text-white">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <Title level="title40" className="text-black">
           Related Auction

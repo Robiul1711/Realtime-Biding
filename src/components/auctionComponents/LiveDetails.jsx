@@ -30,14 +30,13 @@ const LiveDetails = () => {
         {images.map((img, index) => (
           <SwiperSlide key={index}>
             <img
-              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-auto md:h-[400px] xl:h-[550px] object-cover cursor-pointer"
+              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[280px] md:h-[400px] xl:h-[540px] object-cover cursor-pointer"
               src={img}
               alt={`Main image ${index}`}
             />
           </SwiperSlide>
         ))}
       </Swiper>
-
       {/* Thumbnail Swiper */}
       <Swiper
         onSwiper={setThumbsSwiper}
@@ -51,7 +50,7 @@ const LiveDetails = () => {
         {images.map((img, i) => (
           <SwiperSlide key={i}>
             <img
-              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[100px] object-cover cursor-pointer rounded-lg"
+              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[70px] md:h-[110px] object-cover cursor-pointer rounded-lg"
               src={img}
               alt={`Thumbnail ${i}`}
             />
@@ -75,7 +74,7 @@ const LiveDetails = () => {
         the original dial and bezel. The watch has been professionally serviced
         and comes with full documentation and box.
       </p>
-      <div className="my-6 grid grid-cols-1  md:grid-cols-2 gap-6">
+      <div className="my-6 grid grid-cols-1 xs:grid-cols-2 gap-6">
         <div className="border p-5 rounded-lg">
           <h1 className="text-[#0046F9]">Condition</h1>
           <p className="text-[#00103A] text-lg md:text-xl font-medium">
@@ -83,9 +82,9 @@ const LiveDetails = () => {
           </p>
         </div>
         <div className="border p-5 rounded-lg">
-          <h1 className="text-[#0046F9]">Condition</h1>
+          <h1 className="text-[#0046F9]">Quality</h1>
           <p className="text-[#00103A] text-lg md:text-xl font-medium">
-            Excellent
+            Perfection
           </p>
         </div>
         <div className="border p-5 rounded-lg">

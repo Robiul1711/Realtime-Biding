@@ -58,6 +58,7 @@ const TrendingOn = () => {
           grabCursor={true}
           breakpoints={{
             320: { slidesPerView: 2 },
+            495: { slidesPerView: 3 },
             640: { slidesPerView: 3 },
             768: { slidesPerView: 4 },
             1024: { slidesPerView: 5 },
@@ -68,7 +69,7 @@ const TrendingOn = () => {
           {data.map((item, index) => (
             <SwiperSlide key={index}>
               <Link to="/auction-list">
-                <div className="flex justify-center border p-5 sm:p-10 rounded-2xl items-center flex-col gap-3">
+                <div className="flex justify-center border py-5 px-3 sm:py-10 rounded-2xl items-center flex-col gap-3">
                   <img
                     className=" size-12 sm:size-16 md:size-20 object-contain"
                     src={item.image}

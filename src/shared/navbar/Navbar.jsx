@@ -67,7 +67,7 @@ const Navbar = () => {
 
   return (
     <header className="section-padding-x w-full fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50">
-      <div className="hidden md:flex justify-between items-center">
+      <div className="hidden md:flex justify-between items-center gap-4">
         <nav className="flex items-center xl:gap-8 gap-4 whitespace-nowrap">
           {navItems.map((item, index) => {
             const isActive =

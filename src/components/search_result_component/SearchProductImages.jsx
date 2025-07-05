@@ -18,7 +18,7 @@ const SearchProductImages = () => {
 
   return (
     <div>
-      <div className="flex items-center gap-1 text-gray-500 my-2">
+      <div className="flex items-center gap-1 text-gray-500 my-4">
         <span>Home</span>
         <FaAngleRight />
         <span>Search Results</span>
@@ -36,7 +36,7 @@ const SearchProductImages = () => {
         {images.map((img, index) => (
           <SwiperSlide key={index}>
             <img
-              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-auto md:h-[540px] cursor-pointer"
+              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[260px] sm:h-[300px] md:h-[400px] xl:h-[540px] object-cover cursor-pointer"
               src={img}
               alt={`Product ${index}`}
             />
@@ -57,7 +57,7 @@ const SearchProductImages = () => {
         {images1.map((img, i) => (
           <SwiperSlide key={i}>
             <img
-              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[180px] cursor-pointer rounded-lg"
+              className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[60px] md:h-[110px] object-cover cursor-pointer rounded-lg"
               src={img}
               alt={`Thumbnail ${i}`}
             />
