@@ -13,7 +13,7 @@ const Join = () => {
         swap items easily. Log in to continue your trading journey!
       </p>
       <div className="flex flex-col md:flex-row justify-center items-center gap-6 mt-6">
-        <Link to={"/sign-in"}>
+        <Link to={"/sign-up/buyer"}>
           {" "}
           <div className="border p-8 rounded-md flex flex-col justify-center items-center w-full md:max-w-[300px] text-center cursor-pointer hover:border hover:border-[#0046F9] hover:bg-[#e0e6f6]">
             <Title level="title24">Join As Buyer</Title>
@@ -23,7 +23,7 @@ const Join = () => {
           </div>
         </Link>
 
-        <Link to={"/sign-in"}>
+        <Link to={"/sign-up/seller"}>
           <div className="border p-8 rounded-md flex flex-col justify-center items-center w-full md:max-w-[300px] text-center cursor-pointer hover:border hover:border-[#0046F9] hover:bg-[#e0e6f6]">
             <Title level="title24">Join As Seller</Title>
             <p className="text-customSecondary mt-2 text-sm md:text-base">
