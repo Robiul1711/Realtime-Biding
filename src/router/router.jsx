@@ -31,12 +31,16 @@ import UserMessaging from "@/components/userDashboard/UserMessaging";
 import CreateListingForm from "@/components/sellerDashboard/CreateListingForm";
 
 const router = createBrowserRouter([
+    {
+    path: "/",
+    element: <Join />, 
+  },
   {
     path: "/",
     element: <Layout />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />,
       },
       {
@@ -134,10 +138,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/join",
-    element: <Join />,
-  },
+
   {
     path: "/sign-in",
     element: <SignIn />,

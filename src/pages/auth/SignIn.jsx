@@ -37,7 +37,7 @@ const LogInMutation = useMutation({
 
   localStorage.setItem("user", JSON.stringify(userData));
 
-  navigate("/");
+  navigate("/profile-setup-1");
 },
 
     onError: (error) => {
