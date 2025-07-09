@@ -314,3 +314,6 @@ body {
   margin: 0 4px !important;
   transition: all 0.3s ease !important;
 }
+button{
+  cursor: pointer;
+}
