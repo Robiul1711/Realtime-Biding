@@ -26,8 +26,9 @@ const ProfileSetup1 = () => {
       navigate("/profile-setup-2");
     },
     onError: (error) => {
+      console.log('error',error)
       const errorMessage =
-        error.response?.data?.error || "Something went wrong, try again later!!";
+      error.response?.data?.message?.phone || "Something went wrong, try again later!!";
       toast.error(errorMessage);
     },
   });
@@ -98,7 +99,7 @@ const onSubmit = (data) => {
               <input
                 type="text"
                 {...register("city", { required: true })}
-                placeholder="Select city"
+                placeholder="Your City"
                 className="w-full px-4 py-2  md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#001767]"
               />
             </div>
@@ -114,7 +115,7 @@ const onSubmit = (data) => {
                   className="w-full px-4 py-2 md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#001767]"
                 />
               </div>
-              <div className="w-full xl :w-1/2">
+              <div className="w-full xl:w-1/2">
                 <label className="block mb-2 font-medium text-gray-400">
                   ZIP Code
                 </label>
@@ -146,8 +147,6 @@ const onSubmit = (data) => {
               />
               I agree to the Terms & Conditions
             </label>
-
-     
               <button
                 type="submit"
                 className="w-full py-2 md:py-3 px-4 text-white bg-[#0046F9] rounded-3xl md:mt-4 cursor-pointer"

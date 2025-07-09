@@ -29,11 +29,12 @@ import UserSetting from "@/components/userDashboard/UserSetting";
 import BidHistory from "@/components/userDashboard/BidHistory";
 import UserMessaging from "@/components/userDashboard/UserMessaging";
 import CreateListingForm from "@/components/sellerDashboard/CreateListingForm";
+import PrivateRoute from "@/routes/SellerPrivateRoute";
 
 const router = createBrowserRouter([
-    {
+  {
     path: "/",
-    element: <Join />, 
+    element: <Join />,
   },
   {
     path: "/",
@@ -165,11 +166,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile-setup-1",
-    element: <ProfileSetup1 />,
+    element: (
+      <PrivateRoute>
+        <ProfileSetup1 />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/profile-setup-2",
-    element: <ProfileSetup2 />,
+    element: <PrivateRoute><ProfileSetup2 /></PrivateRoute> ,
   },
 ]);
 
