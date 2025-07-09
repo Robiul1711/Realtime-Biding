@@ -46,7 +46,7 @@ const ItemDetails = () => {
     <div>
       
       <form
-        className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 space-y-8"
+        className=" space-y-8"
         onSubmit={handleSubmit(onSubmit)}
       >
 

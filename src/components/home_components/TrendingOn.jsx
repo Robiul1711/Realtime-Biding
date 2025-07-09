@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import car from "@/assets/images/car.png";
 import car1 from "@/assets/images/car1.png";
 import car2 from "@/assets/images/car3.png";
@@ -9,38 +9,52 @@ import { FiArrowUpRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 
-const data = [
-  {
-    image: car,
-    title: "Electronics",
-  },
-  {
-    image: car1,
-    title: "Home & Kitchen",
-  },
-  {
-    image: car2,
-    title: "Sports & Outdoors",
-  },
-  {
-    image: car3,
-    title: "Health & Beauty",
-  },
-  {
-    image: car4,
-    title: "Health & Beauty",
-  },
-  {
-    image: car2,
-    title: "Health & Beauty",
-  },
-  {
-    image: car3,
-    title: "Health & Beauty",
-  },
-];
+// const data = [
+//   {
+//     image: car,
+//     title: "Electronics",
+//   },
+//   {
+//     image: car1,
+//     title: "Home & Kitchen",
+//   },
+//   {
+//     image: car2,
+//     title: "Sports & Outdoors",
+//   },
+//   {
+//     image: car3,
+//     title: "Health & Beauty",
+//   },
+//   {
+//     image: car4,
+//     title: "Health & Beauty",
+//   },
+//   {
+//     image: car2,
+//     title: "Health & Beauty",
+//   },
+//   {
+//     image: car3,
+//     title: "Health & Beauty",
+//   },
+// ];
 const TrendingOn = () => {
+    const BASE_URL = import.meta.env.VITE_IMG_URL;
+  const axiosPublic=useAxiosPublic();
+
+  const { data} = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await axiosPublic.get("/categories");
+      return response.data;
+    },
+  });
+console.log(data)
+ 
   return (
     <div className="section-padding-x py-6 sm:py-10">
       <div className="flex justify-between items-center mb-5">
@@ -66,13 +80,13 @@ const TrendingOn = () => {
           }}
           className="w-full"
         >
-          {data.map((item, index) => (
+          {data?.data?.map((item, index) => (
             <SwiperSlide key={index}>
               <Link to="/auction-list">
                 <div className="flex justify-center border py-5 px-3 sm:py-10 rounded-2xl items-center flex-col gap-3">
                   <img
-                    className=" size-12 sm:size-16 md:size-20 object-contain"
-                    src={item.image}
+                    className=" size-12 sm:size-16 md:size-20 rounded-full object-cover"
+                    src={BASE_URL+item.image}
                     alt={item.title}
                   />
                   <Title level="title18">{item.title}</Title>
