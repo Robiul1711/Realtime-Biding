@@ -1,14 +1,41 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import image from "../../assets/images/signup.png";
-import { Link, ScrollRestoration } from "react-router-dom";
+import { Link, ScrollRestoration, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const ProfileSetup1 = () => {
-  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
+  const {
+    register,
+    handleSubmit,
+  } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+
+  const ProfileMutation = useMutation({
+  mutationFn: async (data) => {
+    const response = await axiosSecure.post("/profile/complete", data);
+    return response?.data;
+  },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Profile setup successful");
+      navigate("/profile-setup-2");
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.error || "Something went wrong, try again later!!";
+      toast.error(errorMessage);
+    },
+  });
+
+const onSubmit = (data) => {
+  ProfileMutation.mutate(data);
+};
+
   return (
     <div className="min-h-screen flex items-center justify-center section-padding-x">
       <ScrollRestoration />
@@ -47,7 +74,7 @@ const ProfileSetup1 = () => {
               </label>
               <input
                 type="text"
-                {...register("county", { required: true })}
+                {...register("country", { required: true })}
                 placeholder="Select country"
                 className="w-full px-4 py-2 md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#001767]"
               />
@@ -82,7 +109,7 @@ const ProfileSetup1 = () => {
                 </label>
                 <input
                   type="text"
-                  {...register("region", { required: true })}
+                  {...register("lat")}
                   placeholder="Enter your State "
                   className="w-full px-4 py-2 md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#001767]"
                 />
@@ -93,7 +120,7 @@ const ProfileSetup1 = () => {
                 </label>
                 <input
                   type="text"
-                  {...register("code", { required: true })}
+                  {...register("lng")}
                   placeholder="Enter your ZIP Code"
                   className="w-full px-4 py-2 md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#001767]"
                 />
@@ -105,7 +132,7 @@ const ProfileSetup1 = () => {
               </label>
               <input
                 type="text"
-                {...register("number", { required: true })}
+                {...register("phone", { required: true })}
                 placeholder="Enter your street address"
                 className="w-full px-4 py-2  md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#001767]"
               />
@@ -114,21 +141,20 @@ const ProfileSetup1 = () => {
             <label className="flex items-center gap-2 text-gray-400 my-4">
               <input
                 type="checkbox"
-                {...register("agree")}
+                {...register("terms", { required: true })}
                 className="w-4 h-4 text-[#ebedf4]"
               />
               I agree to the Terms & Conditions
             </label>
 
-            {/* Submit Button */}
-            <Link to="/profile-setup-2">
+     
               <button
                 type="submit"
                 className="w-full py-2 md:py-3 px-4 text-white bg-[#0046F9] rounded-3xl md:mt-4 cursor-pointer"
               >
                 Continue
               </button>
-            </Link>
+           
           </form>
         </div>
       </div>
