@@ -1,284 +1,309 @@
 import React, { useState } from "react";
 import Title from "../common/Title";
-import { IoChevronDown } from "react-icons/io5";
-
-const filterOptions = [
-  { label: "All", value: "all" },
-  { label: "Option One", value: "option1" },
-  { label: "Option Two", value: "option2" },
-  { label: "Option Three", value: "option3" },
-  { label: "Option Four", value: "option4" },
-  { label: "Option Five", value: "option5" },
-];
-
-const filterOptions1 = [
-  { label: "All", value: "all" },
-  { label: "Ending Soon(24h)", value: "Ending Soon(24h)" },
-  { label: "1-3 Days", value: "1-3 Days" },
-  { label: "3-7 Days", value: "3-7 Days" },
-];
+import { Minus, Plus } from "lucide-react";
+import FilterSection from "./FilterSection";
 
 const FilterCard = () => {
-  const [checkedOptions, setCheckedOptions] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
   const [checkedOptions1, setCheckedOptions1] = useState({});
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("Select Option");
+  const [checkedOptions2, setCheckedOptions2] = useState({});
+  const [checkedOptions3, setCheckedOptions3] = useState({});
+  const [checkedOptions4, setCheckedOptions4] = useState({});
+  const [checkedOptions5, setCheckedOptions5] = useState({});
+  const [checkedOptions6, setCheckedOptions6] = useState({});
+  const [checkedOptions7, setCheckedOptions7] = useState({});
+  const [checkedOptions8, setCheckedOptions8] = useState({});
+  const [checkedOptions9, setCheckedOptions9] = useState({});
+  const [checkedOptions10, setCheckedOptions10] = useState({});
+  const [checkedOptions11, setCheckedOptions11] = useState({});
 
-  const options = [
-    {
-      title: "France",
-    },
-    {
-      title: "Germany",
-    },
-    {
-      title: "India",
-    },
-    {
-      title: "Bangladesh",
-    },
-    {
-      title: "Pakistan",
-    },
+  const [selectedText, setSelectedText] = useState("");
+
+  const subtexts = [
+    "CCG Individual Cards",
+    "CCG Sealed Packs",
+    "CCG Supplies & Accessories",
+    "CCG Mix Card Lots",
   ];
-  const handleInputChange = (key) => {
-    setCheckedOptions((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+
+  const handleSelect = (text) => {
+    setSelectedText(text);
   };
-  const handleInputChange1 = (key) => {
-    setCheckedOptions1((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
+
+  const handleOption1Change = (value) => {
+    setCheckedOptions1((prev) => ({ ...prev, [value]: !prev[value] }));
   };
+
+  const handleOption2Change = (value) => {
+    setCheckedOptions2((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption3Change = (value) => {
+    setCheckedOptions3((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption4Change = (value) => {
+    setCheckedOptions4((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption5Change = (value) => {
+    setCheckedOptions5((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption6Change = (value) => {
+    setCheckedOptions6((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption7Change = (value) => {
+    setCheckedOptions7((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption8Change = (value) => {
+    setCheckedOptions8((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption9Change = (value) => {
+    setCheckedOptions9((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption10Change = (value) => {
+    setCheckedOptions10((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+  const handleOption11Change = (value) => {
+    setCheckedOptions11((prev) => ({ ...prev, [value]: !prev[value] }));
+  };
+
+  const filterOptions1 = [
+    { label: "No", value: "no" },
+    { label: "Yes", value: "yes" },
+    { label: "Not Specified", value: "tot specified" },
+  ];
+
+  const filterOptions2 = [
+    { label: "Base Set", value: "Base Set" },
+    { label: "Sword & Shield", value: "Sword & Shield" },
+    { label: "Scarlet & Violet", value: "Scarlet & Violet" },
+    { label: "Team Rocket", value: "1to3" },
+    { label: "Promo Cards", value: "1to3" },
+    { label: "Crown Zenith", value: "1to3" },
+    { label: "Fossil", value: "1to3" },
+    { label: "Abyss Rising", value: "1to3" },
+  ];
+
+  const filterOptions3 = [
+    { label: "Black Star Promot", value: "Base Set" },
+    { label: "Common", value: "Sword & Shield" },
+    { label: "Holo Rare", value: "Scarlet & Violet" },
+    { label: "Secret Rare", value: "1to3" },
+    { label: "Ultra Rare", value: "1to3" },
+    { label: "Rare", value: "1to3" },
+  ];
+  const filterOptions4 = [
+    { label: "Bandai", value: "Base Set" },
+    { label: "McDonald’s", value: "Sword & Shield" },
+    { label: "Nintendo", value: "Scarlet & Violet" },
+    { label: "The Pokemon Company", value: "1to3" },
+    { label: "Topps", value: "1to3" },
+    { label: "Wizards of the Coast", value: "1to3" },
+    { label: "Unbranded", value: "1to3" },
+  ];
+
+  const filterOptions5 = [
+    { label: "Black Star Promot", value: "Base Set" },
+    { label: "Common", value: "Sword & Shield" },
+    { label: "Holo Rare", value: "Scarlet & Violet" },
+    { label: "Secret Rare", value: "1to3" },
+    { label: "Ultra Rare", value: "1to3" },
+    { label: "Rare", value: "1to3" },
+  ];
+  const filterOptions6 = [
+    { label: "Reversal", value: "Base Set" },
+    { label: "Pikachu", value: "Sword & Shield" },
+    { label: "Charizard", value: "Scarlet & Violet" },
+    { label: "Blastoise", value: "1to3" },
+    { label: "Eevee", value: "1to3" },
+  ];
+  const filterOptions7 = [
+    { label: "Near Mint or better", value: "Base Set" },
+    { label: "Lightly Played", value: "Sword & Shield" },
+    { label: "Moderately Played", value: "Scarlet & Violet" },
+    { label: "Heavily Played", value: "1to3" },
+    { label: "Not Specified", value: "1to3" },
+  ];
+  const filterOptions8 = [
+    { label: "Basic", value: "Base Set" },
+    { label: "Champion", value: "Sword & Shield" },
+    { label: "In Training", value: "Scarlet & Violet" },
+    { label: "Mega", value: "1to3" },
+    { label: "Rookie", value: "1to3" },
+    { label: "Stage 1", value: "1to3" },
+  ];
+  const filterOptions9 = [
+    { label: "Free Returns", value: "Base Set" },
+    { label: "Returns Accepted", value: "Sword & Shield" },
+    { label: "Authorized Seller", value: "Scarlet & Violet" },
+    { label: "Completed Items", value: "1to3" },
+  ];
+  const filterOptions10 = [
+    { label: "Under $4,000", value: "Base Set" },
+    { label: "$4,000 to 20,000", value: "Sword & Shield" },
+    { label: "Over $20,000", value: "Scarlet & Violet" },
+  ];
+  const filterOptions11 = [
+    { label: "Near Mint or better", value: "Base Set" },
+    { label: "Lightly Played", value: "Sword & Shield" },
+    { label: "Moderately Played", value: "Scarlet & Violet" },
+    { label: "Heavily Played", value: "1to3" },
+    { label: "Not Specified", value: "1to3" },
+  ];
 
   return (
-    <div className="border rounded-xl px-4 md:px-6 py-6 md:py-12">
-      <Title level="title24">Filters</Title>
-      <div className="mt-4">
-        {filterOptions.map((option) => (
-          <label
-            key={option.value}
-            className="flex items-center gap-[10px] cursor-pointer mt-4"
-          >
-            <input
-              type="checkbox"
-              className="hidden"
-              onChange={() => handleInputChange(option.value)}
-            />
-
-            <div className="relative">
-              <span
-                className={`${
-                  checkedOptions[option.value]
-                    ? "opacity-100 z-20 scale-[1]"
-                    : "opacity-0 scale-[0.4] z-[-1]"
-                } transition-all duration-200 absolute top-0 left-0`}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g>
-                    <rect
-                      width="20"
-                      height="20"
-                      rx="4"
-                      className="fill-[#FB0000]"
-                      stroke="#3B9DF8"
-                    />
-                    <path
-                      d="M8.19594 15.4948C8.0646 15.4949 7.93453 15.4681 7.81319 15.4157C7.69186 15.3633 7.58167 15.2865 7.48894 15.1896L4.28874 11.8566C4.10298 11.6609 3.99914 11.3965 3.99988 11.1213C4.00063 10.8461 4.10591 10.5824 4.29272 10.3878C4.47953 10.1932 4.73269 10.0835 4.99689 10.0827C5.26109 10.0819 5.51485 10.1901 5.70274 10.3836L8.19591 12.9801L14.2887 6.6335C14.4767 6.4402 14.7304 6.3322 14.9945 6.33307C15.2586 6.33395 15.5116 6.44362 15.6983 6.63815C15.8851 6.83268 15.9903 7.09627 15.9912 7.37137C15.992 7.64647 15.8883 7.91073 15.7027 8.10648L8.90294 15.1896C8.8102 15.2865 8.7 15.3633 8.57867 15.4157C8.45734 15.4681 8.32727 15.4949 8.19594 15.4948Z"
-                      fill="white"
-                    />
-                  </g>
-                </svg>
-              </span>
-              <span
-                className={`${
-                  !checkedOptions[option.value]
-                    ? "opacity-100 z-20 scale-[1]"
-                    : "opacity-0 scale-[0.4] z-[-1]"
-                } transition-all duration-200`}
-              >
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g>
-                    <rect
-                      width="20"
-                      height="20"
-                      rx="4"
-                      className="fill-transparent"
-                      stroke="#ccc"
-                    />
-                  </g>
-                </svg>
-              </span>
-            </div>
-            <span className="text-[1rem] lg:text-[1.2rem] dark:text-[#abc2d3] text-[#424242]">
-              {option.label}
-            </span>
-          </label>
-        ))}
-      </div>
-      <hr className="border-[1px] border-[#ddd] my-8" />
-
-      <div>
-        <Title level="title18" className="font-semibold">
-          Time Left
-        </Title>
-        {filterOptions1.map((option) => (
-          <label
-            key={option.value}
-            className="flex items-center gap-[10px] cursor-pointer mt-4"
-          >
-            <input
-              type="checkbox"
-              className="hidden"
-              onChange={() => handleInputChange1(option.value)}
-            />
-            <div className="relative">
-              <span
-                className={`${
-                  checkedOptions1[option.value]
-                    ? "opacity-100 z-20 scale-[1]"
-                    : "opacity-0 scale-[0.4] z-[-1]"
-                } transition-all duration-200 absolute top-0 left-0`}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g>
-                    <rect
-                      width="20"
-                      height="20"
-                      rx="4"
-                      className="fill-[#FB0000]"
-                      stroke="#3B9DF8"
-                    />
-                    <path
-                      d="M8.19594 15.4948C8.0646 15.4949 7.93453 15.4681 7.81319 15.4157C7.69186 15.3633 7.58167 15.2865 7.48894 15.1896L4.28874 11.8566C4.10298 11.6609 3.99914 11.3965 3.99988 11.1213C4.00063 10.8461 4.10591 10.5824 4.29272 10.3878C4.47953 10.1932 4.73269 10.0835 4.99689 10.0827C5.26109 10.0819 5.51485 10.1901 5.70274 10.3836L8.19591 12.9801L14.2887 6.6335C14.4767 6.4402 14.7304 6.3322 14.9945 6.33307C15.2586 6.33395 15.5116 6.44362 15.6983 6.63815C15.8851 6.83268 15.9903 7.09627 15.9912 7.37137C15.992 7.64647 15.8883 7.91073 15.7027 8.10648L8.90294 15.1896C8.8102 15.2865 8.7 15.3633 8.57867 15.4157C8.45734 15.4681 8.32727 15.4949 8.19594 15.4948Z"
-                      fill="white"
-                    />
-                  </g>
-                </svg>
-              </span>
-              <span
-                className={`${
-                  !checkedOptions1[option.value]
-                    ? "opacity-100 z-20 scale-[1]"
-                    : "opacity-0 scale-[0.4] z-[-1]"
-                } transition-all duration-200`}
-              >
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g>
-                    <rect
-                      width="20"
-                      height="20"
-                      rx="4"
-                      className="fill-transparent"
-                      stroke="#ccc"
-                    />
-                  </g>
-                </svg>
-              </span>
-            </div>
-            <span className="text-[1rem] lg:text-[1.2rem] dark:text-[#abc2d3] text-[#424242]">
-              {option.label}
-            </span>
-          </label>
-        ))}
-      </div>
-
-      <hr className="border-[1px] border-[#ddd] my-8" />
-      <div className="mt-6">
-        <Title level="title18" className="font-semibold">
-          Price
-        </Title>
-        <div className="flex flex-col lg:flex-row items-center gap-5 w-full mt-3">
-          <input
-            type="number"
-            placeholder="Min"
-            className="px-4 py-2 lg:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
-          />
-          <input
-            type="number"
-            placeholder="Max"
-            className="px-4 py-2 lg:py-3 border-2 border-[#BEBBBB] rounded-lg w-full"
-          />
+    <div className="space-y-4">
+      <div className="border border-[#D0D0D0] p-5 rounded-lg">
+        {/* Header Toggle */}
+        <div
+          className="flex items-center justify-between cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <h2 className="text-xl font-semibold text-[#1E1E1E]">Category</h2>
+          {isOpen ? (
+            <Minus size={22} className="transition duration-400" />
+          ) : (
+            <Plus size={22} className="transition duration-400" />
+          )}
         </div>
-      </div>
-      <hr className="border-[1px] border-[#ddd] my-8" />
-      <div className="mt-6">
-        <Title level="title18" className="font-semibold">
-          Location
-        </Title>
-        <div className="my-4 flex items-center flex-col gap-5 justify-center w-full">
-          <button
-            className="bg-[#fff] dark:border-slate-600 dark:bg-transparent dark:text-[#76797c] border-2 border-[#d1d1d1] rounded-md w-full justify-between px-3 py-2 md:py-3 flex items-center  relative cursor-pointer dropdown"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+
+        {/* Dropdown Content */}
+        <div
+          className={`overflow-hidden space-y-4 transition-all duration-500 ease-in-out ${
+            isOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
+          }`}
+        >
+          {/* All */}
+          <h3
+            onClick={() => handleSelect("All")}
+            className={`font-semibold text-[17px] cursor-pointer transition ${
+              selectedText === "All" ? "text-[#1E40AF]" : "text-[#424242]"
+            }`}
           >
-            {selectedItem}
-            <IoChevronDown
-              className={`${
-                isDropdownOpen ? " rotate-[180deg]" : " rotate-0"
-              } transition-all duration-300 text-[1.2rem]`}
-            />
-            <div
-              className={`${
-                isDropdownOpen
-                  ? "z-[1] opacity-100 scale-[1]"
-                  : "z-[-1] opacity-0 scale-[0.8]"
-              } w-full absolute top-12 dark:bg-slate-800 left-0 right-0 z-40 bg-[#fff] rounded-xl flex flex-col  overflow-hidden transition-all duration-300 ease-in-out`}
-              style={{
-                boxShadow: "0 15px 60px -15px rgba(0, 0, 0, 0.3)",
-              }}
+            All
+          </h3>
+
+          {/* Category Group */}
+          <div>
+            <h3
+              onClick={() => handleSelect("Collectible Card Games")}
+              className={`font-semibold text-[17px] cursor-pointer transition ${
+                selectedText === "Collectible Card Games"
+                  ? "text-[#1E40AF]"
+                  : "text-[#424242]"
+              }`}
             >
-              {options?.map((option, index) => (
+              Collectible Card Games
+            </h3>
+
+            <div className="space-y-2 ml-4 font-medium my-2">
+              {subtexts.map((text, index) => (
                 <p
-                  className="py-2 lg:py-3 px-4 dark:hover:bg-slate-900/40 hover:bg-[#ececec] transition-all duration-200 flex items-center gap-2"
                   key={index}
-                  onClick={(e) => setSelectedItem(e.target.textContent)}
+                  onClick={() => handleSelect(text)}
+                  className={`cursor-pointer transition-colors duration-200 ${
+                    selectedText === text
+                      ? "text-[#1E40AF] font-semibold"
+                      : "text-[#424242]"
+                  }`}
                 >
-                  {option.title}
+                  {text}
                 </p>
               ))}
             </div>
-          </button>
-          <input
-            placeholder="City/Region"
-            tyte="text"
-            className="px-4 py-2 lg:py-3 rounded-md border-2 border-[#d9d3d3] w-full text-start cursor-pointer"
-          />
+          </div>
+
+          {/* Other Main Categories */}
+          <h3
+            onClick={() => handleSelect("Collectibles")}
+            className={`font-semibold text-[17px] cursor-pointer transition ${
+              selectedText === "Collectibles"
+                ? "text-[#1E40AF]"
+                : "text-[#424242]"
+            }`}
+          >
+            Collectibles
+          </h3>
+
+          <h3
+            onClick={() => handleSelect("Sport Mem, Cards & Consoles")}
+            className={`font-semibold text-[17px] cursor-pointer transition ${
+              selectedText === "Sport Mem, Cards & Consoles"
+                ? "text-[#1E40AF]"
+                : "text-[#424242]"
+            }`}
+          >
+            Sport Mem, Cards & Consoles
+          </h3>
         </div>
       </div>
-      <hr className="border-[1px] border-[#ddd] my-8" />
-      <div className="mt-6 flex justify-between items-center">
-        <p className="lg:text-[17px] font-semibold cursor-pointer hover:underline">
-          Clear All
-        </p>
-        <button className="bg-[#4275F6] lg:text-lg px-5 py-2 lg:py-3 rounded-md  hover:bg-[#425af9] text-white cursor-pointer">
-          Apply
+      <FilterSection
+        title="Graded"
+        options={filterOptions1}
+        checkedOptions={checkedOptions1}
+        onChange={handleOption1Change}
+      />
+      <FilterSection
+        title="Set"
+        options={filterOptions2}
+        checkedOptions={checkedOptions2}
+        onChange={handleOption2Change}
+      />
+      <FilterSection
+        title="Rarity"
+        options={filterOptions3}
+        checkedOptions={checkedOptions3}
+        onChange={handleOption3Change}
+      />
+      <FilterSection
+        title="Manufacturer"
+        options={filterOptions4}
+        checkedOptions={checkedOptions4}
+        onChange={handleOption4Change}
+      />
+      <FilterSection
+        title="Card Type"
+        options={filterOptions5}
+        checkedOptions={checkedOptions5}
+        onChange={handleOption5Change}
+      />
+      <FilterSection
+        title="Card Name"
+        options={filterOptions6}
+        checkedOptions={checkedOptions6}
+        onChange={handleOption6Change}
+      />
+      <FilterSection
+        title="Card Condition"
+        options={filterOptions7}
+        checkedOptions={checkedOptions7}
+        onChange={handleOption7Change}
+      />
+      <FilterSection
+        title="Stage"
+        options={filterOptions8}
+        checkedOptions={checkedOptions8}
+        onChange={handleOption8Change}
+      />
+      <FilterSection
+        title="Show results for"
+        options={filterOptions9}
+        checkedOptions={checkedOptions9}
+        onChange={handleOption9Change}
+      />
+      <FilterSection
+        title="Price"
+        options={filterOptions10}
+        checkedOptions={checkedOptions10}
+        onChange={handleOption10Change}
+      />
+      <FilterSection
+        title="Condition"
+        options={filterOptions11}
+        checkedOptions={checkedOptions11}
+        onChange={handleOption11Change}
+      />
+      <div>
+        <button className="w-full text-center bg-[#00A1FF] hover:bg-[#00a2fff4] text-white py-3 rounded-xl cursor-pointer">
+          Reset Filters
         </button>
       </div>
     </div>
