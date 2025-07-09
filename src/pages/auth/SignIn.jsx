@@ -37,7 +37,15 @@ const SignIn = () => {
 
       localStorage.setItem("user", JSON.stringify(userData));
 
-      navigate("/profile-setup-1");
+      if (user?.type === "buyer") {
+        if (user?.card_attributes === true) {
+          navigate("/user-dashboard");
+        } else {
+          navigate("/profile-setup-1");
+        }
+      } else if (user?.type === "seller") {
+        navigate("/seller-dashboard");
+      }
     },
 
     onError: (error) => {
@@ -173,7 +181,7 @@ const SignIn = () => {
             <p className="text-sm text-center text-gray-400">
               Don’t have an account?{" "}
               <Link
-                to="/join"
+                to="/"
                 className="text-[#fcfdff] font-medium hover:underline"
               >
                 Sign Up

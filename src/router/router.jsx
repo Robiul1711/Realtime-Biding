@@ -29,7 +29,8 @@ import UserSetting from "@/components/userDashboard/UserSetting";
 import BidHistory from "@/components/userDashboard/BidHistory";
 import UserMessaging from "@/components/userDashboard/UserMessaging";
 import CreateListingForm from "@/components/sellerDashboard/CreateListingForm";
-import PrivateRoute from "@/routes/SellerPrivateRoute";
+import PrivateRoute from "@/routes/PrivateRoute";
+import SellerPrivateRoute from "@/routes/SellerPrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -111,7 +112,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/seller-dashboard",
-        element: <SellerDashboard />, // ✅ Fixed typo
+        element: <SellerPrivateRoute> <SellerDashboard/> </SellerPrivateRoute>, // ✅ Fixed typo
       },
       {
         path: "/seller-dashboard/my-auction",

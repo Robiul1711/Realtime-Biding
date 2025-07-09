@@ -1,7 +1,7 @@
 import React from "react";
 import image from "../../assets/images/logo.png";
 import image1 from "../../assets/images/signup.png";
-import { Link, ScrollRestoration } from "react-router-dom";
+import { Link, ScrollRestoration, useNavigate } from "react-router-dom";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -9,11 +9,14 @@ import CardForm from "./CardForm";
 import toast from "react-hot-toast";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const ProfileSetup2 = () => {
+  const { setUser, token, setLoading, getUserData } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const navigate = useNavigate();
   const handlePaymentMethodCreated = (paymentMethodId) => {
     console.log("Received payment method ID:", paymentMethodId);
     addCardMutation.mutate(paymentMethodId);
@@ -26,9 +29,9 @@ const ProfileSetup2 = () => {
     });
     return response.data;
   },
-  onSuccess: (response) => {
+  onSuccess: () => {
     toast.success("Card added successfully!");
-    // Optionally continue with other logic (e.g., profile setup)
+    navigate('/user-dashboard');
   },
   onError: (error) => {
     console.log("Stripe Card Error:", error);

@@ -7,7 +7,7 @@ const PrivateRoute = ({ children }) => {
 
   console.log(user)
 
-  if (user && user?.token && user?.email && user?.type==="seller" ) {
+  if (user && user?.token && user?.email ) {
     return children;
   }
 
