@@ -1,10 +1,17 @@
 import Title from "@/components/common/Title";
 import React from "react";
 import { Link } from "react-router-dom";
-
+import logo from "../../assets/images/logo.png";
 const Join = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen overflow-y-hidden">
+                <Link to="/">
+            <img
+              src={logo}
+              alt=""
+              className="w-[120px] mx-auto lg:mx-0 mb-5"
+            />
+          </Link>
       <Title level="title48" className="mb-2 text-center">
         Welcome Back! Bid & Win with <br /> Your Community.
       </Title>

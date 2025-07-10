@@ -7,6 +7,7 @@ import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
+import logo from "../../assets/images/logo.png";
 const SignIn = () => {
   const { setUser } = useAuth();
   const axiosPublic = useAxiosPublic();
@@ -67,8 +68,16 @@ const SignIn = () => {
       <ScrollRestoration />
       <div className="w-full flex flex-col lg:flex-row justify-between gap-6">
         {/* Left Content */}
-        <div className="pt-4 lg:p-16 flex flex-col justify-center w-full lg:w-[60%]">
-          <h2 className="text-2xl md:text-5xl font-bold text-[#363636] md:leading-16 lg:leading-20 mb-2">
+
+        <div className="pt-4 lg:p-16 flex flex-col text-center lg:text-left justify-center w-full lg:w-[60%]">
+          <Link to="/">
+            <img
+              src={logo}
+              alt=""
+              className="w-[120px] mx-auto lg:mx-0 mb-5 lg:mb-0"
+            />
+          </Link>
+          <h2 className="text-2xl lg:text-5xl font-bold text-[#363636] md:leading-16 lg:leading-20 mb-2">
             Welcome Back! Bid & Win with <br className="hidden xl:block" /> Your
             Community.
           </h2>
@@ -76,7 +85,7 @@ const SignIn = () => {
             Glad to have you back! Browse new listings, connect with traders,
             and swap items easily. Log in to continue your trading journey!
           </p>
-          <div className="bg-[#F3F3F1] p-4 lg:p-12 rounded-lg mt-2 lg:mt-6">
+          <div className="bg-[#F3F3F1]  hidden lg:block p-4 lg:p-12 rounded-lg mt-2 lg:mt-6">
             <img
               src={image}
               alt="Sign In Illustration"

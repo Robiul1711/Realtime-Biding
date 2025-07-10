@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import resetImage from "../../assets/images/reset.png";
 import Title from "@/components/common/Title";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { useEmail } from "@/hooks/useEmail";
 import { BeatLoader } from "react-spinners";
+import logo from "../../assets/images/logo.png";
 const NewPassword = () => {
   const { email, resetToken } = useEmail();
   const axiosPublic = useAxiosPublic();
@@ -52,9 +53,16 @@ const NewPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col-reverse lg:flex-row w-full">
+    <div className="min-h-screen flex  lg:flex-row w-full">
       {/* left */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-10">
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center px-6 py-10">
+            <Link to="/">
+            <img
+              src={logo}
+              alt=""
+              className="w-[120px] mx-auto lg:mx-0 mb-5 lg:mb-0"
+            />
+          </Link>
         <div className="w-full max-w-md lg:w-[65%]">
           <h2 className="text-xl md:text-[32px] font-semibold mb-6 md:mb-8 text-[#363636]">
             Create new password
@@ -147,7 +155,7 @@ const NewPassword = () => {
       </div>
 
       {/* right */}
-      <div className="bg-[#001767] w-full lg:w-1/2 flex flex-col items-center justify-center px-6 py-10">
+      <div className="bg-[#001767] hidden  w-full lg:w-1/2 lg:flex flex-col items-center justify-center px-6 py-10">
         <Title
           level="title48"
           className="mb-2 text-white ml-0 lg:ml-8  xl:ml-0"
