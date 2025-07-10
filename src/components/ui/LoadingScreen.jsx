@@ -24,7 +24,7 @@ export const LoadingScreen = () => {
             d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
           ></path>
         </svg>
-        <p className="text-gray-700 text-lg font-medium">Loading, please wait...</p>
+        <p className="text-gray-700 text-lg font-medium">Please wait a moment...</p>
       </div>
     </div>
   )

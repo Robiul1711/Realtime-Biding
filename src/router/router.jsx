@@ -32,6 +32,7 @@ import CreateListingForm from "@/components/sellerDashboard/CreateListingForm";
 import PrivateRoute from "@/routes/PrivateRoute";
 import SellerPrivateRoute from "@/routes/SellerPrivateRoute";
 import BuyerPrivateRoute from "@/routes/BuyerPrivateRoute";
+import { PublicRoute } from "@/routes/PublicRoute";
 
 const router = createBrowserRouter([
   {
@@ -173,7 +174,7 @@ const router = createBrowserRouter([
 
   {
     path: "/sign-in",
-    element: <SignIn />,
+    element: <PublicRoute><SignIn /></PublicRoute> ,
   },
   {
     path: "/sign-up/:type",
