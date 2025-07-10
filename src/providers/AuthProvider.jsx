@@ -1,3 +1,4 @@
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { AuthContext } from "@/context";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +47,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen/>;
   }
 
   return (

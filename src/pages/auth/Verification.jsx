@@ -34,7 +34,7 @@ const Verification = () => {
     },
     onError: (error) => {
       const errorMessage =
-        error.response?.data?.error || "Something went wrong, try again later!";
+        error.response?.data?.message || "Something went wrong, try again later!";
       toast.error(errorMessage);
     },
   });
