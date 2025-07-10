@@ -51,7 +51,7 @@ const SignIn = () => {
     onError: (error) => {
       console.log(error);
       const errorMessage =
-        error.response?.data?.error ||
+        error.response?.data?.message ||
         "Something went wrong, try again later!!";
       toast.error(errorMessage);
     },
@@ -181,7 +181,7 @@ const SignIn = () => {
             <p className="text-sm text-center text-gray-400">
               Don’t have an account?{" "}
               <Link
-                to="/"
+                to="/join"
                 className="text-[#fcfdff] font-medium hover:underline"
               >
                 Sign Up
