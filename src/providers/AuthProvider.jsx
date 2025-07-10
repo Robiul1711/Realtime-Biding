@@ -24,6 +24,8 @@ const AuthProvider = ({ children }) => {
       return data.data.user;
     } catch (error) {
       console.error("Error fetching customer from backend", error);
+      localStorage.removeItem("user");
+      setUser(null);
       return null;
     }
   }

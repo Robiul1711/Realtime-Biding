@@ -120,7 +120,7 @@ const Verification = () => {
               data-testid="loader"
             />
           ) : (
-            "  Login"
+            "Submit"
           )}
           </button>
         </div>

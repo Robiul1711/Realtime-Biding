@@ -31,10 +31,11 @@ import UserMessaging from "@/components/userDashboard/UserMessaging";
 import CreateListingForm from "@/components/sellerDashboard/CreateListingForm";
 import PrivateRoute from "@/routes/PrivateRoute";
 import SellerPrivateRoute from "@/routes/SellerPrivateRoute";
+import BuyerPrivateRoute from "@/routes/BuyerPrivateRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/join",
     element: <Join />,
   },
   {
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/home",
+        path: "/",
         element: <Home />,
       },
       {
@@ -82,7 +83,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/user-dashboard",
-        element: <UserDashboard />,
+        element: <BuyerPrivateRoute><UserDashboard /></BuyerPrivateRoute>,
       },
       {
         path: "/user-dashboard/my-auction",
@@ -112,31 +113,60 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/seller-dashboard",
-        element: <SellerPrivateRoute> <SellerDashboard/> </SellerPrivateRoute>, // ✅ Fixed typo
+        element: (
+          <SellerPrivateRoute>
+            {" "}
+            <SellerDashboard />{" "}
+          </SellerPrivateRoute>
+        ), // ✅ Fixed typo
       },
       {
         path: "/seller-dashboard/my-auction",
-        element: <MyAuction />,
+        element: (
+          <SellerPrivateRoute>
+            <MyAuction />
+          </SellerPrivateRoute>
+        ),
       },
       {
         path: "/seller-dashboard/wishlist",
-        element: <WishList />,
+        element: (
+          <SellerPrivateRoute>
+            <WishList />
+          </SellerPrivateRoute>
+        ),
       },
       {
         path: "/seller-dashboard/messages",
-        element: <UserMessaging />,
+        element: (
+          <SellerPrivateRoute>
+            <UserMessaging />
+          </SellerPrivateRoute>
+        ),
       },
       {
         path: "/seller-dashboard/auction-history",
-        element: <BidHistory />,
+        element: (
+          <SellerPrivateRoute>
+            <BidHistory />
+          </SellerPrivateRoute>
+        ),
       },
       {
         path: "/seller-dashboard/setting",
-        element: <UserSetting />,
+        element: (
+          <SellerPrivateRoute>
+            <UserSetting />
+          </SellerPrivateRoute>
+        ),
       },
       {
         path: "/seller-dashboard/create-listing",
-        element: <CreateListingForm />,
+        element: (
+          <SellerPrivateRoute>
+            <CreateListingForm />
+          </SellerPrivateRoute>
+        ),
       },
     ],
   },
@@ -175,7 +205,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile-setup-2",
-    element: <PrivateRoute><ProfileSetup2 /></PrivateRoute> ,
+    element: (
+      <PrivateRoute>
+        <ProfileSetup2 />
+      </PrivateRoute>
+    ),
   },
 ]);
 

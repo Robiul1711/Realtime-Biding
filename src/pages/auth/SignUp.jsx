@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import image from "../../assets/images/signup.png";
-import { Link, ScrollRestoration, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  ScrollRestoration,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import toast from "react-hot-toast";
@@ -12,7 +17,7 @@ const SignUp = () => {
   const { type } = useParams();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
-  const {setUser}=useAuth();
+  const { setUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -29,19 +34,19 @@ const SignUp = () => {
     mutationFn: async (data) => {
       const response = await axiosPublic.post("/register", {
         ...data,
-  
         type,
       });
       return response?.data;
     },
     onSuccess: (response, variables) => {
       toast.success(response?.message || "Signup successful");
-        setUser({ email: variables.email });
+      setUser({ email: variables.email });
       navigate("/verification");
     },
     onError: (error) => {
       const errorMessage =
-        error.response?.data?.error || "Something went wrong, try again later!!";
+        error.response?.data?.message ||
+        "Something went wrong, try again later!!";
       toast.error(errorMessage);
     },
   });
@@ -78,25 +83,36 @@ const SignUp = () => {
 
         {/* Right Form */}
         <div className="p-8 md:p-12 xl:p-16 bg-[#001767] rounded-lg text-white mt-2 xl:mt-24 h-full w-full md:flex-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-4 md:my-8">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4 my-4 md:my-8"
+          >
             <h3 className="text-lg md:text-3xl font-semibold mb-6">
               Signup now as {type?.toUpperCase()}
             </h3>
 
             {/* Name */}
             <div>
-              <label className="block mb-2 font-medium text-gray-400">Full Name</label>
+              <label className="block mb-2 font-medium text-gray-400">
+                Full Name
+              </label>
               <input
                 {...register("name", { required: "Name is required" })}
                 placeholder="Enter your name"
                 className="w-full px-4 py-2 md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none"
               />
-              {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             {/* Email */}
             <div>
-              <label className="block mb-2 font-medium text-gray-400">Email Address</label>
+              <label className="block mb-2 font-medium text-gray-400">
+                Email Address
+              </label>
               <input
                 type="email"
                 {...register("email", {
@@ -109,12 +125,18 @@ const SignUp = () => {
                 placeholder="Enter your email address"
                 className="w-full px-4 py-2 md:py-3 text-gray-400 bg-white rounded-lg focus:outline-none"
               />
-              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password */}
             <div>
-              <label className="block mb-2 font-medium text-gray-400">Password</label>
+              <label className="block mb-2 font-medium text-gray-400">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -135,12 +157,18 @@ const SignUp = () => {
                   {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                 </span>
               </div>
-              {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block mb-2 font-medium text-gray-400">Confirm Password</label>
+              <label className="block mb-2 font-medium text-gray-400">
+                Confirm Password
+              </label>
               <div className="relative">
                 <input
                   type={showConfirm ? "text" : "password"}
@@ -158,7 +186,9 @@ const SignUp = () => {
                 </span>
               </div>
               {errors.password_confirmation && (
-                <p className="text-red-400 text-sm mt-1">{errors.password_confirmation.message}</p>
+                <p className="text-red-400 text-sm mt-1">
+                  {errors.password_confirmation.message}
+                </p>
               )}
             </div>
 
@@ -166,34 +196,43 @@ const SignUp = () => {
             <label className="flex items-center gap-2 text-gray-400 my-4">
               <input
                 type="checkbox"
-                {...register("terms", { required: "You must agree to the terms" })}
+                {...register("terms", {
+                  required: "You must agree to the terms",
+                })}
               />
               I agree to the Terms & Conditions
             </label>
-            {errors.terms && <p className="text-red-400 text-sm -mt-2">{errors.terms.message}</p>}
+            {errors.terms && (
+              <p className="text-red-400 text-sm -mt-2">
+                {errors.terms.message}
+              </p>
+            )}
 
             {/* Submit */}
             <button
               type="submit"
               className="w-full py-2 md:py-3 px-4 text-[#021352] bg-white rounded-lg lg:mt-4 cursor-pointer"
             >
-               {signUpMutation?.isPending ? (
-            <BeatLoader
-              loading={signUpMutation?.isPending}
-              color="#021352"
-              size={10}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          ) : (
-            "    Sign Up"
-          )}
+              {signUpMutation?.isPending ? (
+                <BeatLoader
+                  loading={signUpMutation?.isPending}
+                  color="#021352"
+                  size={10}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                "    Sign Up"
+              )}
             </button>
 
             {/* Redirect Link */}
             <p className="text-sm text-center text-gray-400 pt-2">
               Already have an account?{" "}
-              <Link to="/sign-in" className="text-[#fcfdff] font-medium hover:underline">
+              <Link
+                to="/sign-in"
+                className="text-[#fcfdff] font-medium hover:underline"
+              >
                 Sign In
               </Link>
             </p>
