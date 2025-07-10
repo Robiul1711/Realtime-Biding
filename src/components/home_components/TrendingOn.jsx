@@ -43,13 +43,13 @@ import { useQuery } from "@tanstack/react-query";
 //   },
 // ];
 const TrendingOn = () => {
-    const BASE_URL = import.meta.env.VITE_IMG_URL;
+
   const axiosPublic=useAxiosPublic();
 
   const { data} = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const response = await axiosPublic.get("/categories");
+      const response = await axiosPublic.get("/categories/trending");
       return response.data;
     },
   });
@@ -86,7 +86,7 @@ console.log(data)
                 <div className="flex justify-center border py-5 px-3 sm:py-10 rounded-2xl items-center flex-col gap-3">
                   <img
                     className=" size-12 sm:size-16 md:size-20 rounded-full object-cover"
-                    src={BASE_URL+item.image}
+                    src={item.image}
                     alt={item.title}
                   />
                   <Title level="title18">{item.title}</Title>
