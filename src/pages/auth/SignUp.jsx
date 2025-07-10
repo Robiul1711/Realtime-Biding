@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useAuth } from "@/hooks/useAuth";
 import { BeatLoader } from "react-spinners";
+import logo from "../../assets/images/logo.png";
 const SignUp = () => {
   const { type } = useParams();
   const navigate = useNavigate();
@@ -64,12 +65,19 @@ const SignUp = () => {
       <ScrollRestoration />
       <div className="w-full flex flex-col lg:flex-row justify-between gap-2">
         {/* Left Content */}
-        <div className="p-4 lg:p-16 flex flex-col justify-center w-full lg:w-[60%]">
+        <div className="p-4 lg:p-16 flex flex-col justify-center text-center lg:text-left w-full lg:w-[60%]">
+                    <Link to="/">
+            <img
+              src={logo}
+              alt=""
+              className="w-[120px] mx-auto lg:mx-0 mb-5 lg:mb-0"
+            />
+          </Link>
           <h2 className="text-2xl md:text-5xl font-bold text-[#363636] md:leading-12 lg:leading-16 mb-2">
             Welcome Back! Bid & Win with <br className="hidden xl:block" /> Your
             Community.
           </h2>
-          <p className="text-[#4B5563] text-sm md:text-[17px] mb-6 lg:mb-12">
+          <p className="text-[#4B5563] text-sm md:text-[17px] lg:mb-6">
             Glad to have you back! Browse new listings, connect with traders,
             and swap items easily. Log in to continue your trading journey!
           </p>
@@ -77,7 +85,7 @@ const SignUp = () => {
           <img
             src={image}
             alt="Sign Up Illustration"
-            className="w-full h-[300px] lg:h-full object-cover"
+            className="w-full h-[300px] lg:h-full object-cover hidden lg:block"
           />
         </div>
 

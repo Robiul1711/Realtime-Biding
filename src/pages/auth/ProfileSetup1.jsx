@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { BeatLoader } from "react-spinners";
 
 const ProfileSetup1 = () => {
   const navigate = useNavigate();
@@ -151,7 +152,17 @@ const onSubmit = (data) => {
                 type="submit"
                 className="w-full py-2 md:py-3 px-4 text-white bg-[#0046F9] rounded-3xl md:mt-4 cursor-pointer"
               >
-                Continue
+                {ProfileMutation?.isPending ? (
+                           <BeatLoader
+                             loading={ProfileMutation?.isPending}
+                             color="white"
+                             size={10}
+                             aria-label="Loading Spinner"
+                             data-testid="loader"
+                           />
+                         ) : (
+                           "  Continue"
+                         )}
               </button>
            
           </form>
