@@ -1,13 +1,19 @@
 import FilterCard from "@/components/auctionComponents/FilterCard";
 import ProductCard from "@/components/auctionComponents/ProductCard";
 import BigDeal from "@/components/home_components/BigDeal";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FiFilter, FiX } from "react-icons/fi";
 import { ScrollRestoration } from "react-router-dom";
 
 const AuctionList = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+const axiosPublic = useAxiosPublic();
+const { data: products, isLoading } = useQuery({
+  queryKey:["products"],
+  queryFn: () => axiosPublic.get("/products"),
+})
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -47,7 +53,7 @@ const AuctionList = () => {
           <FilterCard />
         </div>
         <div className="w-full md:flex-1">
-          <ProductCard />
+          <ProductCard products={products}  isLoading={isLoading}/>
         </div>
       </div>
 

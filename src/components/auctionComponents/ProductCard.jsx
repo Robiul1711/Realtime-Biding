@@ -1,163 +1,67 @@
 import React, { useState } from "react";
-import card from "../../assets/images/card.png";
-import card1 from "../../assets/images/card9.png";
-import card2 from "../../assets/images/card1.png";
-import card3 from "../../assets/images/card2.png";
-import card4 from "../../assets/images/card3.png";
-import card5 from "../../assets/images/card4.png";
-import card6 from "../../assets/images/card5.png";
-import card7 from "../../assets/images/card6.png";
-import card8 from "../../assets/images/card7.png";
-import card9 from "../../assets/images/card8.png";
-import card10 from "../../assets/images/card10.png";
 import { HeartShape } from "../common/CustomIcon";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
-const dummyItems = [
-  {
-    id: 1,
-    title: "Vintage Collection Item 1",
-    currentBid: "$24,500",
-    bids: "0 bids",
-    time: "Today 11:50 AM",
-    delivery: "+$19.15 delivery",
-    location: "from Australia",
-    image: card,
-  },
-  {
-    id: 2,
-    title: "Vintage Collection Item 2",
-    currentBid: "$25,000",
-    bids: "3 bids",
-    time: "Today 12:10 PM",
-    delivery: "+$20.00 delivery",
-    location: "from Australia",
-    image: card1,
-  },
-  {
-    id: 3,
-    title: "Vintage Collection Item 3",
-    currentBid: "$22,800",
-    bids: "1 bid",
-    time: "Today 2:30 PM",
-    delivery: "+$18.00 delivery",
-    location: "from Australia",
-    image: card2,
-  },
-  {
-    id: 4,
-    title: "Vintage Collection Item 4",
-    currentBid: "$26,000",
-    bids: "5 bids",
-    time: "Today 3:00 PM",
-    delivery: "+$21.00 delivery",
-    location: "from Australia",
-    image: card3,
-  },
-  {
-    id: 5,
-    title: "Vintage Collection Item 5",
-    currentBid: "$23,300",
-    bids: "2 bids",
-    time: "Today 4:20 PM",
-    delivery: "+$19.75 delivery",
-    location: "from Australia",
-    image: card4,
-  },
-  {
-    id: 6,
-    title: "Vintage Collection Item 6",
-    currentBid: "$27,450",
-    bids: "4 bids",
-    time: "Today 5:45 PM",
-    delivery: "+$22.10 delivery",
-    location: "from Australia",
-    image: card5,
-  },
-  {
-    id: 7,
-    title: "Vintage Collection Item 7",
-    currentBid: "$28,100",
-    bids: "3 bids",
-    time: "Today 6:00 PM",
-    delivery: "+$20.50 delivery",
-    location: "from Australia",
-    image: card6,
-  },
-  {
-    id: 8,
-    title: "Vintage Collection Item 8",
-    currentBid: "$29,000",
-    bids: "6 bids",
-    time: "Today 6:30 PM",
-    delivery: "+$21.30 delivery",
-    location: "from Australia",
-    image: card7,
-  },
-  {
-    id: 9,
-    title: "Vintage Collection Item 9",
-    currentBid: "$21,700",
-    bids: "1 bid",
-    time: "Today 7:00 PM",
-    delivery: "+$18.90 delivery",
-    location: "from Australia",
-    image: card8,
-  },
-  {
-    id: 10,
-    title: "Vintage Collection Item 10",
-    currentBid: "$30,000",
-    bids: "8 bids",
-    time: "Today 7:45 PM",
-    delivery: "+$23.15 delivery",
-    location: "from Australia",
-    image: card9,
-  },
-  {
-    id: 11,
-    title: "Vintage Collection Item 11",
-    currentBid: "$24,999",
-    bids: "0 bids",
-    time: "Today 8:00 PM",
-    delivery: "+$19.99 delivery",
-    location: "from Australia",
-    image: card10,
-  },
-  {
-    id: 12,
-    title: "Vintage Collection Item 12",
-    currentBid: "$22,400",
-    bids: "1 bid",
-    time: "Today 9:00 PM",
-    delivery: "+$20.45 delivery",
-    location: "from Australia",
-    image: card4,
-  },
-];
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
-const ProductCard = () => {
+const ProductCard = ({ products, isLoading }) => {
   const [likedItems, setLikedItems] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const axiosSecure = useAxiosSecure();
+  const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
+  const BookmarkMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axiosSecure.post("/bookmark", data); // expects { product_id: ... }
+      return { ...response.data, productId: data.product_id }; // attach productId so you can access it in onSuccess
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Bookmark added successfully");
+      setLikedItems((prev) => [...prev, response.productId]);
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong, try again later!!";
+      toast.error(errorMessage);
+    },
+  });
 
-  const totalItems = dummyItems.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const UnbookmarkMutation = useMutation({
+  mutationFn: async (data) => {
+    // const response = await axiosSecure.post("/bookmark", data); // Adjust endpoint if it's DELETE
+    return data.product_id;
+  },
+  onSuccess: (productId) => {
+    toast.success("Bookmark removed successfully");
+    setLikedItems((prev) => prev.filter((id) => id !== productId));
+  },
+  onError: (error) => {
+    const errorMessage =
+      error.response?.data?.message || "Failed to remove bookmark.";
+    toast.error(errorMessage);
+  },
+});
 
-  const paginatedItems = dummyItems.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(parseInt(e.target.value));
-    setCurrentPage(1);
-  };
+  // const totalItems = dummyItems.length;
+  // const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const goToPage = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
+  // const paginatedItems = dummyItems.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
+  // const handleItemsPerPageChange = (e) => {
+  //   setItemsPerPage(parseInt(e.target.value));
+  //   setCurrentPage(1);
+  // };
+
+  // const goToPage = (page) => {
+  //   if (page >= 1 && page <= totalPages) {
+  //     setCurrentPage(page);
+  //   }
+  // };
 
   const options = [
     {
@@ -174,11 +78,6 @@ const ProductCard = () => {
     },
   ];
 
-  const toggleLike = (id) => {
-    setLikedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
@@ -210,48 +109,86 @@ const ProductCard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-        {dummyItems.map((item) => (
-          <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
-            <img
-              className="w-full h-[280px] md:h-auto"
-              src={item.image}
-              alt="image"
-            />
-            <div className="p-4">
-              <div className="flex justify-between items-center">
-                <div className="my-1">
-                  <p className="text-[14px] text-[#0C0D19]">{item.title}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-[14px] text-[#A8A8A8]">Current bid</p>
-                    <p className="text-[15px] font-semibold text-[#0C0D19]">
-                      {item.currentBid}
-                    </p>
+        {isLoading
+          ? Array(6)
+              .fill()
+              .map((_, index) => (
+                <div key={index} className="border border-[#CAC3C3] rounded-xl">
+                  <Skeleton height={240} className="w-full rounded-t-xl" />
+                  <div className="p-4">
+                    <div className="flex justify-between items-center">
+                      <div className="my-1 w-full">
+                        <Skeleton width="80%" height={16} className="mb-2" />
+                        <div className="flex items-center gap-2">
+                          <Skeleton width={60} height={14} />
+                          <Skeleton width={40} height={14} />
+                        </div>
+                      </div>
+                      <Skeleton circle width={24} height={24} />
+                    </div>
+                    <Skeleton width="70%" height={12} className="my-1" />
+                    <Skeleton width="60%" height={12} className="my-1" />
+                    <Skeleton width="50%" height={12} className="my-1" />
+                    <Skeleton height={40} className="rounded-2xl mt-2" />
                   </div>
                 </div>
-                <button
-                  onClick={() => toggleLike(item.id)}
-                  className="transition-all"
-                >
-                  <HeartShape filled={likedItems.includes(item.id)} />
-                </button>
+              ))
+          : products?.data?.data?.data?.map((item) => (
+              <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
+                <img
+                  className="w-full h-[280px] md:h-auto object-cover"
+                  src={VITE_IMG_URL + item.first_image}
+                  alt="image"
+                />
+                <div className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div className="my-1">
+                      <p className="text-[14px] text-[#0C0D19]">{item.title}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-[14px] text-[#A8A8A8]">
+                          Current bid
+                        </p>
+                        <p className="text-[15px] font-semibold text-[#0C0D19]">
+                          {item.bid}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+  onClick={() => {
+    if (likedItems.includes(item.id)) {
+      UnbookmarkMutation.mutate({ product_id: item.id });
+    } else {
+      BookmarkMutation.mutate({ product_id: item.id });
+    }
+  }}
+  className="transition-all"
+>
+  <HeartShape filled={likedItems.includes(item.id)} />
+</button>
+
+                  </div>
+                  <p className="text-[12px] text-[#161515] my-1">
+                    <span className="text-[#EE0B0B]">{item.bids.length} </span>·
+                    Time Ended ({item.time})
+                  </p>
+                  <p className="text-[12px] text-[#161515] my-1">
+                    +$19.15 delivery
+                  </p>
+                  <p className="text-[12px] text-[#161515] my-1">
+                    From {item.country}
+                  </p>
+                  <Link
+                    to={`/auction-details/${item.id}`}
+                    className="bg-[#4275F6] text-white block text-center py-2 lg:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2"
+                  >
+                    Quick Bid
+                  </Link>
+                </div>
               </div>
-              <p className="text-[12px] text-[#161515] my-1">
-                <span className="text-[#EE0B0B]">{item.bids} </span>· Time Ended
-                ({item.time})
-              </p>
-              <p className="text-[12px] text-[#161515] my-1">{item.delivery}</p>
-              <p className="text-[12px] text-[#161515] my-1">{item.location}</p>
-              <Link to={`/auction-details`}>
-                <button className="bg-[#4275F6] text-white py-2 lg:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2">
-                  Quick Bid
-                </button>
-              </Link>
-            </div>
-          </div>
-        ))}
+            ))}
       </div>
-      <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t pt-4 gap-4">
-        {/* Left */}
+      {/* <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t pt-4 gap-4">
+ 
         <div className="flex items-center gap-3 text-sm text-[#595858]">
           <span>
             {(currentPage - 1) * itemsPerPage + 1} -{" "}
@@ -270,7 +207,6 @@ const ProductCard = () => {
           </select>
         </div>
 
-        {/* Middle (Page Numbers) */}
         <div className="flex items-center gap-1">
           <button
             onClick={() => goToPage(currentPage - 1)}
@@ -318,7 +254,7 @@ const ProductCard = () => {
             &gt;
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
