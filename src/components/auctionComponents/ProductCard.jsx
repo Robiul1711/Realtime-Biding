@@ -7,11 +7,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const ProductCard = ({ products, isLoading }) => {
   const [likedItems, setLikedItems] = useState([]);
   const axiosSecure = useAxiosSecure();
   const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
+  const { user } = useAuth();
   const BookmarkMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axiosSecure.post("/bookmark", data); // expects { product_id: ... }
@@ -30,20 +32,20 @@ const ProductCard = ({ products, isLoading }) => {
   });
 
   const UnbookmarkMutation = useMutation({
-  mutationFn: async (data) => {
-    // const response = await axiosSecure.post("/bookmark", data); // Adjust endpoint if it's DELETE
-    return data.product_id;
-  },
-  onSuccess: (productId) => {
-    toast.success("Bookmark removed successfully");
-    setLikedItems((prev) => prev.filter((id) => id !== productId));
-  },
-  onError: (error) => {
-    const errorMessage =
-      error.response?.data?.message || "Failed to remove bookmark.";
-    toast.error(errorMessage);
-  },
-});
+    mutationFn: async (data) => {
+      // const response = await axiosSecure.post("/bookmark", data); // Adjust endpoint if it's DELETE
+      return data.product_id;
+    },
+    onSuccess: (productId) => {
+      toast.success("Bookmark removed successfully");
+      setLikedItems((prev) => prev.filter((id) => id !== productId));
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message || "Failed to remove bookmark.";
+      toast.error(errorMessage);
+    },
+  });
 
   // const totalItems = dummyItems.length;
   // const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -108,7 +110,7 @@ const ProductCard = ({ products, isLoading }) => {
         <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xmd:grid-cols-2 lg:grid-cols-2 xlg:grid-cols-3 gap-4 mt-8">
         {isLoading
           ? Array(6)
               .fill()
@@ -135,11 +137,14 @@ const ProductCard = ({ products, isLoading }) => {
               ))
           : products?.data?.data?.data?.map((item) => (
               <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
+                <div className="h-[200px]">
+
                 <img
-                  className="w-full h-[280px] md:h-auto object-cover"
+                  className="w-full  h-full object-cover"
                   src={VITE_IMG_URL + item.first_image}
                   alt="image"
                 />
+                </div>
                 <div className="p-4">
                   <div className="flex justify-between items-center">
                     <div className="my-1">
@@ -154,26 +159,25 @@ const ProductCard = ({ products, isLoading }) => {
                       </div>
                     </div>
                     <button
-  onClick={() => {
-    if (likedItems.includes(item.id)) {
-      UnbookmarkMutation.mutate({ product_id: item.id });
-    } else {
-      BookmarkMutation.mutate({ product_id: item.id });
-    }
-  }}
-  className="transition-all"
->
-  <HeartShape filled={likedItems.includes(item.id)} />
-</button>
-
+                      onClick={() => {
+                        if (likedItems.includes(item.id)) {
+                          UnbookmarkMutation.mutate({ product_id: item.id });
+                        } else {
+                          BookmarkMutation.mutate({ product_id: item.id });
+                        }
+                      }}
+                      className="transition-all"
+                    >
+                      <HeartShape filled={likedItems.includes(item.id)} />
+                    </button>
                   </div>
                   <p className="text-[12px] text-[#161515] my-1">
                     <span className="text-[#EE0B0B]">{item.bids.length} </span>·
                     Time Ended ({item.time})
                   </p>
-                  <p className="text-[12px] text-[#161515] my-1">
+                  {/* <p className="text-[12px] text-[#161515] my-1">
                     +$19.15 delivery
-                  </p>
+                  </p> */}
                   <p className="text-[12px] text-[#161515] my-1">
                     From {item.country}
                   </p>
