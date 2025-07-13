@@ -5,12 +5,19 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import echo from "@/utils/echo";
 
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
   const auctionEndAt = productDetails?.auction_end_at;
   const [countValue, setCountValue] = useState("$250");
+  const axiosSecure = useAxiosSecure();
+  // console.log(productDetails)
+  const [bids, setBids] = useState(productDetails?.bids || []);
 
   const getNumericValue = (val) => parseInt(val.replace(/[^0-9]/g, "")) || 0;
 
@@ -57,6 +64,62 @@ const LiveBid = ({ productDetails, isLoading }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [auctionEndAt, isLoading]);
+
+
+  const placeBidMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axiosSecure.post(`auction/bid/${productDetails?.id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      setBids((prev) => [...prev, response?.bid]);
+      toast.success("Bid placed successfully!");
+    },
+    onError: (error) => {
+      console.log(error);
+      if(error.status === 401) {
+        return false;
+      }else {
+        console.log(error)
+        toast.error(error?.response?.data?.message);
+      }
+      
+    },
+  });
+
+  const handlePlaceBid = () => {
+    const numericValue = getNumericValue(countValue);
+    console.log(`Placing bid of $${numericValue}`);
+    placeBidMutation.mutate({amount: numericValue});
+  }
+
+useEffect(() => {
+  const id = productDetails?.id;
+
+  if (!id) return;
+
+  const channelName = `auction.${id}.bids`;
+  console.log("🔁 Subscribing to:", channelName);
+
+  const channel = echo.channel(channelName);
+
+  channel.listen(".BidPlaced", (e) => {
+    console.log("✅ BidPlaced received:", e);
+    setBids((prev) => [...prev, e]);
+  });
+
+  return () => {
+    echo.leaveChannel(channelName);
+    console.log("👋 Unsubscribed from:", channelName);
+  };
+}, [productDetails?.id]);
+
+
 
   return (
     <div className="border border-[#D0D0D0] p-5 rounded-lg">
@@ -123,8 +186,8 @@ const LiveBid = ({ productDetails, isLoading }) => {
         {isLoading ? (
           <Skeleton height={45} />
         ) : (
-          <button className="bg-[#4275F6] text-white py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300">
-            Start Now
+          <button disabled={placeBidMutation.isPending} onClick={handlePlaceBid} className="bg-[#4275F6] text-white py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300">
+             {placeBidMutation.isPending?"Bid Placing...":"Place a Bid"}
           </button>
         )}
       </div>
@@ -149,16 +212,16 @@ const LiveBid = ({ productDetails, isLoading }) => {
                   <Skeleton width={60} height={20} />
                 </div>
               ))
-          : [1, 2, 3, 4].map((_, i) => (
+          : bids?.slice()?.reverse()?.map((bid, i) => (
               <div key={i} className="flex justify-between items-center my-6 border-b pb-3">
                 <div className="flex items-center gap-4">
                   <img className="w-12 h-12 rounded-full" src={man} alt="Bidder" />
                   <div>
-                    <h2 className="text-[#0C0D19] mb-1 text-[15px]">Alex M.</h2>
+                    <h2 className="text-[#0C0D19] mb-1 text-[15px]">{bid?.user?.name}</h2>
                     <p className="text-[#A8A8A8] text-[13px]">2 Mins ago</p>
                   </div>
                 </div>
-                <p className="text-[15px] text-[#0C0D19] font-semibold">$24,500</p>
+                <p className="text-[15px] text-[#0C0D19] font-semibold">${bid?.amount}</p>
               </div>
             ))}
       </div>

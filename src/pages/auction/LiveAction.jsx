@@ -8,14 +8,17 @@ import React from "react";
 import { ScrollRestoration, useParams } from "react-router-dom";
 
 const LiveAction = () => {
-  const {id}=useParams()
+  const { id } = useParams();
 
-const axiosPublic = useAxiosPublic();
-const { data: details, isLoading } = useQuery({
-  queryKey:["products-details"],
-  queryFn: () => axiosPublic.get("/products/"+id),
-})
-const productDetails=details?.data?.data
+  const axiosPublic = useAxiosPublic();
+
+  const { data: details, isLoading } = useQuery({
+    queryKey: ["products-details"],
+    queryFn: () => axiosPublic.get("/products/" + id),
+  });
+  const productDetails = details?.data?.data;
+
+  console.log(productDetails)
 
   return (
     <div>
@@ -28,7 +31,7 @@ const productDetails=details?.data?.data
           <LiveBid productDetails={productDetails} isLoading={isLoading} />
         </div>
       </div>
-      <RelatedAuctionCard />
+      {/* <RelatedAuctionCard /> */}
       <BigDeal />
     </div>
   );

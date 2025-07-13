@@ -24,9 +24,9 @@ const FilterSection = ({ title, options, checkedOptions, onChange }) => {
           isOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
         }`}
       >
-        {options.map((option) => (
+        {options.map((option, index) => (
           <label
-            key={option.value}
+            key={index}
             className="flex items-center gap-[10px] cursor-pointer mt-4"
           >
             <input

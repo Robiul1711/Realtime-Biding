@@ -26,15 +26,17 @@ const Verification = () => {
       console.log(response?.expire_token);
       toast.success(response?.message);
       setResetToken(response?.expire_token);
-      {
-        response?.expire_token
-          ? navigate("/new-password")
-          : navigate("/sign-in");
+      console.log('auth working')
+      if (response?.expire_token) {
+        navigate("/new-password");
+      } else {
+        navigate("/sign-in");
       }
     },
     onError: (error) => {
       const errorMessage =
-        error.response?.data?.message || "Something went wrong, try again later!";
+        error.response?.data?.message ||
+        "Something went wrong, try again later!";
       toast.error(errorMessage);
     },
   });
@@ -111,17 +113,17 @@ const Verification = () => {
             onClick={handleVerify}
             className="bg-[#001767] text-white py-2 md:py-3 rounded-3xl w-full  hover:bg-[#001787] transition-all duration-300 text-sm font-medium cursor-pointer mt-6"
           >
-          {OTPMutation?.isPending ? (
-            <BeatLoader
-              loading={OTPMutation?.isPending}
-              color="white"
-              size={10}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          ) : (
-            "Submit"
-          )}
+            {OTPMutation?.isPending ? (
+              <BeatLoader
+                loading={OTPMutation?.isPending}
+                color="white"
+                size={10}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            ) : (
+              "Submit"
+            )}
           </button>
         </div>
       </div>
