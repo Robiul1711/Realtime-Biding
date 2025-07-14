@@ -53,7 +53,7 @@ const TrendingOn = () => {
       return response.data;
     },
   });
-console.log(data)
+
  
   return (
     <div className="section-padding-x py-6 sm:py-10">

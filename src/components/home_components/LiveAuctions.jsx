@@ -8,29 +8,40 @@ import "swiper/css/pagination";
 import banner from "@/assets/images/auction.png";
 import Title from "../common/Title";
 import { FiArrowUpRight } from "react-icons/fi";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 
+const slides = [
+  {
+    image: banner,
+    title: "Live Auctions Happening Now!xvxv",
+    subtitle:
+      "Bid in real-time, compete for the best deals, and win exclusive items before time runs out. Don't miss out—place your bid now!",
+  },
+  {
+    image: banner,
+    title: "Live Auctions Happening Now!",
+    subtitle:
+      "Bid in real-time, compete for the best deals, and win exclusive items before time runs out. Don't miss out—place your bid now!",
+  },
+  {
+    image: banner,
+    title: "Live Auctions Happening Now!",
+    subtitle:
+      "Bid in real-time, compete for the best deals, and win exclusive items before time runs out. Don't miss out—place your bid now!",
+  },
+];
 const LiveAuctions = () => {
-  const slides = [
-    {
-      image: banner,
-      title: "Live Auctions Happening Now!",
-      subtitle:
-        "Bid in real-time, compete for the best deals, and win exclusive items before time runs out. Don't miss out—place your bid now!",
-    },
-    {
-      image: banner,
-      title: "Live Auctions Happening Now!",
-      subtitle:
-        "Bid in real-time, compete for the best deals, and win exclusive items before time runs out. Don't miss out—place your bid now!",
-    },
-    {
-      image: banner,
-      title: "Live Auctions Happening Now!",
-      subtitle:
-        "Bid in real-time, compete for the best deals, and win exclusive items before time runs out. Don't miss out—place your bid now!",
-    },
-  ];
+  const axiosPublic=useAxiosPublic();
 
+  const { data} = useQuery({
+    queryKey: ["popular"],
+    queryFn: async () => {
+      const response = await axiosPublic.get("/auctions/popular");
+      return response.data;
+    },
+  });
+console.log(data?.data)
   return (
     <div className="bg-black  xl:bg-[#efeeee] mb-5">
       <Swiper

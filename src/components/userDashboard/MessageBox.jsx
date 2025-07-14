@@ -294,13 +294,13 @@ const MessageBox = () => {
                     className="bg-white absolute -right-2 bottom-2 rounded-full min-h-[25px] min-w-[25px] flex items-center cursor-pointer justify-center shadow-md shadow-gray-100 dark:bg-slate-700 dark:shadow-slate-800"
                   >
                     {message.reaction === "love" ? (
-                      <LuHeart size={12} fill="red" color="red" />
+                      <LuHeart size={16} fill="red" color="red" />
                     ) : null}
                     {message.reaction === "like" ? (
-                      <LuThumbsUp size={12} fill="blue" color="blue" />
+                      <LuThumbsUp size={16} fill="blue" color="blue" />
                     ) : null}
                     {message.reaction === "smile" ? (
-                      <FaRegSmile size={12} fill="gold" color="gold" />
+                      <FaRegSmile size={16} fill="gold" color="gold" />
                     ) : null}
                   </span>
                 )}
@@ -367,7 +367,7 @@ const MessageBox = () => {
       </div>
 
       {/* Message Input */}
-      <div className="bg-white dark:bg-slate-900 dark:border-slate-700 p-4 pb-3 border border-border rounded-lg">
+      <div className=" p-4 pb-3 border border-border rounded-t-lg">
         {/* Attachments preview */}
         {(attachments.length || isUploading) && (
           <div className="mb-2 flex flex-wrap gap-2">
@@ -432,7 +432,7 @@ const MessageBox = () => {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
-            className="w-[70%] md:flex-1 pr-4 py-1 border-none dark:bg-transparent dark:text-[#d2e5f5] focus:outline-none focus:ring-0"
+            className="w-[70%] md:flex-1 pr-4 py-1 border-none focus:outline-none focus:ring-0"
           />
 
           {/* Hidden file input */}
@@ -448,7 +448,7 @@ const MessageBox = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handleAttachmentClick}
-            className="bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-[#d2e5f5] dark:hover:bg-slate-600/50 min-w-[30px] p-2.5 rounded-full hover:bg-gray-200 flex items-center justify-center focus:outline-none"
+            className="bg-gray-100 text-gray-600 min-w-[30px] p-2.5 rounded-full hover:bg-gray-200 flex items-center justify-center focus:outline-none"
             disabled={isUploading}
           >
             <LuPaperclip size={18} />
