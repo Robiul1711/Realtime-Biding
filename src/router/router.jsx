@@ -33,6 +33,7 @@ import PrivateRoute from "@/routes/PrivateRoute";
 import SellerPrivateRoute from "@/routes/SellerPrivateRoute";
 import BuyerPrivateRoute from "@/routes/BuyerPrivateRoute";
 import { PublicRoute } from "@/routes/PublicRoute";
+import SellerMessaging from "@/components/sellerDashboard/SellerMessaging";
 
 const router = createBrowserRouter([
   {
@@ -141,7 +142,7 @@ const router = createBrowserRouter([
         path: "/seller-dashboard/messages",
         element: (
           <SellerPrivateRoute>
-            <UserMessaging />
+            <SellerMessaging />
           </SellerPrivateRoute>
         ),
       },
