@@ -175,7 +175,8 @@ const router = createBrowserRouter([
 
   {
     path: "/sign-in",
-    element: <PublicRoute><SignIn /></PublicRoute> ,
+    element: <SignIn /> ,
+    // element: <PublicRoute><SignIn /></PublicRoute> ,
   },
   {
     path: "/sign-up/:type",

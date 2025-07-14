@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import echo from "@/utils/echo";
+import { formatDistanceToNow } from 'date-fns';
 
 dayjs.extend(duration);
 
@@ -77,7 +78,6 @@ const LiveBid = ({ productDetails, isLoading }) => {
     },
     onSuccess: (response) => {
       console.log(response);
-      setBids((prev) => [...prev, response?.bid]);
       toast.success("Bid placed successfully!");
     },
     onError: (error) => {
@@ -104,22 +104,22 @@ useEffect(() => {
   if (!id) return;
 
   const channelName = `auction.${id}.bids`;
-  console.log("🔁 Subscribing to:", channelName);
+  console.log("Subscribing to:", channelName);
 
   const channel = echo.channel(channelName);
 
-  channel.listen(".BidPlaced", (e) => {
-    console.log("✅ BidPlaced received:", e);
-    setBids((prev) => [...prev, e]);
+  channel.listen(".App\\Events\\BidPlaced", (e) => {
+    console.log("BidPlaced received:", e);
+    setBids(e?.top_bids);
   });
 
   return () => {
     echo.leaveChannel(channelName);
-    console.log("👋 Unsubscribed from:", channelName);
+    console.log("Unsubscribed from:", channelName);
   };
 }, [productDetails?.id]);
 
-
+console.log('bids', bids);
 
   return (
     <div className="border border-[#D0D0D0] p-5 rounded-lg">
@@ -128,7 +128,7 @@ useEffect(() => {
         {isLoading ? <Skeleton width={120} /> : "Current Bid"}
       </h2>
       <p className="text-2xl md:text-4xl lg:text-2xl xl:text-4xl font-semibold text-[#000000] text-center my-3 xl:my-6">
-        {isLoading ? <Skeleton width={150} /> : "$24,500"}
+        {isLoading ? <Skeleton width={150} /> : `$${productDetails?.starting_price}`}
       </p>
 
       {/* Time Left Section */}
@@ -212,13 +212,13 @@ useEffect(() => {
                   <Skeleton width={60} height={20} />
                 </div>
               ))
-          : bids?.slice()?.reverse()?.map((bid, i) => (
+          : bids?.map((bid, i) => (
               <div key={i} className="flex justify-between items-center my-6 border-b pb-3">
                 <div className="flex items-center gap-4">
                   <img className="w-12 h-12 rounded-full" src={man} alt="Bidder" />
                   <div>
                     <h2 className="text-[#0C0D19] mb-1 text-[15px]">{bid?.user?.name}</h2>
-                    <p className="text-[#A8A8A8] text-[13px]">2 Mins ago</p>
+                    {/* { formatDistanceToNow(new Date(bid?.timestamp), { addSuffix: true })} */}
                   </div>
                 </div>
                 <p className="text-[15px] text-[#0C0D19] font-semibold">${bid?.amount}</p>

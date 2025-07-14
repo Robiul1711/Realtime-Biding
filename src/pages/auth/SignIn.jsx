@@ -55,6 +55,9 @@ const SignIn = () => {
         error.response?.data?.message ||
         "Something went wrong, try again later!!";
       toast.error(errorMessage);
+      // if(error.response?.data?.message==="Check your email to verify your account"){
+      //   navigate("/verification");
+      // }
     },
   });
 
