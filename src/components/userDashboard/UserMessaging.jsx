@@ -6,6 +6,7 @@ import { IoChevronBack } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
+import echo from "@/utils/echo";
 
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
@@ -36,7 +37,7 @@ const UserMessaging = () => {
       return response?.data;
     },
     onSuccess: (response) => {
-      console.log(response)
+      console.log(response);
       toast.success(response?.message || "Login successful");
     },
 
@@ -46,15 +47,74 @@ const UserMessaging = () => {
         error.response?.data?.message ||
         "Something went wrong, try again later!!";
       toast.error(errorMessage);
-      
     },
   });
 
-  useEffect(()=>{
-    createChatMutation.mutate({user_id: 2});
-  },[])
+  useEffect(() => {
+    createChatMutation.mutate({ user_id: 2 });
+  }, []);
 
-  // 
+  const [currentUserId, setCurrentUserId] = useState(2);
+  const [messages, setMessages] = useState([]);
+  console.log("outside");
+  
+  useEffect(() => {
+  const channelName = `private-chat.${currentUserId}`;
+  const channel = echo.private(channelName);
+
+  console.log(`Subscribing to chat channel: ${channelName}`);
+
+  channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
+    console.log('listening for messages on channel:', channel.name);
+    console.log("📨 New message:", e.message);
+    setMessages((prev) => [...prev, e.message]);
+  });
+
+  return () => {
+    echo.leaveChannel(channelName);
+  };
+}, [currentUserId]);
+
+
+  const sendMessageMutation = useMutation({
+  mutationFn: async (data) => {
+    const response = await axiosSecure.post(
+      `/messages`,
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  },
+  onSuccess: (response) => {
+    console.log("Message sent successfully:", response);
+    toast.success("Message sent!");
+  },
+  onError: (error) => {
+    console.error("Send message error:", error);
+    if (error?.response?.status === 401) {
+      // handle unauthorized (e.g., redirect to login)
+    } else {
+      toast.error(error?.response?.data?.message || "Failed to send message.");
+    }
+  },
+});
+
+// Usage function
+const handleSendMessage = () => {
+  // if (!message.trim()) {
+  //   return toast.error("Message cannot be empty.");
+  // }
+
+  sendMessageMutation.mutate({
+    to_user_id:2,
+    message: "Hello, this is a test message!",
+  });
+};
+
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
@@ -66,9 +126,8 @@ const UserMessaging = () => {
       >
         {/* Header */}
         <div className="p-4">
-          <h1 className="sm:text-xl font-bold text-[#4275F6]">
-            Messages (04)
-          </h1>
+          <h1 className="sm:text-xl font-bold text-[#4275F6]">Messages (04)</h1>
+          <div onClick={handleSendMessage} className="p-4 bg-red-800 cursor-pointer text-white ">submit</div>
           <div className="mt-4">
             <input
               type="text"
