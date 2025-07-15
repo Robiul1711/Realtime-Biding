@@ -12,13 +12,16 @@ const LiveAction = () => {
 
   const axiosPublic = useAxiosPublic();
 
-  const { data: details, isLoading } = useQuery({
-    queryKey: ["products-details"],
+  const { data: productDetails, isLoading } = useQuery({
+    queryKey: ["products-details", id],
     queryFn: () => axiosPublic.get("/products/" + id),
+    select: (res) => res.data.data,
   });
-  const productDetails = details?.data?.data;
 
-  console.log(productDetails)
+  // if (isLoading) return <p>.</p>;
+  // if (!productDetails) return <p>Product not found.</p>;
+
+  // console.log(productDetails);
 
   return (
     <div>

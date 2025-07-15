@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import user from "../../assets/images/user.png";
 import { CiMenuKebab } from "react-icons/ci";
 import MessageBox from "./MessageBox";
 import { IoChevronBack } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
-
+  const axiosSecure = useAxiosSecure();
   const users = [
     "Mary Freund",
     "Katie Sims",
@@ -26,6 +29,32 @@ const UserMessaging = () => {
   const goBackToUserList = () => {
     setActiveUser(null);
   };
+
+  const createChatMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axiosSecure.post("messages/create", data);
+      return response?.data;
+    },
+    onSuccess: (response) => {
+      console.log(response)
+      toast.success(response?.message || "Login successful");
+    },
+
+    onError: (error) => {
+      console.log(error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong, try again later!!";
+      toast.error(errorMessage);
+      
+    },
+  });
+
+  useEffect(()=>{
+    createChatMutation.mutate({user_id: 2});
+  },[])
+
+  // 
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
