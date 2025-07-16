@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import echo from "@/utils/echo";
+import { useMatch } from "react-router-dom";
 
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
@@ -20,6 +21,12 @@ const UserMessaging = () => {
     "Rodger Struck",
     "Ricky Smith",
   ];
+  const [currentUserId, setCurrentUserId] = useState(15);
+  const [messages, setMessages] = useState([]);
+  const [conversationId, setConversationId] = useState(null);
+
+  const match = useMatch("/user-dashboard/messages/:sellerId");
+  const sellerId = match?.params?.sellerId;
 
   const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
 
@@ -38,7 +45,7 @@ const UserMessaging = () => {
     },
     onSuccess: (response) => {
       console.log(response);
-      toast.success(response?.message || "Login successful");
+      setConversationId(response?.data?.conversation?.id);
     },
 
     onError: (error) => {
@@ -51,69 +58,65 @@ const UserMessaging = () => {
   });
 
   useEffect(() => {
-    createChatMutation.mutate({ user_id: 2 });
+    createChatMutation.mutate({ user_id: 15 });
   }, []);
 
-  const [currentUserId, setCurrentUserId] = useState(2);
-  const [messages, setMessages] = useState([]);
-  console.log("outside");
-  
+  console.log("conversationId", conversationId);
+
   useEffect(() => {
-  const channelName = `chat.3`;
-  const channel = echo.private(channelName);
+    if (!conversationId) return;
+    
+    const channelName = `chat.5`;
+    const channel = echo.private(channelName);
 
-  console.log(`Subscribing to chat channel: ${channelName}`);
+    console.log(`Subscribing to chat channel: ${channelName}`);
 
-  channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
-    console.log('listening for messages on channel:', channel.name);
-    console.log("📨 New message:", e);
-  });
+    channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
+      console.log("listening for messages on channel:", channel.name);
+      console.log("📨 New message:", e);
+    });
 
-  return () => {
-    echo.leaveChannel(channelName);
-  };
-}, [currentUserId]);
-
+    return () => {
+      echo.leaveChannel(channelName);
+    };
+  }, [conversationId]);
 
   const sendMessageMutation = useMutation({
-  mutationFn: async (data) => {
-    const response = await axiosSecure.post(
-      `/messages`,
-      data,
-      {
+    mutationFn: async (data) => {
+      const response = await axiosSecure.post(`/messages`, data, {
         headers: {
           "Content-Type": "application/json",
         },
+      });
+      return response.data;
+    },
+    onSuccess: (response) => {
+      console.log("Message sent successfully:", response);
+      toast.success("Message sent!");
+    },
+    onError: (error) => {
+      console.error("Send message error:", error);
+      if (error?.response?.status === 401) {
+        // handle unauthorized (e.g., redirect to login)
+      } else {
+        toast.error(
+          error?.response?.data?.message || "Failed to send message."
+        );
       }
-    );
-    return response.data;
-  },
-  onSuccess: (response) => {
-    console.log("Message sent successfully:", response);
-    toast.success("Message sent!");
-  },
-  onError: (error) => {
-    console.error("Send message error:", error);
-    if (error?.response?.status === 401) {
-      // handle unauthorized (e.g., redirect to login)
-    } else {
-      toast.error(error?.response?.data?.message || "Failed to send message.");
-    }
-  },
-});
-
-// Usage function
-const handleSendMessage = () => {
-  // if (!message.trim()) {
-  //   return toast.error("Message cannot be empty.");
-  // }
-
-  sendMessageMutation.mutate({
-    to_user_id:2,
-    message: "Hello, this is a test message!",
+    },
   });
-};
 
+  // Usage function
+  const handleSendMessage = () => {
+    // if (!message.trim()) {
+    //   return toast.error("Message cannot be empty.");
+    // }
+
+    sendMessageMutation.mutate({
+      to_user_id: 15,
+      message: "Hello, this is a test message!",
+    });
+  };
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
@@ -125,8 +128,18 @@ const handleSendMessage = () => {
       >
         {/* Header */}
         <div className="p-4">
+          {sellerId ? (
+            <p>Messaging with seller ID: {sellerId}</p>
+          ) : (
+            <p>All messages</p>
+          )}
           <h1 className="sm:text-xl font-bold text-[#4275F6]">Messages (04)</h1>
-          <div onClick={handleSendMessage} className="p-4 bg-red-800 cursor-pointer text-white ">submit</div>
+          <div
+            onClick={handleSendMessage}
+            className="p-4 bg-red-800 cursor-pointer text-white "
+          >
+            submit
+          </div>
           <div className="mt-4">
             <input
               type="text"

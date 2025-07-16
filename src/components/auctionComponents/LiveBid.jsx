@@ -10,13 +10,14 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import echo from "@/utils/echo";
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
   const auctionEndAt = productDetails?.auction_end_at;
   const [bids, setBids] = useState([]);
-
+  const navigate = useNavigate();
   const [countValue, setCountValue] = useState(`$0`);
   const axiosSecure = useAxiosSecure();
   // console.log(productDetails)
@@ -135,6 +136,10 @@ const LiveBid = ({ productDetails, isLoading }) => {
   }, [productDetails?.id]);
 
   console.log("bids", bids);
+
+  const handleMessageSeller = (sellerId) => {
+  navigate(`/user-dashboard/messages/${sellerId}`);
+};
 
   return (
     <div className="border border-[#D0D0D0] p-5 rounded-lg">
@@ -263,6 +268,9 @@ const LiveBid = ({ productDetails, isLoading }) => {
               </div>
             ))}
       </div>
+
+      <div onClick={()=>handleMessageSeller(15)} className="bg-[#4275F6] text-white text-center cursor-pointer py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300">Contact to Seller</div>
+
     </div>
   );
 };
