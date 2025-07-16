@@ -96,7 +96,7 @@ const router = createBrowserRouter([
         element: <WishList />,
       },
       {
-        path: "/user-dashboard/messages",
+        path: "/user-dashboard/messages/*",
         element: <UserMessaging />,
       },
       {

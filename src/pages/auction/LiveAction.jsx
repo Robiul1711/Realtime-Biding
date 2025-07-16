@@ -5,24 +5,21 @@ import RelatedAuctionCard from "@/components/recentWon_components/RelatedAuction
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { ScrollRestoration, useParams } from "react-router-dom";
+import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
 
 const LiveAction = () => {
   const { id } = useParams();
 
   const axiosPublic = useAxiosPublic();
 
+  const navigate = useNavigate();
+
   const { data: productDetails, isLoading } = useQuery({
     queryKey: ["products-details", id],
     queryFn: () => axiosPublic.get("/products/" + id),
     select: (res) => res.data.data,
   });
-
-  // if (isLoading) return <p>.</p>;
-  // if (!productDetails) return <p>Product not found.</p>;
-
-  // console.log(productDetails);
-
+  
   return (
     <div>
       <ScrollRestoration />
