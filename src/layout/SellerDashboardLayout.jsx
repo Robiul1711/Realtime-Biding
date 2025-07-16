@@ -75,7 +75,7 @@ const SellerDashboardLayout = () => {
       <ScrollRestoration />
       <div className="flex  h-screen min-h-screen w-full">
         <SideBar open={Open} setOpen={setOpen} sidebar={sideBar} />
-        <div className="flex-1 bg-dark text-white flex flex-col overflow-auto custom-scrollbar">
+        <div className="flex-1 bg-dark text-white px-8 flex flex-col overflow-auto custom-scrollbar">
           <div className=" flex flex-col">
             <CommonNavbar open={Open} setOpen={setOpen} />
             <Outlet />

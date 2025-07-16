@@ -5,21 +5,20 @@ import { ChevronDown } from "lucide-react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const ItemDetails = () => {
   const [fileList, setFileList] = useState([]);
   const {
     register,
     control,
-    handleSubmit,
     setValue,
     formState: { errors },
-    watch,
   } = useFormContext();
 
-  const additionalInputs =
-    useWatch({ name: "additionalInputs", control }) || [];
-  const buyNowValue = watch("buy_now");
+  const additionalInputs = useWatch({ name: "product_properties", control }) || [];
+  const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
     const defaultImages = control._defaultValues?.images || [];
@@ -32,67 +31,58 @@ const ItemDetails = () => {
     setFileList(formatted);
   }, [control]);
 
-  const handleAddSection = () => {
-    const newInputs = [...additionalInputs, { title: "", buyNowPrice: "" }];
-    setValue("additionalInputs", newInputs);
-  };
+  const { data: allCategories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/categories");
+      return res.data;
+    },
+  });
 
-  const onSubmit = (data) => {
-    console.log("Submitted Form Data:", data);
+  const { data: allSubcategories } = useQuery({
+    queryKey: ["subcategories"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/subcategories");
+      return res.data;
+    },
+  });
+
+  const handleAddProperty = () => {
+    setValue("product_properties", [...additionalInputs, { title: "", value: "" }]);
   };
 
   return (
     <div className="max-w-4xl mx-auto px-4">
-      <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
-        {/* Hidden type input */}
-        <input
-          type="hidden"
-          {...register("type")}
-          value={buyNowValue === "yes" ? "sell" : "auction"}
-        />
-
+      <div className="space-y-8">
         {/* Image Upload */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Upload Images <span className="text-red-500">*</span>
-          </label>    
-<Controller
-  control={control}
-  name="images"
-  rules={{ required: "At least one image is required" }}
-  render={({ field: { onChange } }) => (
-    <Upload
-      multiple
-      listType="picture"
-      fileList={fileList}
-      beforeUpload={() => false} // prevent auto upload
-      onChange={({ fileList: newList }) => {
-        setFileList(newList);
-
-        // ✅ Handle both already-uploaded (with URL) and newly-selected files
-        const actualFiles = newList.map((file) => {
-          if (file.originFileObj) {
-            return file.originFileObj; // new file
-          } else if (file.url) {
-            // reconstruct a File-like object with the original name if needed
-            return file; // keep URL version if backend supports string URLs
-          }
-          return null;
-        }).filter(Boolean);
-
-        onChange(actualFiles); // only File objects or URL-backed ones
-      }}
-    >
-      <Button icon={<UploadOutlined />}>Select Images</Button>
-    </Upload>
-  )}
-/>
-
-
+          </label>
+          <Controller
+            control={control}
+            name="images"
+            rules={{ required: "At least one image is required" }}
+            render={({ field: { onChange } }) => (
+              <Upload
+                multiple
+                listType="picture"
+                fileList={fileList}
+                beforeUpload={() => false}
+                onChange={({ fileList: newList }) => {
+                  setFileList(newList);
+                  const actualFiles = newList
+                    .map((file) => file.originFileObj || file)
+                    .filter(Boolean);
+                  onChange(actualFiles);
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Select Images</Button>
+              </Upload>
+            )}
+          />
           {errors.images && (
-            <span className="text-red-500 text-sm">
-              {errors.images.message}
-            </span>
+            <span className="text-red-500 text-sm">{errors.images.message}</span>
           )}
         </div>
 
@@ -137,7 +127,7 @@ const ItemDetails = () => {
         </div>
 
         {/* Care Guide */}
-        <div>
+        <div className=" mt-20">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Care Guide <span className="text-red-500">*</span>
           </label>
@@ -161,7 +151,7 @@ const ItemDetails = () => {
         </div>
 
         {/* Category & Subcategory */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-20">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Category <span className="text-red-500">*</span>
@@ -174,9 +164,11 @@ const ItemDetails = () => {
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
               >
                 <option value="">Select a category</option>
-                <option value="1">Electronics</option>
-                <option value="2">Collectibles</option>
-                <option value="3">Fashion</option>
+                {allCategories?.data?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.title}
+                  </option>
+                ))}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
             </div>
@@ -199,9 +191,11 @@ const ItemDetails = () => {
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
               >
                 <option value="">Select sub category</option>
-                <option value={1}>Accessories</option>
-                <option value={2}>Gadgets</option>
-                <option value={3}>Decor</option>
+                {allSubcategories?.data?.map((subcategory) => (
+                  <option  key={subcategory.id} value={subcategory.id}>
+                    {subcategory.title}
+                  </option>
+                ))}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
             </div>
@@ -213,7 +207,7 @@ const ItemDetails = () => {
           </div>
         </div>
 
-        {/* Additional Inputs */}
+        {/* Additional Properties */}
         <div className="pt-2">
           <div className="flex justify-between items-center border-t border-gray-200 pt-6">
             <h3 className="text-base font-semibold text-gray-900">
@@ -221,46 +215,42 @@ const ItemDetails = () => {
             </h3>
             <button
               type="button"
-              onClick={handleAddSection}
+              onClick={handleAddProperty}
               className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center"
             >
-              <span>Add</span>
+              <span>Add Property</span>
               <ChevronDown className="ml-1 w-4 h-4" />
             </button>
           </div>
 
           {additionalInputs.map((_, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
-            >
+            <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Title {index + 1}
+                  Property Name
                 </label>
                 <input
                   type="text"
                   {...register(`product_properties.${index}.title`)}
-                  placeholder="Enter the title"
+                  placeholder="e.g. Condition"
                   className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Buy Now Price {index + 1}
+                  Property Value
                 </label>
                 <input
                   type="number"
-                  step="0.01"
                   {...register(`product_properties.${index}.value`)}
-                  placeholder="Enter the price"
+                  placeholder="e.g. Excellent"
                   className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"
                 />
               </div>
             </div>
           ))}
         </div>
-      </form>
+      </div>
     </div>
   );
 };

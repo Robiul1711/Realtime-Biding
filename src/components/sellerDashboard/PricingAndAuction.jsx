@@ -1,18 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker";
-import dayjs from "dayjs";
 import "react-datepicker/dist/react-datepicker.css";
+import dayjs from "dayjs";
 
 const PricingAndAuction = () => {
   const {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext();
 
-  const buyNowEnabled = watch("buy_now") === "yes";
+  const buyNowValue = watch("buy_now");
+  const buyNowEnabled = buyNowValue === "yes";
+
+  // Automatically set type based on buy_now selection
+  useEffect(() => {
+    setValue("type", buyNowEnabled ? " sale" : " auction", {
+      shouldValidate: true,
+    });
+  }, [buyNowEnabled, setValue]);
 
   return (
     <div className="text-black space-y-6">
@@ -20,16 +29,36 @@ const PricingAndAuction = () => {
       <div className="flex items-center gap-6">
         <label className="font-medium">Optional Buy Now</label>
         <label className="flex items-center gap-2">
-          <input type="radio" value="yes" {...register("buy_now")} defaultChecked />
+          <input
+            type="radio"
+            value="yes"
+            {...register("buy_now", {
+              onChange: () => {
+                setValue("type", "sell");
+                setValue("starting_price", "");
+                setValue("auction_end_at", "");
+              },
+            })}
+          />
           <span>Yes</span>
         </label>
         <label className="flex items-center gap-2">
-          <input type="radio" value="no" {...register("buy_now")} />
+          <input
+            type="radio"
+            value="no"
+            {...register("buy_now", {
+              onChange: () => {
+                setValue("type", "auction");
+                setValue("price", "");
+              },
+            })}
+            defaultChecked
+          />
           <span>No</span>
         </label>
       </div>
 
-      {/* Buy Now Price */}
+      {/* Buy Now Price (only shown when buy now is yes) */}
       {buyNowEnabled && (
         <div>
           <label className="block mb-1 font-medium">
@@ -37,116 +66,170 @@ const PricingAndAuction = () => {
           </label>
           <input
             type="number"
-            {...register("buy_now_price", { required: true })}
+            step="0.01"
+            {...register("price", {
+              required: buyNowEnabled ? "Price is required" : false,
+              min: { value: 0.01, message: "Price must be greater than 0" },
+            })}
             placeholder="Enter buy now price"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
           />
-          {errors.buy_now_price && (
-            <span className="text-red-500 text-sm">This field is required</span>
+          {errors.price && (
+            <span className="text-red-500 text-sm">{errors.price.message}</span>
           )}
         </div>
       )}
 
-      {/* Starting Price */}
-      <div>
-        <label className="block mb-1 font-medium">
-          Starting Price<span className="text-red-500">*</span>
-        </label>
-        <input
-          type="number"
-          {...register("starting_price", { required: true })}
-          placeholder="Enter starting price"
-          className="w-full border border-gray-300 rounded-md px-3 py-2"
-        />
-        {errors.starting_price && (
-          <span className="text-red-500 text-sm">This field is required</span>
-        )}
-      </div>
+      {/* Auction Fields (only shown when buy now is no) */}
 
-      {/* Auction End At & Ship Within */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block mb-1 font-medium">
-            Auction End At<span className="text-red-500">*</span>
-          </label>
-          <Controller
-            control={control}
-            name="auction_end_at"
-            rules={{ required: true }}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                selected={field.value ? new Date(field.value) : null}
-                onChange={(date) =>
-                  field.onChange(dayjs(date).format("YYYY-MM-DD"))
-                }
-                dateFormat="yyyy-MM-dd"
-                placeholderText="Select auction end date"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-              />
+      <>
+        {!buyNowEnabled && (
+          <div>
+            <label className="block mb-1 font-medium">
+              Starting Price<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              {...register("starting_price", {
+                required: !buyNowEnabled ? "Starting price is required" : false,
+                min: { value: 0.01, message: "Price must be greater than 0" },
+              })}
+              placeholder="Enter starting price"
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
+            />
+            {errors.starting_price && (
+              <span className="text-red-500 text-sm">
+                {errors.starting_price.message}
+              </span>
             )}
-          />
-          {errors.auction_end_at && (
-            <span className="text-red-500 text-sm">This field is required</span>
-          )}
-        </div>
+          </div>
+        )}
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {!buyNowEnabled && (
+            <div>
+              <label className="block mb-1 font-medium">
+                Auction End Date<span className="text-red-500">*</span>
+              </label>
+              <Controller
+                control={control}
+                name="auction_end_at"
+                rules={{
+                  required: !buyNowEnabled
+                    ? "Auction end date is required"
+                    : false,
+                  validate: (value) => {
+                    if (!value && !buyNowEnabled)
+                      return "Auction end date is required";
+                    if (value) {
+                      const selectedDate = new Date(value);
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return (
+                        selectedDate >= today || "Date must be in the future"
+                      );
+                    }
+                    return true;
+                  },
+                }}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value ? new Date(field.value) : null}
+                    onChange={(date) => {
+                      const formattedDate = dayjs(date).format("YYYY-MM-DD");
+                      field.onChange(formattedDate);
+                      setValue("auction_end_at", formattedDate, {
+                        shouldValidate: true,
+                      });
+                    }}
+                    minDate={new Date()}
+                    dateFormat="yyyy-MM-dd"
+                    placeholderText="Select auction end date"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  />
+                )}
+              />
+              {errors.auction_end_at && (
+                <span className="text-red-500 text-sm">
+                  {errors.auction_end_at.message}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div>
+            <label className="block mb-1 font-medium w-full">
+              Ship Within (days)<span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              {...register("ship_within", {
+                required: "Shipping days is required",
+                min: { value: 1, message: "Must be at least 1 day" },
+              })}
+              placeholder="e.g. 3"
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
+            />
+            {errors.ship_within && (
+              <span className="text-red-500 text-sm">
+                {errors.ship_within.message}
+              </span>
+            )}
+          </div>
+        </div>
+      </>
+
+      {/* Location Fields (always shown) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
           <label className="block mb-1 font-medium">
-            Ship Within (in days)<span className="text-red-500">*</span>
+            Country<span className="text-red-500">*</span>
           </label>
           <input
-            type="number"
-            {...register("ship_within", { required: true })}
-            placeholder="e.g. 3"
+            type="text"
+            {...register("country", { required: "Country is required" })}
+            placeholder="Enter country"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
           />
-          {errors.ship_within && (
-            <span className="text-red-500 text-sm">This field is required</span>
+          {errors.country && (
+            <span className="text-red-500 text-sm">
+              {errors.country.message}
+            </span>
           )}
         </div>
-      </div>
 
-      {/* City */}
-      <div>
-        <label className="block mb-1 font-medium">
-          City<span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          {...register("city", { required: true })}
-          placeholder="Enter city"
-          className="w-full border border-gray-300 rounded-md px-3 py-2"
-        />
-        {errors.city && <span className="text-red-500 text-sm">This field is required</span>}
-      </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            City<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            {...register("city", { required: "City is required" })}
+            placeholder="Enter city"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+          />
+          {errors.city && (
+            <span className="text-red-500 text-sm">{errors.city.message}</span>
+          )}
+        </div>
 
-      {/* Country */}
-      <div>
-        <label className="block mb-1 font-medium">
-          Country<span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          {...register("country", { required: true })}
-          placeholder="Enter country"
-          className="w-full border border-gray-300 rounded-md px-3 py-2"
-        />
-        {errors.country && <span className="text-red-500 text-sm">This field is required</span>}
-      </div>
-
-      {/* Address */}
-      <div>
-        <label className="block mb-1 font-medium">
-          Address<span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          {...register("address", { required: true })}
-          placeholder="Enter address"
-          className="w-full border border-gray-300 rounded-md px-3 py-2"
-        />
-        {errors.address && <span className="text-red-500 text-sm">This field is required</span>}
+        <div>
+          <label className="block mb-1 font-medium">
+            Address<span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            {...register("address", { required: "Address is required" })}
+            placeholder="Enter address"
+            className="w-full border border-gray-300 rounded-md px-3 py-2"
+          />
+          {errors.address && (
+            <span className="text-red-500 text-sm">
+              {errors.address.message}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
