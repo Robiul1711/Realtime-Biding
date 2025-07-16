@@ -59,15 +59,14 @@ const UserMessaging = () => {
   console.log("outside");
   
   useEffect(() => {
-  const channelName = `private-chat.${currentUserId}`;
+  const channelName = `chat.3`;
   const channel = echo.private(channelName);
 
   console.log(`Subscribing to chat channel: ${channelName}`);
 
   channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
     console.log('listening for messages on channel:', channel.name);
-    console.log("📨 New message:", e.message);
-    setMessages((prev) => [...prev, e.message]);
+    console.log("📨 New message:", e);
   });
 
   return () => {
