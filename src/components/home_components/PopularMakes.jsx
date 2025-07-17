@@ -70,9 +70,9 @@ const PopularMakes = () => {
     <div className="section-padding-x pb-20 pt-10 lg:py-20 bg-[#001767] text-white">
       <div className="flex justify-between items-center mb-5">
         <Title level="title40">Popular Makes</Title>
-        <p className="flex items-center gap-2">
+        {/* <p className="flex items-center gap-2">
           View All <FiArrowUpRight className="text-2xl" />
-        </p>
+        </p> */}
       </div>
 
       {/* Categories tabs */}
@@ -135,7 +135,7 @@ const PopularMakes = () => {
                           e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
                         }}
                       />
-                      <button
+                      {/* <button
                         onClick={() => toggleBookmark(product.id)}
                         className="absolute top-2 right-2 text-black p-2.5 text-2xl bg-white rounded-full"
                       >
@@ -146,7 +146,7 @@ const PopularMakes = () => {
                               : "fill-[#050B20]"
                           }`}
                         />
-                      </button>
+                      </button> */}
                     </div>
                     <div className="p-4">
                       <h3 className="text-lg font-semibold line-clamp-2">

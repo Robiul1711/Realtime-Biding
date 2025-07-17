@@ -8,15 +8,16 @@ import React from "react";
 import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
 
 const LiveAction = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
+  console.log(slug)
 
   const axiosPublic = useAxiosPublic();
 
   const navigate = useNavigate();
 
   const { data: productDetails, isLoading } = useQuery({
-    queryKey: ["products-details", id],
-    queryFn: () => axiosPublic.get("/products/" + id),
+    queryKey: ["products-details", slug],
+    queryFn: () => axiosPublic.get("/products/" + slug),
     select: (res) => res.data.data,
   });
   

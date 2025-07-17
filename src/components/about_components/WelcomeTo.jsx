@@ -1,31 +1,56 @@
 import React from "react";
 import Title from "../common/Title";
-import banner2 from "../../assets/images/banner2.png";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css"; // if not already imported globally
+
 const WelcomeTo = () => {
+  const axiosPublic = useAxiosPublic();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["about-section-one"],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/cms/about/section-one`);
+      return res.data;
+    },
+  });
+
+  const content = data?.data;
+
   return (
     <div className="section-padding-x py-8 md:py-12 flex flex-col items-center justify-center text-center">
-      <Title level="title64" >Welcome to The Hobby Nexus</Title>
+      {/* Title */}
+      <Title level="title64">
+        {isLoading ? <Skeleton width={280} height={50} /> : content?.title}
+      </Title>
+
+      {/* Subtitle */}
       <Title level="title16" className="mt-4 max-w-[780px]">
-        At The Hobby Nexus, we're more than just an auction site—we're a
-        community built for hobbyists, collectors, and enthusiasts who are
-        passionate about sports cards, TCGs (Trading Card Games), and unique
-        collectibles.
+        {isLoading ? (
+          <Skeleton width={`100%`} height={20} count={2} />
+        ) : (
+          content?.sub_title
+        )}
       </Title>
-      <Title level="title20" className="mt-4 ">
-        We founded The Hobby Nexus with a simple goal: to empower sellers and
-        buyers with a fair, transparent, and community-first platform. While
-        other auction platforms charge up to 20%, 30%, or even 40% in fees,
-        we've kept it simple and affordable—with just a $0.25 listing fee and a
-        6% auction closing fee. That means more of your hard-earned money stays
-        in your pocket. Whether you're just starting your collection, a seasoned
-        seller, or a passionate buyer, The Hobby Nexus is designed to support
-        your journey.
+
+      {/* Description */}
+      <Title level="title20" className="mt-4">
+        {isLoading ? <Skeleton width={`60%`} height={18} /> : content?.description}
       </Title>
-      <img
-        src={banner2}
-        alt="Welcome Banner"
-        className="w-full mt-12 rounded-lg shadow-lg"
-      />
+
+      {/* Image */}
+      <div className="w-full mt-12 rounded-lg shadow-lg">
+        {isLoading ? (
+          <Skeleton height={300} borderRadius={12} />
+        ) : (
+          <img
+            src={content?.image}
+            alt="Welcome Banner"
+            className="w-full rounded-lg shadow-lg"
+          />
+        )}
+      </div>
     </div>
   );
 };

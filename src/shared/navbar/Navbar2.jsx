@@ -17,7 +17,7 @@ const Navbar2 = () => {
   ];
 
   return (
-    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center section-padding-x mt-20 2xl:gap-12">
+    <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center justify-between section-padding-x mt-20 2xl:gap-12">
       <div className="flex flex-col xxs:flex-row gap-2 sm:gap-6 md:items-center">
         <div className="flex flex-col sm:flex-row gap-5 xl:gap-[70px] items-start sm:items-center w-full xl:w-[80%]">
           <div className="w-[60px] md:w-[80px] lg:w-[126px] xl:w-[166px] h-[65px] sm:h-[85px] mx-auto sm:mx-0 hidden md:block">
@@ -25,7 +25,7 @@ const Navbar2 = () => {
               <img src={Logo} className="w-full h-full object-contain " />
             </Link>
           </div>
-          <div className="w-full md:w-auto">
+          <div className="w-full md:w-auto ">
             <SearchContainer />
           </div>
         </div>

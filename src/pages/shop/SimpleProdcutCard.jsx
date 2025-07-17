@@ -72,7 +72,7 @@ const SimpleProductCard = ({ products, isLoading }) => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
         <div className="flex items-center gap-4 w-full sm:w-[65%]">
           <p className="text-sm sm:text-base">Sort By :</p>
           <div className="relative w-full max-w-[180px]">
@@ -96,7 +96,7 @@ const SimpleProductCard = ({ products, isLoading }) => {
           </div>
         </div>
         <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xmd:grid-cols-2 lg:grid-cols-2 xlg:grid-cols-3 gap-4 mt-8">
         {isLoading
@@ -143,10 +143,10 @@ const SimpleProductCard = ({ products, isLoading }) => {
                       </p>
                       <div className="flex items-center gap-2">
                         <p className="text-[14px] text-[#A8A8A8]">
-                          Current bid
+                          Price
                         </p>
                         <p className="text-[15px] font-semibold text-[#0C0D19]">
-                          ${item.bid}
+                          ${item.price}
                         </p>
                       </div>
                     </div>

@@ -135,13 +135,13 @@ const ProductCard = ({ products, isLoading }) => {
                   </div>
                 </div>
               ))
-          : products?.data?.data?.data?.map((item) => (
+          : products?.data?.data?.map((item) => (
               <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
                 <div className="h-[200px]">
 
                 <img
                   className="w-full  h-full object-cover"
-                  src={VITE_IMG_URL + item.first_image}
+                  src={VITE_IMG_URL + item.images[0]}
                   alt="image"
                 />
                 </div>
@@ -182,7 +182,7 @@ const ProductCard = ({ products, isLoading }) => {
                     From {item.country}
                   </p>
                   <Link
-                    to={`/auction-details/${item.id}`}
+                    to={`/auction-details/${item?.slug}`}
                     className="bg-[#4275F6] text-white block text-center py-2 lg:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2"
                   >
                     Quick Bid

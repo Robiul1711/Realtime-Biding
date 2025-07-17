@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegHeart } from "react-icons/fa";
 import { IoCartOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdDashboard, MdOutlineSell } from "react-icons/md";
@@ -10,22 +10,36 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useCart } from "@/hooks/useCart";
 
 const UserActions = () => {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
-const LogOutMutation = useMutation({
+
+  // Check if mobile screen
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 1025);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  const LogOutMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axiosSecure.post("/logout", data);
       return response?.data;
     },
     onSuccess: (response) => {
       toast.success(response?.message || "Logout successful");
-       localStorage.removeItem("user");
-  setUser(null);
+      localStorage.removeItem("user");
+      setUser(null);
       navigate("/");
     },
     onError: (error) => {
@@ -35,39 +49,31 @@ const LogOutMutation = useMutation({
       toast.error(errorMessage);
     },
   });
+
+  const { cart } = useCart();
+
   return (
     <div className="flex flex-row justify-between items-start sm:items-center gap-4 xl:gap-8 w-full xmd:w-auto bg-white py-4 px-8 2xl:px-4">
       {/* Sell */}
-      <div className="relative flex items-center gap-0.5 cursor-pointer">
-        <MdOutlineSell className="text-[1.2rem] sm:text-[1.5rem]" />
-        <p className="text-customSecondary text-[15px] xl:text-base">Sell</p>
-      </div>
-
-      {/* Wishlist */}
-      <div className="relative flex items-center gap-3">
-        <FaRegHeart className="text-[1.2rem] sm:text-[1.5rem] cursor-pointer" />
-        <div className="absolute top-[-50%] left-[17%] text-white min-w-[20px] min-h-[20px] text-center">
-          <span className="text-[0.6rem] xl:text-[0.8rem] bg-[#FB0000] py-0.5 px-1 rounded-full w-full h-full">
-            6
-          </span>
-        </div>
-        <p className="text-customSecondary cursor-pointer text-[15px] xl:text-base">
-          Wishlist
-        </p>
-      </div>
+      {!user && (
+        <Link to={`/join`} className="relative flex items-center gap-0.5 cursor-pointer">
+          <MdOutlineSell className="text-[1.2rem] sm:text-[1.5rem]" />
+          <p className="text-customSecondary text-[15px] xl:text-base">Sell</p>
+        </Link>
+      )}
 
       {/* Cart */}
-      <div className="relative flex items-center gap-3">
+      <Link to={`/cart`} className="relative flex items-center gap-3">
         <IoCartOutline className="text-[1.2rem] sm:text-[1.5rem] cursor-pointer" />
         <div className="absolute top-[-50%] left-[17%] text-white min-w-[20px] min-h-[20px] text-center">
-          <span className="text-[0.6rem] xl:text-[0.8rem] bg-[#FB0000] py-0.5 px-1 rounded-full w-full h-full">
-            8
+          <span className="text-[0.6rem] xl:text-[0.8rem] bg-[#FB0000] py-0.5 px-2 aspect-square rounded-full w-full h-full">
+            {cart?.length}
           </span>
         </div>
         <p className="text-customSecondary cursor-pointer text-[15px] xl:text-base">
           Cart
         </p>
-      </div>
+      </Link>
 
       {/* User Account */}
       <div className="relative flex items-center gap-0.5 cursor-pointer">
@@ -97,8 +103,12 @@ const LogOutMutation = useMutation({
                 className={`${
                   accountMenuOpen
                     ? "translate-y-0 opacity-100"
-                    : "translate-y-[10px] opacity-0 z-[-1]"
-                } bg-white border z-50 w-max rounded-md absolute dark:bg-slate-800 top-[45px] right-0 p-[10px] flex flex-col transition-all duration-300 gap-[5px]`}
+                    : isMobile 
+                      ? "translate-y-[-10px] opacity-0 z-[-1]"
+                      : "translate-y-[10px] opacity-0 z-[-1]"
+                } bg-white border z-50 w-max rounded-md absolute dark:bg-slate-800 ${
+                  isMobile ? 'bottom-full mb-2' : 'top-[45px]'
+                } right-0 p-[10px] flex flex-col transition-all duration-300 gap-[5px] shadow-md`}
               >
                 <Link
                   to={`${
@@ -125,7 +135,10 @@ const LogOutMutation = useMutation({
                 </Link>
 
                 <div className="mt-3 border-t dark:border-slate-700 border-gray-200 pt-[5px]">
-                  <p onClick={() => LogOutMutation.mutate({})} className="flex items-center gap-[5px] rounded-md p-[8px] pr-[45px] py-[3px] text-[1rem] dark:text-red-500 dark:hover:bg-red-500/20 text-red-500 hover:bg-red-50 cursor-pointer">
+                  <p 
+                    onClick={() => LogOutMutation.mutate({})} 
+                    className="flex items-center gap-[5px] rounded-md p-[8px] pr-[45px] py-[3px] text-[1rem] dark:text-red-500 dark:hover:bg-red-500/20 text-red-500 hover:bg-red-50 cursor-pointer"
+                  >
                     Logout
                   </p>
                 </div>
