@@ -21,7 +21,9 @@ const UserDropdown = ({
   const { setUser } = useAuth();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
-  console.log(user);
+  console.log("user", user);
+  const toastId = useRef(null);
+
   const LogOutMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axiosSecure.post("/logout", data);
@@ -41,6 +43,55 @@ const UserDropdown = ({
     },
   });
 
+  // const switchAccountMutation = useMutation({
+  //   mutationFn: async (data) => {
+  //     const response = await axiosSecure.post("/switch", data);
+  //     return response?.data;
+  //   },
+  //   onSuccess: (response) => {
+  //     navigate("/");
+  //     toast.success(response?.message || "Account switched successful");
+  //     console.log(response?.data?.type);
+  //     setUser({ ...user, type: response?.data?.type });
+  //     console.log(response);
+  //   },
+  //   onError: (error) => {
+  //     const errorMessage =
+  //       error.response?.data?.message ||
+  //       "Something went wrong, try again later!!";
+  //     toast.error(errorMessage);
+  //   },
+  // });
+
+
+  const switchAccountMutation = useMutation({
+  mutationFn: async (data) => {
+    return await axiosSecure.post("/switch", data).then(res => res?.data);
+  },
+  onMutate: () => {
+    // Show loading toast and save the toast ID
+    toastId.current = toast.loading("Switching account...");
+  },
+  onSuccess: (response) => {
+    toast.success(response?.message || "Account switched successfully", {
+      id: toastId.current,
+    });
+
+    setUser({ ...user, type: response?.data?.type });
+    navigate("/");
+  },
+  onError: (error) => {
+    toast.error(
+      error.response?.data?.message ||
+        "Something went wrong, try again later!!",
+      {
+        id: toastId.current,
+      }
+    );
+  },
+});
+
+
   const defaultItems = [
     // {
     //   label: "Profile",
@@ -48,9 +99,14 @@ const UserDropdown = ({
     //   href: "/profile",
     // },
     {
-      label: "Switch to seller",
+      label: user?.type === "buyer" ? "Switch to seller" : "Switch to buyer",
       icon: <PiUserSwitch className="text-lg text-black w-4 h-4 mr-3" />,
-      href: "/sign-in",
+      onClick: () =>
+        navigate("/").then(() => {
+          switchAccountMutation.mutate({
+            to_type: user?.type === "buyer" ? "seller" : "buyer",
+          });
+        }),
     },
     {
       label: "Sign Out",
@@ -75,6 +131,10 @@ const UserDropdown = ({
   const getUserInitial = () => {
     return user?.name ? user.name.charAt(0).toUpperCase() : "U";
   };
+
+  // if (switchAccountMutation.isPending) {
+  //   toast.loading("Switching account...");
+  // }
 
   return (
     <div
