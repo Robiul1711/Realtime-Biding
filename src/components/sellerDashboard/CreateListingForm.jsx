@@ -8,22 +8,6 @@ import toast from "react-hot-toast";
 
 const CreateListingForm = () => {
   const axiosSecure = useAxiosSecure();
-
-const ProductCreateMutation = useMutation({
-  mutationFn: async (formData) => {
-    const response = await axiosSecure.post("/seller/product", formData /* no headers here */);
-    return response.data;
-  },
-  onSuccess: (response) => {
-    toast.success(response?.message || "Product created successfully");
-  },
-  onError: (error) => {
-    const errorMessage =
-      error.response?.data?.message || "Something went wrong, try again later!!";
-    toast.error(errorMessage);
-  },
-});
-
   const [step, setStep] = useState(1);
   const totalSteps = 2;
 
@@ -32,20 +16,50 @@ const ProductCreateMutation = useMutation({
       type: "auction",
       ship_within: 5,
       product_properties: [{ title: "", value: "" }],
+      buy_now: "no",
+    },
+    mode: "onChange", // Changed to onChange for better UX
+  });
+
+  const ProductCreateMutation = useMutation({
+    mutationFn: async (formData) => {
+      const response = await axiosSecure.post("/seller/product", formData);
+      return response.data;
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Product created successfully");
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong, try again later!!";
+      toast.error(errorMessage);
     },
   });
 
-  const handleNext = () => {
-    methods.trigger().then((isValid) => {
-      if (isValid) {
-        if (step < totalSteps) {
-          setStep((prev) => prev + 1);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        } else {
-          methods.handleSubmit(onSubmit)();
-        }
+  const handleNext = async () => {
+    // Only validate fields in the current step
+    let isValid = true;
+    if (step === 1) {
+      isValid = await methods.trigger(
+        [
+          "images",
+          "title",
+          "description",
+          "care_guide",
+          "category_id",
+          "subcategory_id",
+        ],
+        { shouldFocus: true }
+      );
+    }
+
+    if (isValid) {
+      if (step < totalSteps) {
+        setStep((prev) => prev + 1);
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    });
+    }
   };
 
   const handleBack = () => {
@@ -53,36 +67,74 @@ const ProductCreateMutation = useMutation({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-const onSubmit = (data) => {
-  const formData = new FormData();
+  const onSubmit = (data) => {
+    const formData = new FormData();
 
-  Object.entries(data).forEach(([key, value]) => {
-    if (key !== "images" && key !== "product_properties") {
-      if (value instanceof Date) {
-        formData.append(key, value.toISOString());
-      } else {
-        formData.append(key, value || "");
+    // Append simple fields
+    const simpleFields = [
+      "title",
+      "description",
+      "care_guide",
+      "category_id",
+      "subcategory_id",
+      "city",
+      "country",
+      "address",
+      "ship_within",
+    ];
+
+    simpleFields.forEach((field) => {
+      if (data[field] !== undefined) {
+        formData.append(field, data[field]);
       }
+    });
+
+    // Handle auction-specific fields
+    if (data.starting_price) {
+      formData.append("starting_price", data.starting_price);
     }
-  });
+    if (data.price) {
+      formData.append("price", data.price);
+    }
 
-  if (data.images && Array.isArray(data.images)) {
-    data.images.forEach((file, index) => {
-      if (file instanceof File) {
-        formData.append(`images[${index}]`, file);
-      }
-    });
-  }
+    if (data.auction_end_at) {
+      formData.append("auction_end_at", data.auction_end_at);
+    }
 
-  if (data.product_properties && Array.isArray(data.product_properties)) {
-    data.product_properties.forEach((prop, index) => {
-      formData.append(`product_prop_title[${index}]`, prop.title || "");
-      formData.append(`product_prop_value[${index}]`, prop.value || "");
-    });
-  }
-  console.log("Form Data:", formData);
-  ProductCreateMutation.mutate(formData);
-};
+    // Handle buy now price if enabled
+    if (data.buy_now === "yes" && data.buy_now_price) {
+      formData.append("buy_now_price", data.buy_now_price);
+    }
+    formData.append("type", data.type);
+
+    // Append images
+    if (data.images && Array.isArray(data.images)) {
+      data.images.forEach((file, index) => {
+        if (file instanceof File) {
+          formData.append(`images[${index}]`, file);
+        } else if (file.url) {
+          formData.append(`images[${index}]`, file.url);
+        }
+      });
+    }
+
+    // Append product properties
+    if (data.product_properties && Array.isArray(data.product_properties)) {
+      data.product_properties.forEach((prop, index) => {
+        if (prop.title && prop.value) {
+          formData.append(`product_prop_title[${index}]`, prop.title);
+          formData.append(`product_prop_value[${index}]`, prop.value);
+        }
+      });
+    }
+
+    // For debugging - log the form data before submission
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    ProductCreateMutation.mutate(formData);
+  };
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto px-4 sm:px-6 py-8">
@@ -91,8 +143,8 @@ const onSubmit = (data) => {
           Create Listing
         </h1>
         <p className="text-gray-600">
-          Our Standard Service Plan is designed for homeowners who want a reliable and cost-effective solution
-          without compromising on quality.
+          Our Standard Service Plan is designed for homeowners who want a
+          reliable and cost-effective solution without compromising on quality.
         </p>
       </div>
 
@@ -120,7 +172,8 @@ const onSubmit = (data) => {
 
             {step === totalSteps ? (
               <button
-                type="submit"
+                type="button" // Changed from submit to button
+                onClick={methods.handleSubmit(onSubmit)} // Explicitly call submit handler
                 disabled={ProductCreateMutation.isPending}
                 className="px-6 w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-70"
               >
