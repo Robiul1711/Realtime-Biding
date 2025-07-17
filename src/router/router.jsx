@@ -68,7 +68,7 @@ const router = createBrowserRouter([
         element: <Shop />,
       },
       {
-        path: "/auction-details/:id",
+        path: "/auction-details/:slug",
         element: <LiveAction />,
       },
       {

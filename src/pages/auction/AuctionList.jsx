@@ -12,7 +12,7 @@ const AuctionList = () => {
   const axiosPublic = useAxiosPublic();
   const { data: products, isLoading } = useQuery({
     queryKey: ["products"],
-    queryFn: () => axiosPublic.get("/products"),
+    queryFn: () => axiosPublic.get("/auctions"),
   });
   useEffect(() => {
     const html = document.documentElement;
