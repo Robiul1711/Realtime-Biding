@@ -34,6 +34,9 @@ import SellerPrivateRoute from "@/routes/SellerPrivateRoute";
 import BuyerPrivateRoute from "@/routes/BuyerPrivateRoute";
 import { PublicRoute } from "@/routes/PublicRoute";
 import SellerMessaging from "@/components/sellerDashboard/SellerMessaging";
+import Shop from "@/pages/shop/Shop";
+
+import CartPage from "@/pages/Cart/CartPage";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +64,10 @@ const router = createBrowserRouter([
         element: <AuctionList />,
       },
       {
+        path: "/shop",
+        element: <Shop />,
+      },
+      {
         path: "/auction-details/:id",
         element: <LiveAction />,
       },
@@ -71,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "/search-result",
         element: <SearchResult />,
+      },
+      {
+        path: "/cart",
+        element: <CartPage />,
       },
       {
         path: "/search-product-details",
@@ -85,7 +96,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/user-dashboard",
-        element: <BuyerPrivateRoute><UserDashboard /></BuyerPrivateRoute>,
+        element: (
+          <BuyerPrivateRoute>
+            <UserDashboard />
+          </BuyerPrivateRoute>
+        ),
       },
       {
         path: "/user-dashboard/my-auction",
@@ -175,7 +190,7 @@ const router = createBrowserRouter([
 
   {
     path: "/sign-in",
-    element: <SignIn /> ,
+    element: <SignIn />,
     // element: <PublicRoute><SignIn /></PublicRoute> ,
   },
   {

@@ -8,20 +8,19 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import AuthProvider from "./providers/AuthProvider";
 import { Toaster } from "react-hot-toast";
 import EmailProvider from "./providers/EmailProvider";
+import CartProvider from "./providers/CartProvider";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Toaster
-  position="top-center"
-  reverseOrder={false}
-/>
+    <Toaster position="top-center" reverseOrder={false} />
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <EmailProvider>
-
-        <RouterProvider router={router} />
-        </EmailProvider>
+        <CartProvider>
+          <EmailProvider>
+            <RouterProvider router={router} />
+          </EmailProvider>
+        </CartProvider>
       </AuthProvider>
       {/* <ReactQueryDevtools initialIsOpen={false} />   */}
     </QueryClientProvider>

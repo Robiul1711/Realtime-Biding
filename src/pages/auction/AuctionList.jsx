@@ -9,11 +9,11 @@ import { ScrollRestoration } from "react-router-dom";
 
 const AuctionList = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-const axiosPublic = useAxiosPublic();
-const { data: products, isLoading } = useQuery({
-  queryKey:["products"],
-  queryFn: () => axiosPublic.get("/products"),
-})
+  const axiosPublic = useAxiosPublic();
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => axiosPublic.get("/products"),
+  });
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -53,7 +53,7 @@ const { data: products, isLoading } = useQuery({
           <FilterCard />
         </div>
         <div className="w-full md:flex-1">
-          <ProductCard products={products}  isLoading={isLoading}/>
+          <ProductCard products={products} isLoading={isLoading} />
         </div>
       </div>
 

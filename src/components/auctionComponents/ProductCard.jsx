@@ -171,10 +171,10 @@ const ProductCard = ({ products, isLoading }) => {
                       <HeartShape filled={likedItems.includes(item.id)} />
                     </button>
                   </div>
-                  <p className="text-[12px] text-[#161515] my-1">
+                  {/* <p className="text-[12px] text-[#161515] my-1">
                     <span className="text-[#EE0B0B]">{item.bids.length} </span>·
                     Time Ended ({item.time})
-                  </p>
+                  </p> */}
                   {/* <p className="text-[12px] text-[#161515] my-1">
                     +$19.15 delivery
                   </p> */}
