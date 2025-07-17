@@ -4,14 +4,17 @@ import { CiMenuKebab } from "react-icons/ci";
 import MessageBox from "./MessageBox";
 import { IoChevronBack } from "react-icons/io5";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import echo from "@/utils/echo";
-import { useMatch } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
 
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
   const axiosSecure = useAxiosSecure();
+  const { setUser } = useAuth();
   const users = [
     "Mary Freund",
     "Katie Sims",
@@ -24,7 +27,7 @@ const UserMessaging = () => {
   const [currentUserId, setCurrentUserId] = useState(15);
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
-
+  const navigate = useNavigate();
   const match = useMatch("/user-dashboard/messages/:sellerId");
   const sellerId = match?.params?.sellerId;
 
@@ -65,7 +68,7 @@ const UserMessaging = () => {
 
   useEffect(() => {
     if (!conversationId) return;
-    
+
     const channelName = `chat.5`;
     const channel = echo.private(channelName);
 
@@ -97,7 +100,9 @@ const UserMessaging = () => {
     onError: (error) => {
       console.error("Send message error:", error);
       if (error?.response?.status === 401) {
-        // handle unauthorized (e.g., redirect to login)
+        setUser(null);
+        toast.error("Session expired. Please log in again.");
+        navigate("/sign-in");
       } else {
         toast.error(
           error?.response?.data?.message || "Failed to send message."
@@ -117,6 +122,20 @@ const UserMessaging = () => {
       message: "Hello, this is a test message!",
     });
   };
+
+  const {
+    data: inbox,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["my-inbox"],
+    queryFn: async () => {
+      const response = await axiosSecure.get("/messages");
+      return response?.data?.data?.conversations;
+    },
+  });
+
+  console.log("inbox data", inbox);
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
@@ -151,22 +170,31 @@ const UserMessaging = () => {
 
         {/* Contact List */}
         <div className="flex-1 overflow-y-auto">
-          {users.map((name, index) => (
+          {inbox?.map((chat, index) => (
             <div
               key={index}
-              onClick={() => handleUserClick(name)}
+              onClick={() => handleUserClick(chat)}
               className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
             >
               <div className="flex gap-3 items-center">
                 <img src={user} alt="" className="w-10 h-10 rounded-full" />
                 <div className="flex-1">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold">{name}</p>
-                    <p className="text-xs text-[#4275F6]">May, 28</p>
+                  <div className="flex gap-x-2 flex-wrap justify-between items-center">
+                    <p className="font-semibold">
+                      {chat?.participants[0]?.participantable?.name}
+                    </p>
+                    <p className="text-xs text-[#4275F6]">
+                      
+                      {chat?.last_message?.created_at &&
+                        formatDistanceToNow(
+                          new Date(chat?.last_message?.created_at),
+                          { addSuffix: true }
+                        )}
+                    </p>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex mt-1 justify-between items-center">
                     <p className="text-gray-500 text-sm truncate w-[90%]">
-                      Hello, How are you....
+                      {chat?.last_message?.body || "No messages yet"}
                     </p>
                     <span className="w-2 h-2 bg-[#4275F6] rounded-full"></span>
                   </div>

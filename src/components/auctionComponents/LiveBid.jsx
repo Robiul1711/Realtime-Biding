@@ -258,7 +258,7 @@ const LiveBid = ({ productDetails, isLoading }) => {
                     <h2 className="text-[#0C0D19] mb-1 text-[15px]">
                       {bid?.user?.name}
                     </h2>
-                    {/* { formatDistanceToNow(new Date(bid?.timestamp), { addSuffix: true })} */}
+                    
                     {formatDistanceToNow(new Date(bid?.created_at), { addSuffix: true })}
                   </div>
                 </div>
