@@ -241,7 +241,7 @@ const ItemDetails = () => {
                   Property Value
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   {...register(`product_properties.${index}.value`)}
                   placeholder="e.g. Excellent"
                   className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"

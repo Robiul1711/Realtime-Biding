@@ -1,308 +1,155 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Title from "../common/Title";
 import { Minus, Plus } from "lucide-react";
 import FilterSection from "./FilterSection";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 
 const FilterCard = () => {
+  const axiosPublic = useAxiosPublic();
   const [isOpen, setIsOpen] = useState(false);
-  const [checkedOptions1, setCheckedOptions1] = useState({});
-  const [checkedOptions2, setCheckedOptions2] = useState({});
-  const [checkedOptions3, setCheckedOptions3] = useState({});
-  const [checkedOptions4, setCheckedOptions4] = useState({});
-  const [checkedOptions5, setCheckedOptions5] = useState({});
-  const [checkedOptions6, setCheckedOptions6] = useState({});
-  const [checkedOptions7, setCheckedOptions7] = useState({});
-  const [checkedOptions8, setCheckedOptions8] = useState({});
-  const [checkedOptions9, setCheckedOptions9] = useState({});
-  const [checkedOptions10, setCheckedOptions10] = useState({});
-  const [checkedOptions11, setCheckedOptions11] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const [checkedOptions, setCheckedOptions] = useState({});
 
-  const [selectedText, setSelectedText] = useState("");
+  // Fetch categories
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await axiosPublic.get("/categories");
+      return response.data;
+    },
+  });
 
-  const subtexts = [
-    "CCG Individual Cards",
-    "CCG Sealed Packs",
-    "CCG Supplies & Accessories",
-    "CCG Mix Card Lots",
-  ];
+  // Fetch filters
+  const { data: filtersData } = useQuery({
+    queryKey: ["filters"],
+    queryFn: async () => {
+      const response = await axiosPublic.get("/products/filter/items");
+      return response.data;
+    },
+  });
 
-  const handleSelect = (text) => {
-    setSelectedText(text);
-  };
+  // Initialize with first category if available
+  useEffect(() => {
+    if (categoriesData?.data?.length > 0 && !selectedCategory) {
+      setSelectedCategory(categoriesData.data[0].id);
+    }
+  }, [categoriesData, selectedCategory]);
 
-  const handleOption1Change = (value) => {
-    setCheckedOptions1((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-
-  const handleOption2Change = (value) => {
-    setCheckedOptions2((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption3Change = (value) => {
-    setCheckedOptions3((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption4Change = (value) => {
-    setCheckedOptions4((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption5Change = (value) => {
-    setCheckedOptions5((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption6Change = (value) => {
-    setCheckedOptions6((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption7Change = (value) => {
-    setCheckedOptions7((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption8Change = (value) => {
-    setCheckedOptions8((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption9Change = (value) => {
-    setCheckedOptions9((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption10Change = (value) => {
-    setCheckedOptions10((prev) => ({ ...prev, [value]: !prev[value] }));
-  };
-  const handleOption11Change = (value) => {
-    setCheckedOptions11((prev) => ({ ...prev, [value]: !prev[value] }));
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubcategory(null);
   };
 
-  const filterOptions1 = [
-    { label: "No", value: "no" },
-    { label: "Yes", value: "yes" },
-    { label: "Not Specified", value: "tot specified" },
-  ];
+  const handleSubcategorySelect = (subcategoryId) => {
+    setSelectedSubcategory(subcategoryId);
+  };
 
-  const filterOptions2 = [
-    { label: "Base Set", value: "Base Set" },
-    { label: "Sword & Shield", value: "Sword & Shield" },
-    { label: "Scarlet & Violet", value: "Scarlet & Violet" },
-    { label: "Team Rocket", value: "1to3" },
-    { label: "Promo Cards", value: "1to3" },
-    { label: "Crown Zenith", value: "1to3" },
-    { label: "Fossil", value: "1to3" },
-    { label: "Abyss Rising", value: "1to3" },
-  ];
+  const handleOptionChange = (filterName, value) => {
+    setCheckedOptions((prev) => ({
+      ...prev,
+      [filterName]: {
+        ...prev[filterName],
+        [value]: !prev[filterName]?.[value],
+      },
+    }));
+  };
 
-  const filterOptions3 = [
-    { label: "Black Star Promot", value: "Base Set" },
-    { label: "Common", value: "Sword & Shield" },
-    { label: "Holo Rare", value: "Scarlet & Violet" },
-    { label: "Secret Rare", value: "1to3" },
-    { label: "Ultra Rare", value: "1to3" },
-    { label: "Rare", value: "1to3" },
-  ];
-  const filterOptions4 = [
-    { label: "Bandai", value: "Base Set" },
-    { label: "McDonald’s", value: "Sword & Shield" },
-    { label: "Nintendo", value: "Scarlet & Violet" },
-    { label: "The Pokemon Company", value: "1to3" },
-    { label: "Topps", value: "1to3" },
-    { label: "Wizards of the Coast", value: "1to3" },
-    { label: "Unbranded", value: "1to3" },
-  ];
-
-  const filterOptions5 = [
-    { label: "Black Star Promot", value: "Base Set" },
-    { label: "Common", value: "Sword & Shield" },
-    { label: "Holo Rare", value: "Scarlet & Violet" },
-    { label: "Secret Rare", value: "1to3" },
-    { label: "Ultra Rare", value: "1to3" },
-    { label: "Rare", value: "1to3" },
-  ];
-  const filterOptions6 = [
-    { label: "Reversal", value: "Base Set" },
-    { label: "Pikachu", value: "Sword & Shield" },
-    { label: "Charizard", value: "Scarlet & Violet" },
-    { label: "Blastoise", value: "1to3" },
-    { label: "Eevee", value: "1to3" },
-  ];
-  const filterOptions7 = [
-    { label: "Near Mint or better", value: "Base Set" },
-    { label: "Lightly Played", value: "Sword & Shield" },
-    { label: "Moderately Played", value: "Scarlet & Violet" },
-    { label: "Heavily Played", value: "1to3" },
-    { label: "Not Specified", value: "1to3" },
-  ];
-  const filterOptions8 = [
-    { label: "Basic", value: "Base Set" },
-    { label: "Champion", value: "Sword & Shield" },
-    { label: "In Training", value: "Scarlet & Violet" },
-    { label: "Mega", value: "1to3" },
-    { label: "Rookie", value: "1to3" },
-    { label: "Stage 1", value: "1to3" },
-  ];
-  const filterOptions9 = [
-    { label: "Free Returns", value: "Base Set" },
-    { label: "Returns Accepted", value: "Sword & Shield" },
-    { label: "Authorized Seller", value: "Scarlet & Violet" },
-    { label: "Completed Items", value: "1to3" },
-  ];
-  const filterOptions10 = [
-    { label: "Under $4,000", value: "Base Set" },
-    { label: "$4,000 to 20,000", value: "Sword & Shield" },
-    { label: "Over $20,000", value: "Scarlet & Violet" },
-  ];
-  const filterOptions11 = [
-    { label: "Near Mint or better", value: "Base Set" },
-    { label: "Lightly Played", value: "Sword & Shield" },
-    { label: "Moderately Played", value: "Scarlet & Violet" },
-    { label: "Heavily Played", value: "1to3" },
-    { label: "Not Specified", value: "1to3" },
-  ];
+  const resetFilters = () => {
+    setCheckedOptions({});
+    setSelectedSubcategory(null);
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="border border-[#D0D0D0] p-5 rounded-lg">
-        {/* Header Toggle */}
-        <div
-          className="flex items-center justify-between cursor-pointer"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <h2 className="text-xl font-semibold text-[#1E1E1E]">Category</h2>
-          {isOpen ? (
-            <Minus size={22} className="transition duration-400" />
-          ) : (
-            <Plus size={22} className="transition duration-400" />
-          )}
-        </div>
+    <div className="flex flex-col h-[calc(100vh-150px)] bg-white rounded-lg shadow-sm border border-gray-200">
+      {/* Header */}
+      <div className="p-4 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-800">Filters</h2>
+      </div>
 
-        {/* Dropdown Content */}
-        <div
-          className={`overflow-hidden space-y-4 transition-all duration-500 ease-in-out ${
-            isOpen ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0 mt-0"
-          }`}
-        >
-          {/* All */}
-          <h3
-            onClick={() => handleSelect("All")}
-            className={`font-semibold text-[17px] cursor-pointer transition ${
-              selectedText === "All" ? "text-[#1E40AF]" : "text-[#424242]"
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+        {/* Category Filter Section */}
+        <div className="border border-gray-200 rounded-lg">
+          <div
+            className="flex items-center justify-between p-4 cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <Title level="title24">Category</Title>
+            {isOpen ? (
+              <Minus size={20} className="text-gray-500" />
+            ) : (
+              <Plus size={20} className="text-gray-500" />
+            )}
+          </div>
+
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
-            All
-          </h3>
+            <div className="p-4 pt-0 space-y-3">
+              {categoriesData?.data?.map((category) => (
+                <div key={category.id} className="space-y-2">
+                  <h4
+                    onClick={() => handleCategorySelect(category.id)}
+                    className={`font-medium cursor-pointer ${
+                      selectedCategory === category.id
+                        ? "text-blue-600"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {category.title}
+                  </h4>
 
-          {/* Category Group */}
-          <div>
-            <h3
-              onClick={() => handleSelect("Collectible Card Games")}
-              className={`font-semibold text-[17px] cursor-pointer transition ${
-                selectedText === "Collectible Card Games"
-                  ? "text-[#1E40AF]"
-                  : "text-[#424242]"
-              }`}
-            >
-              Collectible Card Games
-            </h3>
-
-            <div className="space-y-2 ml-4 font-medium my-2">
-              {subtexts.map((text, index) => (
-                <p
-                  key={index}
-                  onClick={() => handleSelect(text)}
-                  className={`cursor-pointer transition-colors duration-200 ${
-                    selectedText === text
-                      ? "text-[#1E40AF] font-semibold"
-                      : "text-[#424242]"
-                  }`}
-                >
-                  {text}
-                </p>
+                  {category.subcategories?.length > 0 && (
+                    <div className="ml-3 space-y-1">
+                      {category.subcategories.map((subcategory) => (
+                        <p
+                          key={subcategory.id}
+                          onClick={() =>
+                            handleSubcategorySelect(subcategory.id)
+                          }
+                          className={`text-sm cursor-pointer ${
+                            selectedSubcategory === subcategory.id
+                              ? "text-blue-600 font-medium"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {subcategory.title}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
-
-          {/* Other Main Categories */}
-          <h3
-            onClick={() => handleSelect("Collectibles")}
-            className={`font-semibold text-[17px] cursor-pointer transition ${
-              selectedText === "Collectibles"
-                ? "text-[#1E40AF]"
-                : "text-[#424242]"
-            }`}
-          >
-            Collectibles
-          </h3>
-
-          <h3
-            onClick={() => handleSelect("Sport Mem, Cards & Consoles")}
-            className={`font-semibold text-[17px] cursor-pointer transition ${
-              selectedText === "Sport Mem, Cards & Consoles"
-                ? "text-[#1E40AF]"
-                : "text-[#424242]"
-            }`}
-          >
-            Sport Mem, Cards & Consoles
-          </h3>
         </div>
+
+        {/* Dynamic Filter Sections */}
+        {filtersData?.data &&
+          Object.entries(filtersData.data).map(([filterName, options]) => (
+            <FilterSection
+              key={filterName}
+              title={filterName}
+              options={options.map((option) => ({
+                label: option,
+                value: option,
+              }))}
+              checkedOptions={checkedOptions[filterName] || {}}
+              onChange={(value) => handleOptionChange(filterName, value)}
+            />
+          ))}
       </div>
-      <FilterSection
-        title="Graded"
-        options={filterOptions1}
-        checkedOptions={checkedOptions1}
-        onChange={handleOption1Change}
-      />
-      <FilterSection
-        title="Set"
-        options={filterOptions2}
-        checkedOptions={checkedOptions2}
-        onChange={handleOption2Change}
-      />
-      <FilterSection
-        title="Rarity"
-        options={filterOptions3}
-        checkedOptions={checkedOptions3}
-        onChange={handleOption3Change}
-      />
-      <FilterSection
-        title="Manufacturer"
-        options={filterOptions4}
-        checkedOptions={checkedOptions4}
-        onChange={handleOption4Change}
-      />
-      <FilterSection
-        title="Card Type"
-        options={filterOptions5}
-        checkedOptions={checkedOptions5}
-        onChange={handleOption5Change}
-      />
-      <FilterSection
-        title="Card Name"
-        options={filterOptions6}
-        checkedOptions={checkedOptions6}
-        onChange={handleOption6Change}
-      />
-      <FilterSection
-        title="Card Condition"
-        options={filterOptions7}
-        checkedOptions={checkedOptions7}
-        onChange={handleOption7Change}
-      />
-      <FilterSection
-        title="Stage"
-        options={filterOptions8}
-        checkedOptions={checkedOptions8}
-        onChange={handleOption8Change}
-      />
-      <FilterSection
-        title="Show results for"
-        options={filterOptions9}
-        checkedOptions={checkedOptions9}
-        onChange={handleOption9Change}
-      />
-      <FilterSection
-        title="Price"
-        options={filterOptions10}
-        checkedOptions={checkedOptions10}
-        onChange={handleOption10Change}
-      />
-      <FilterSection
-        title="Condition"
-        options={filterOptions11}
-        checkedOptions={checkedOptions11}
-        onChange={handleOption11Change}
-      />
-      <div>
-        <button className="w-full text-center bg-[#00A1FF] hover:bg-[#00a2fff4] text-white py-3 rounded-xl cursor-pointer">
+
+      {/* Footer with Reset Button */}
+      <div className="p-4 border-t border-gray-200">
+        <button
+          onClick={resetFilters}
+          className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 font-medium"
+        >
           Reset Filters
         </button>
       </div>
