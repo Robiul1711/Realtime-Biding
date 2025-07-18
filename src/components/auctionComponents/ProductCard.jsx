@@ -140,7 +140,7 @@ const ProductCard = ({ products, isLoading }) => {
                 <div className="h-[200px]">
 
                 <img
-                  className="w-full  h-full object-cover"
+                  className="w-full  h-full object-cover rounded-xl"
                   src={VITE_IMG_URL + item.images[0]}
                   alt="image"
                 />

@@ -11,7 +11,7 @@ const AuctionList = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const axiosPublic = useAxiosPublic();
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products"],
+    queryKey: ["auction-products"],
     queryFn: () => axiosPublic.get("/auctions"),
   });
   useEffect(() => {
@@ -33,6 +33,8 @@ const AuctionList = () => {
       body.style.overflow = "";
     };
   }, [isFilterOpen]);
+
+  console.log(products)
 
   return (
     <div
