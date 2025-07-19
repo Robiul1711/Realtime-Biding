@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import man from "../../assets/images/man.png";
+import placeholderUser from "../../assets/images/placeholder-user.png";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import Skeleton from "react-loading-skeleton";
@@ -251,7 +252,7 @@ const LiveBid = ({ productDetails, isLoading }) => {
                 <div className="flex items-center gap-4">
                   <img
                     className="w-12 h-12 rounded-full"
-                    src={man}
+                    src={bid?.user?.avatar || placeholderUser }
                     alt="Bidder"
                   />
                   <div>

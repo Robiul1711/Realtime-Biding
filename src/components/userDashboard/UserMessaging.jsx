@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import user from "../../assets/images/user.png";
+import placeholderUser from "../../assets/images/placeholder-user.png";
 import { CiMenuKebab } from "react-icons/ci";
 import MessageBox from "./MessageBox";
 import { IoChevronBack } from "react-icons/io5";
 import toast from "react-hot-toast";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import echo from "@/utils/echo";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
+import { EmptyMessage } from "./EmptyMessage";
 
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
@@ -27,14 +29,18 @@ const UserMessaging = () => {
   const [currentUserId, setCurrentUserId] = useState(15);
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const match = useMatch("/user-dashboard/messages/:sellerId");
   const sellerId = match?.params?.sellerId;
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentMessages, setCurrentMessages] = useState([]);
 
   const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
 
-  const handleUserClick = (name) => {
-    setActiveUser(name);
+  const handleUserClick = (chat) => {
+    setCurrentUser(chat);
+    console.log('current',chat)
   };
 
   const goBackToUserList = () => {
@@ -137,6 +143,26 @@ const UserMessaging = () => {
 
   console.log("inbox data", inbox);
 
+  // get chat for a particular user
+  const {
+    data: singleChatInfo,
+    isLoading: isSingleChatLoading,
+    error: singleChatError,
+  } = useQuery({
+    queryKey: ["single-chat", currentUser?.id],
+    queryFn: async () => {
+      const response = await axiosSecure.get(
+        `/messages/${currentUser?.id}`
+      );
+      setCurrentMessages(response?.data?.data?.conversations?.messages);
+    },
+    enabled: !!currentUser?.id, // Prevents firing until ID is available
+  });
+
+  console.log("singleChatInfo", currentMessages);
+
+  if(isSingleChatLoading) return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
+
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
       {/* Sidebar */}
@@ -173,7 +199,9 @@ const UserMessaging = () => {
           {inbox?.map((chat, index) => (
             <div
               key={index}
-              onClick={() => handleUserClick(chat)}
+              onClick={() => {
+                handleUserClick(chat?.participants[0]?.participantable);
+              }}
               className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
             >
               <div className="flex gap-3 items-center">
@@ -184,7 +212,6 @@ const UserMessaging = () => {
                       {chat?.participants[0]?.participantable?.name}
                     </p>
                     <p className="text-xs text-[#4275F6]">
-                      
                       {chat?.last_message?.created_at &&
                         formatDistanceToNow(
                           new Date(chat?.last_message?.created_at),
@@ -206,35 +233,39 @@ const UserMessaging = () => {
       </div>
 
       {/* Chat Section */}
-      <div
-        className={`w-full flex flex-col ${
-          !activeUser && isMobileView ? "hidden" : "flex"
-        }`}
-      >
-        {/* Chat Header */}
-        <div className="p-4 border-b border-gray-300 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            {isMobileView && (
-              <button onClick={goBackToUserList}>
-                <IoChevronBack className="text-xl text-gray-600" />
-              </button>
-            )}
-            <img src={user} alt="user" className="w-10 h-10 rounded-full" />
-            <div>
-              <h2 className="font-semibold text-[#4275F6]">
-                {activeUser || "Way Jack"}
-              </h2>
-              <p className="text-xs text-gray-500">Active</p>
+      {currentUser ? (
+        <div
+          className={`w-full flex flex-col ${
+            !activeUser && isMobileView ? "hidden" : "flex"
+          }`}
+        >
+          {/* Chat Header */}
+          <div className="p-4 border-b border-gray-300 flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              {isMobileView && (
+                <button onClick={goBackToUserList}>
+                  <IoChevronBack className="text-xl text-gray-600" />
+                </button>
+              )}
+              <img src={currentUser?.avatar || placeholderUser } alt="user" className="w-10 h-10 rounded-full" />
+              <div>
+                <h2 className="font-semibold text-[#4275F6]">
+                  {currentUser?.name || "User Name"}
+                </h2>
+                <p className="text-xs text-gray-500">Active</p>
+              </div>
             </div>
+            <CiMenuKebab className="text-xl text-gray-600 cursor-pointer" />
           </div>
-          <CiMenuKebab className="text-xl text-gray-600 cursor-pointer" />
-        </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 w-full overflow-y-auto">
-          <MessageBox />
+          {/* Chat Messages */}
+          <div className="flex-1 w-full overflow-y-auto">
+            <MessageBox loading={isSingleChatLoading} currentUser={singleChatInfo} currentMessages={currentMessages} />
+          </div>
         </div>
-      </div>
+      ) : (
+        <EmptyMessage />
+      )}
     </div>
   );
 };

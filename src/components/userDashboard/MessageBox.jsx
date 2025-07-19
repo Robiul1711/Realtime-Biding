@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
+import placeholderUser from "../../assets/images/placeholder-user.png";
 // framer motion
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,8 +15,10 @@ import {
 } from "react-icons/lu";
 import { FaRegSmile } from "react-icons/fa";
 import { FiImage } from "react-icons/fi";
+import { useAuth } from "@/hooks/useAuth";
 
-const MessageBox = () => {
+const MessageBox = (currentUser, currentMessages, loading) => {
+  const {user} = useAuth();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -56,6 +58,8 @@ const MessageBox = () => {
     },
   ]);
 
+  const [messagesToShow, setMessagesToShow] = useState(currentMessages || [] );
+
   const [newMessage, setNewMessage] = useState("");
   const [reactingTo, setReactingTo] = useState(null);
   const [attachments, setAttachments] = useState([]);
@@ -69,6 +73,11 @@ const MessageBox = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(()=>{
+    setMessagesToShow(currentMessages);
+    scrollToBottom();
+  },[currentMessages])
 
   useEffect(() => {
     scrollToBottom();
@@ -208,11 +217,15 @@ const MessageBox = () => {
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
+  if(loading) return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
+
+  console.log('current messages', currentMessages);
+
   return (
     <div className="flex flex-col w-full h-full text-black">
       <div className="flex-1 p-2 md:p-4 overflow-y-auto">
         <AnimatePresence>
-          {messages.map((message) => (
+          {currentMessages?.map((message) => (
             <motion.div
               key={message.id}
               variants={messageVariants}
@@ -222,27 +235,27 @@ const MessageBox = () => {
               exit="exit"
               layout
               className={`mb-4 flex ${
-                message.sender === "me" ? "justify-end" : "justify-start"
+                message?.isMe ? "justify-end" : "justify-start"
               }`}
             >
               <div className="relative max-w-md flex items-end gap-2">
-                {message.sender === "other" && (
+                {!message.isMe && (
                   <img
-                    src={message.senderProfile?.avatar}
-                    alt={message.senderProfile?.name}
+                    src={currentUser?.avatar || placeholderUser }
+                    alt={currentUser?.name}
                     className="w-8 h-8 rounded-full"
                   />
                 )}
                 <div>
                   <div
                     className={`p-3 rounded-high rounded-2xl  dark:text-[#d2e5f5] text-sm ${
-                      message.sender === "me"
+                      message?.isMe
                         ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
                         : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
                     }`}
                   >
                     {/* File attachments in message */}
-                    {message.attachments && message.attachments.length > 0 && (
+                    {/* {message.attachments && message.attachments.length > 0 && (
                       <div className="mb-2">
                         {message.attachments.map((attachment) => (
                           <div
@@ -267,21 +280,21 @@ const MessageBox = () => {
                           </div>
                         ))}
                       </div>
-                    )}
-                    {message.text}
+                    )} */}
+                    {message?.body || "no text found" }
                   </div>
                   <div
                     className={`${
-                      message.sender === "me" ? "text-right" : "text-left"
+                      message?.isMe ? "text-right" : "text-left"
                     } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70 mt`}
                   >
-                    {message.timestamp}
+                    {/* {message.timestamp} */}time 
                   </div>
                 </div>
-                {message.sender === "me" && (
+                {message?.isMe && (
                   <img
-                    src={message.senderProfile?.avatar}
-                    alt={message.senderProfile?.name}
+                    src={user?.avatar || placeholderUser }
+                    alt={user?.name}
                     className="w-8 h-8 rounded-full"
                   />
                 )}
