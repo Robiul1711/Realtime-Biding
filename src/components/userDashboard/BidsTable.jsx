@@ -1,55 +1,115 @@
-import React from "react";
-import {
-  ChevronDown,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronDown, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocation } from "react-router-dom";
-
-const sampleData = Array.from({ length: 12 }, (_, i) => ({
-  name: [
-    "Guy Hawkins",
-    "Jane Cooper",
-    "Jacob Jones",
-    "Annette Black",
-    "Esther Howard",
-    "Wade Warren",
-    "Courtney Henry",
-    "Jerome Bell",
-    "Floyd Miles",
-    "Eleanor Pena",
-    "Devon Lane",
-    "Christopher Colombus",
-  ][i],
-  category: i % 2 === 0 ? "Large Enterprise" : "MSV",
-  owner: "Brooklyn Simmons",
-  location: [
-    "1901 Thornridge Cir. Shiloh",
-    "6391 Elgin St. Celina, Delaw",
-    "4517 Washington Ave. Manchester, Kentucky 39495",
-    "2972 Westheimer Rd. Santa Ana, Illinois 85486",
-    "8502 Preston Rd. Inglewood, Maine 98380",
-    "2464 Royal Ln. Mesa, New Jersey 45463",
-    "2715 Ash Dr. San Jose, South Dakota 83475",
-    "3517 W. Gray St. Utica, Pennsylvania 57867",
-    "3891 Ranchview Dr. Richardson, California 62639",
-    "3891 Ranchview Dr. Richardson, California 62639",
-    "2118 Thornridge Cir. Syracuse, Connecticut 35624",
-    "4140 Parker Rd. Allentown, New Mexico 31134",
-  ][i],
-  price: "$10,000",
-}));
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useAuth } from "@/hooks/useAuth";
 
 const BidsTable = () => {
   const { pathname } = useLocation();
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+
+  // State for pagination, search, and sorting
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: "created_at",
+    direction: "desc",
+  });
+
+  // Fetch data
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["action-history"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/bids/user/${user?.id}`);
+      return res.data;
+    },
+  });
+
+  // Process and filter data
+  const [processedBids, setProcessedBids] = useState([]);
+  
+  useEffect(() => {
+    if (data?.data) {
+      let filteredData = [...data.data];
+      
+      // Apply search filter
+      if (searchTerm) {
+        filteredData = filteredData.filter(bid => 
+          bid.product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          bid.product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      
+      // Apply sorting
+      filteredData.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+      
+      setProcessedBids(filteredData);
+    }
+  }, [data, searchTerm, sortConfig]);
+
+  // Handle sort request
+  const requestSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = processedBids.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(processedBids.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Handle items per page change
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset to first page when items per page changes
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-4 sm:p-6 bg-white rounded-md shadow-sm">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-4 sm:p-6 bg-white rounded-md shadow-sm">
+        <div className="text-center py-10 text-red-500">
+          Failed to load bid history. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 bg-white rounded-md shadow-sm">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
         <h2 className="text-lg font-semibold text-gray-800">
-          {pathname === "/user-dashboard/bid-history" ? "456 Bids" : "456 Auction"}
+          {pathname === "/user-dashboard/bid-history"
+            ? `${processedBids.length} Bids`
+            : `${processedBids.length} Auction`}
         </h2>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -59,19 +119,29 @@ const BidsTable = () => {
             <input
               type="text"
               placeholder="Search Bids"
-              className="pl-8 pr-4 py-2 w-full text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-8 pr-4 py-2 w-full text-black  text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1); // Reset to first page when searching
+              }}
             />
           </div>
 
           {/* Items per page */}
           <div className="text-sm text-gray-500 flex items-center">
             Showing{" "}
-            <select className="border border-gray-300 px-2 py-1 rounded ml-1">
-              <option>20</option>
-              <option>10</option>
-              <option>50</option>
+            <select 
+              className="border border-gray-300 px-2 py-1 rounded ml-1"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
             </select>{" "}
-            of 60 result
+            of {processedBids.length} result
           </div>
         </div>
       </div>
@@ -85,76 +155,186 @@ const BidsTable = () => {
                 <input type="checkbox" />
               </th>
               <th className="p-3">
-                <div className="flex items-center gap-1">
-                  Product Name <ChevronDown className="w-4 h-4" />
+                <div 
+                  className="flex items-center gap-1 cursor-pointer"
+                  onClick={() => requestSort('title')}
+                >
+                  Product Name 
+                  <ChevronDown className={`w-4 h-4 transition-transform ${
+                    sortConfig.key === 'title' && sortConfig.direction === 'asc' ? 'rotate-180' : ''
+                  }`} />
                 </div>
               </th>
-              <th className="p-3">Categories</th>
-              <th className="p-3">Owner</th>
+              <th className="p-3">
+                <div 
+                  className="flex items-center gap-1 cursor-pointer"
+                  onClick={() => requestSort('amount')}
+                >
+                  Bid Amount
+                  <ChevronDown className={`w-4 h-4 transition-transform ${
+                    sortConfig.key === 'amount' && sortConfig.direction === 'asc' ? 'rotate-180' : ''
+                  }`} />
+                </div>
+              </th>
+              <th className="p-3">Status</th>
               <th className="p-3">Location</th>
-              <th className="p-3">Price</th>
+              <th className="p-3">
+                <div 
+                  className="flex items-center gap-1 cursor-pointer"
+                  onClick={() => requestSort('created_at')}
+                >
+                  Date
+                  <ChevronDown className={`w-4 h-4 transition-transform ${
+                    sortConfig.key === 'created_at' && sortConfig.direction === 'asc' ? 'rotate-180' : ''
+                  }`} />
+                </div>
+              </th>
               <th className="p-3">Product Image</th>
             </tr>
           </thead>
           <tbody>
-            {sampleData.map((item, index) => (
-              <tr
-                key={index}
-                className="border-b hover:bg-gray-50 transition-colors"
-              >
-                <td className="p-3">
-                  <input type="checkbox" />
-                </td>
-                <td className="p-3 font-medium">{item.name}</td>
-                <td className="p-3">{item.category}</td>
-                <td className="p-3">{item.owner}</td>
-                <td className="p-3 text-gray-500">{item.location}</td>
-                <td className="p-3 font-semibold">{item.price}</td>
-                <td className="p-3">
-                  <button className="text-sm text-black px-3 py-1 rounded-sm bg-[#D6E5EE] hover:bg-blue-500 hover:text-white transition">
-                    Download
-                  </button>
+            {currentItems.length > 0 ? (
+              currentItems.map((bid) => (
+                <tr
+                  key={bid.id}
+                  className="border-b hover:bg-gray-50 transition-colors"
+                >
+                  <td className="p-3">
+                    <input type="checkbox" />
+                  </td>
+                  <td className="p-3 font-medium">{bid.product.title}</td>
+                  <td className="p-3">${bid.amount.toLocaleString()}</td>
+                  <td className="p-3">
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        bid.is_winner
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {bid.is_winner ? "Winner" : "Pending"}
+                    </span>
+                  </td>
+                  <td className="p-3 text-gray-500">
+                    {bid.product.city}, {bid.product.country}
+                  </td>
+                  <td className="p-3">
+                    {new Date(bid.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="p-3">
+                    {bid.product.images.length > 0 && (
+                      <img
+                        src={`${
+                          import.meta.env.VITE_IMG_URL + bid.product.images[0]
+                        }`}
+                        alt={bid.product.title}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="p-4 text-center text-gray-500">
+                  No bids found
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 text-sm text-gray-600 gap-3">
-        <div>
-          Showing{" "}
-          <select className="border px-2 py-1 rounded mx-1">
-            <option>10</option>
-          </select>
-          of 124
-        </div>
-        <div className="flex items-center gap-1">
-          <button className="px-2 py-1 border rounded hover:bg-gray-100">
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          {[1, 2, 3].map((p) => (
+      {processedBids.length > 0 && (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 text-sm text-gray-600 gap-3">
+          <div>
+            Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, processedBids.length)} of {processedBids.length} entries
+          </div>
+          <div className="flex items-center gap-1">
+            <button 
+              className="px-2 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            
+            {/* Always show first page */}
             <button
-              key={p}
               className={`px-3 py-1 border rounded ${
-                p === 1
+                currentPage === 1
                   ? "bg-blue-600 text-white"
                   : "hover:bg-gray-100 text-gray-800"
               }`}
+              onClick={() => paginate(1)}
             >
-              {p}
+              1
             </button>
-          ))}
-          <span className="px-2">...</span>
-          <button className="px-3 py-1 border rounded hover:bg-gray-100">
-            16
-          </button>
-          <button className="px-2 py-1 border rounded hover:bg-gray-100">
-            <ChevronRight className="w-4 h-4" />
-          </button>
+            
+            {/* Show ellipsis if needed */}
+            {currentPage > 3 && (
+              <span className="px-2">...</span>
+            )}
+            
+            {/* Show previous page if not first */}
+            {currentPage > 2 && (
+              <button
+                className="px-3 py-1 border rounded hover:bg-gray-100 text-gray-800"
+                onClick={() => paginate(currentPage - 1)}
+              >
+                {currentPage - 1}
+              </button>
+            )}
+            
+            {/* Show current page if not first or last */}
+            {currentPage > 1 && currentPage < totalPages && (
+              <button
+                className="px-3 py-1 border rounded bg-blue-600 text-white"
+              >
+                {currentPage}
+              </button>
+            )}
+            
+            {/* Show next page if not last */}
+            {currentPage < totalPages - 1 && (
+              <button
+                className="px-3 py-1 border rounded hover:bg-gray-100 text-gray-800"
+                onClick={() => paginate(currentPage + 1)}
+              >
+                {currentPage + 1}
+              </button>
+            )}
+            
+            {/* Show ellipsis if needed */}
+            {currentPage < totalPages - 2 && (
+              <span className="px-2">...</span>
+            )}
+            
+            {/* Always show last page if there is more than one page */}
+            {totalPages > 1 && (
+              <button
+                className={`px-3 py-1 border rounded ${
+                  currentPage === totalPages
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-gray-100 text-gray-800"
+                }`}
+                onClick={() => paginate(totalPages)}
+              >
+                {totalPages}
+              </button>
+            )}
+            
+            <button 
+              className="px-2 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

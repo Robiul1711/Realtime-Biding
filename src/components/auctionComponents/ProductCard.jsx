@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HeartShape } from "../common/CustomIcon";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 const ProductCard = ({ products, isLoading }) => {
   const [likedItems, setLikedItems] = useState([]);
+  const [timeLeft, setTimeLeft] = useState({});
   const axiosSecure = useAxiosSecure();
   const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
   const { user } = useAuth();
@@ -79,6 +80,43 @@ const ProductCard = ({ products, isLoading }) => {
       value: "next bid",
     },
   ];
+   useEffect(() => {
+    // Ensure we have an array before proceeding
+
+
+    const calculateTimeLeft = () => {
+      const newTimeLeft = {};
+
+     products?.data?.data?.forEach((item) => {
+        if (item?.auction_end_at) {
+          const endDate = new Date(item.auction_end_at);
+          const now = new Date();
+          const difference = endDate - now;
+
+          if (difference > 0) {
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / 1000 / 60) % 60);
+            const seconds = Math.floor((difference / 1000) % 60);
+
+            newTimeLeft[item.id] = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+          } else {
+            newTimeLeft[item.id] = "Auction ended";
+          }
+        }
+      });
+
+      setTimeLeft(newTimeLeft);
+    };
+
+    // Calculate immediately
+    calculateTimeLeft();
+
+    // Then update every second
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, [products]);
 
   return (
     <div>
@@ -178,6 +216,13 @@ const ProductCard = ({ products, isLoading }) => {
                   {/* <p className="text-[12px] text-[#161515] my-1">
                     +$19.15 delivery
                   </p> */}
+                     {item?.auction_end_at && (
+                  <div className="pb-1">
+                    <p className="text-[#001AFF]">
+                      Time left: {timeLeft[item.id] || "Over"}
+                    </p>
+                  </div>
+                )}
                   <p className="text-[12px] text-[#161515] my-1">
                     From {item.country}
                   </p>

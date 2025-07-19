@@ -6,6 +6,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import banner from "@/assets/images/banner.png";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 
 const Banner = () => {
   const slides = [
@@ -26,6 +28,17 @@ const Banner = () => {
     },
   ];
 
+  const axiosPublic =useAxiosPublic();
+
+  const {data:bannerData,isLoading} =useQuery({
+    queryKey:["banner-list"],
+    queryFn:async()=>{
+      const res = await axiosPublic.get(`/banners`);
+      return res.data;
+    }
+  })
+
+  console.log(bannerData?.data);
   return (
     <div className="section-padding-x">
       <Swiper
