@@ -129,7 +129,7 @@ const BidsTable = () => {
           </div>
 
           {/* Items per page */}
-          <div className="text-sm text-gray-500 flex items-center">
+          {/* <div className="text-sm text-gray-500 flex items-center">
             Showing{" "}
             <select 
               className="border border-gray-300 px-2 py-1 rounded ml-1"
@@ -142,7 +142,7 @@ const BidsTable = () => {
               <option value={50}>50</option>
             </select>{" "}
             of {processedBids.length} result
-          </div>
+          </div> */}
         </div>
       </div>
 
