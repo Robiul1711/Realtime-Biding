@@ -23,6 +23,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "laravel-echo": "^2.1.6",
+    "ldrs": "^1.1.7",
     "lucide-react": "^0.507.0",
     "motion": "^12.16.0",
     "otp-input-react": "^0.3.0",

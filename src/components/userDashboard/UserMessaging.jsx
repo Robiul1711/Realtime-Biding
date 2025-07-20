@@ -16,6 +16,8 @@ import { EmptyMessage } from "./EmptyMessage";
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
   const axiosSecure = useAxiosSecure();
+  const [newMessage, setNewMessage] = useState("");
+  const { user } = useAuth();
   const { setUser } = useAuth();
   const users = [
     "Mary Freund",
@@ -40,7 +42,7 @@ const UserMessaging = () => {
 
   const handleUserClick = (chat) => {
     setCurrentUser(chat);
-    console.log('current',chat)
+    console.log("current", chat);
   };
 
   const goBackToUserList = () => {
@@ -60,22 +62,22 @@ const UserMessaging = () => {
     onError: (error) => {
       console.log(error);
       const errorMessage =
-        error.response?.data?.message ||
+        error?.response?.data?.message ||
         "Something went wrong, try again later!!";
       toast.error(errorMessage);
     },
   });
 
   useEffect(() => {
-    createChatMutation.mutate({ user_id: 15 });
-  }, []);
+    createChatMutation.mutate({ user_id: currentUser?.id || 15 });
+  }, [currentUser?.id]);
 
   console.log("conversationId", conversationId);
 
   useEffect(() => {
-    if (!conversationId) return;
+    if (!conversationId && currentUser?.id ) return;
 
-    const channelName = `chat.5`;
+    const channelName = `chat.${conversationId}`;
     const channel = echo.private(channelName);
 
     console.log(`Subscribing to chat channel: ${channelName}`);
@@ -83,12 +85,16 @@ const UserMessaging = () => {
     channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
       console.log("listening for messages on channel:", channel.name);
       console.log("📨 New message:", e);
+      setCurrentMessages([
+        ...currentMessages,
+        { ...e, body: e?.content, created_at: "2025-07-20T08:29:44.000000Z" },
+      ]);
     });
 
     return () => {
       echo.leaveChannel(channelName);
     };
-  }, [conversationId]);
+  }, [conversationId, currentMessages, currentUser?.id]);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data) => {
@@ -102,6 +108,7 @@ const UserMessaging = () => {
     onSuccess: (response) => {
       console.log("Message sent successfully:", response);
       toast.success("Message sent!");
+      setNewMessage(""); // Clear the message input after sending
     },
     onError: (error) => {
       console.error("Send message error:", error);
@@ -125,7 +132,7 @@ const UserMessaging = () => {
 
     sendMessageMutation.mutate({
       to_user_id: 15,
-      message: "Hello, this is a test message!",
+      message: "Hello, this is a new test message!",
     });
   };
 
@@ -151,17 +158,16 @@ const UserMessaging = () => {
   } = useQuery({
     queryKey: ["single-chat", currentUser?.id],
     queryFn: async () => {
-      const response = await axiosSecure.get(
-        `/messages/${currentUser?.id}`
-      );
+      const response = await axiosSecure.get(`/messages/${currentUser?.id}`);
       setCurrentMessages(response?.data?.data?.conversations?.messages);
     },
     enabled: !!currentUser?.id, // Prevents firing until ID is available
   });
 
-  console.log("singleChatInfo", currentMessages);
+  console.log("currentMessages", currentMessages);
 
-  if(isSingleChatLoading) return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
+  if (isSingleChatLoading)
+    return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
@@ -247,7 +253,11 @@ const UserMessaging = () => {
                   <IoChevronBack className="text-xl text-gray-600" />
                 </button>
               )}
-              <img src={currentUser?.avatar || placeholderUser } alt="user" className="w-10 h-10 rounded-full" />
+              <img
+                src={currentUser?.avatar || placeholderUser}
+                alt="user"
+                className="w-10 h-10 rounded-full"
+              />
               <div>
                 <h2 className="font-semibold text-[#4275F6]">
                   {currentUser?.name || "User Name"}
@@ -260,7 +270,15 @@ const UserMessaging = () => {
 
           {/* Chat Messages */}
           <div className="flex-1 w-full overflow-y-auto">
-            <MessageBox loading={isSingleChatLoading} currentUser={singleChatInfo} currentMessages={currentMessages} />
+            <MessageBox
+              loading={isSingleChatLoading}
+              currentUser={currentUser}
+              currentMessages={currentMessages}
+              handleSendMessage={handleSendMessage}
+              sendMessageMutation={sendMessageMutation}
+              newMessage={newMessage}
+              setNewMessage={setNewMessage}
+            />
           </div>
         </div>
       ) : (

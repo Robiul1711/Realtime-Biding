@@ -13,12 +13,24 @@ import {
   LuFile,
   LuLoader,
 } from "react-icons/lu";
+import { Tailspin } from "ldrs/react";
+import "ldrs/react/Tailspin.css";
+
 import { FaRegSmile } from "react-icons/fa";
 import { FiImage } from "react-icons/fi";
 import { useAuth } from "@/hooks/useAuth";
+import { format, isToday, isYesterday, parseISO } from "date-fns";
+import toast from "react-hot-toast";
 
-const MessageBox = (currentUser, currentMessages, loading) => {
-  const {user} = useAuth();
+const MessageBox = ({
+  currentUser,
+  currentMessages,
+  loading,
+  sendMessageMutation,
+  newMessage,
+  setNewMessage,
+}) => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -57,10 +69,6 @@ const MessageBox = (currentUser, currentMessages, loading) => {
       attachments: [],
     },
   ]);
-
-  const [messagesToShow, setMessagesToShow] = useState(currentMessages || [] );
-
-  const [newMessage, setNewMessage] = useState("");
   const [reactingTo, setReactingTo] = useState(null);
   const [attachments, setAttachments] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -74,47 +82,46 @@ const MessageBox = (currentUser, currentMessages, loading) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(()=>{
-    setMessagesToShow(currentMessages);
+  useEffect(() => {
     scrollToBottom();
-  },[currentMessages])
+  }, [currentMessages]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() === "" && attachments.length === 0) return;
+  // const handleSendMessage = () => {
+  //   if (newMessage.trim() === "" && attachments.length === 0) return;
 
-    const newId = messages.length
-      ? Math.max(...messages.map((m) => m.id)) + 1
-      : 1;
+  //   const newId = messages.length
+  //     ? Math.max(...messages.map((m) => m.id)) + 1
+  //     : 1;
 
-    setMessages([
-      ...messages,
-      {
-        id: newId,
-        text: newMessage,
-        sender: "me",
-        senderProfile: {
-          name: "You",
-          avatar: "https://i.pravatar.cc/40?img=1",
-        },
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        reaction: null,
-        attachments: [...attachments],
-      },
-    ]);
+  //   setMessages([
+  //     ...messages,
+  //     {
+  //       id: newId,
+  //       text: newMessage,
+  //       sender: "me",
+  //       senderProfile: {
+  //         name: "You",
+  //         avatar: "https://i.pravatar.cc/40?img=1",
+  //       },
+  //       timestamp: new Date().toLocaleTimeString([], {
+  //         hour: "2-digit",
+  //         minute: "2-digit",
+  //       }),
+  //       reaction: null,
+  //       attachments: [...attachments],
+  //     },
+  //   ]);
 
-    setNewMessage("");
-    setAttachments([]);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
+  //   setNewMessage("");
+  //   setAttachments([]);
+  //   if (inputRef.current) {
+  //     inputRef.current.focus();
+  //   }
+  // };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -210,6 +217,25 @@ const MessageBox = (currentUser, currentMessages, loading) => {
     exit: { opacity: 0, y: 10 },
   };
 
+  // separate the messages by date
+  const formatMessageTime = (timestamp) => {
+    return format(parseISO(timestamp), "h:mm a"); // e.g., 6:00 PM
+  };
+
+  const formatMessageDate = (timestamp) => {
+    const date = parseISO(timestamp);
+    if (isToday(date)) return "Today";
+    if (isYesterday(date)) return "Yesterday";
+    return format(date, "MMMM d, yyyy"); // e.g., July 16, 2025
+  };
+
+  const groupedMessages = currentMessages?.reduce((acc, msg) => {
+    const dateKey = formatMessageDate(msg.created_at);
+    if (!acc[dateKey]) acc[dateKey] = [];
+    acc[dateKey].push(msg);
+    return acc;
+  }, {});
+
   // Format file size for display
   const formatFileSize = (bytes) => {
     if (bytes < 1024) return bytes + " B";
@@ -217,91 +243,91 @@ const MessageBox = (currentUser, currentMessages, loading) => {
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
-  if(loading) return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
+  console.log("current user", currentUser);
+  // send message mutation
+  const handleSendMessage = () => {
+    if (!newMessage?.trim()) {
+      return toast.error("Message cannot be empty.");
+    }
 
-  console.log('current messages', currentMessages);
+    sendMessageMutation.mutate({
+      to_user_id: currentUser?.id,
+      message: newMessage,
+    });
+  };
+
+  if (loading)
+    return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
+
+  console.log("current messages", currentMessages);
 
   return (
     <div className="flex flex-col w-full h-full text-black">
       <div className="flex-1 p-2 md:p-4 overflow-y-auto">
         <AnimatePresence>
-          {currentMessages?.map((message) => (
-            <motion.div
-              key={message.id}
-              variants={messageVariants}
-              custom={message}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              layout
-              className={`mb-4 flex ${
-                message?.isMe ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div className="relative max-w-md flex items-end gap-2">
-                {!message.isMe && (
-                  <img
-                    src={currentUser?.avatar || placeholderUser }
-                    alt={currentUser?.name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                )}
-                <div>
-                  <div
-                    className={`p-3 rounded-high rounded-2xl  dark:text-[#d2e5f5] text-sm ${
-                      message?.isMe
-                        ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
-                        : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
-                    }`}
-                  >
-                    {/* File attachments in message */}
-                    {/* {message.attachments && message.attachments.length > 0 && (
-                      <div className="mb-2">
-                        {message.attachments.map((attachment) => (
-                          <div
-                            key={attachment.id}
-                            className="flex items-center p-2 mb-2  rounded-md text-white dark:bg-slate-800 dark:border-slate-700"
-                          >
-                            <div className="p-2  dark:bg-slate-900 rounded-md">
-                              {attachment.type.includes("image/") ? (
-                                <FiImage size={16} />
-                              ) : (
-                                <LuFile size={16} />
-                              )}
-                            </div>
-                            <div className="ml-2 flex-1 max-w-[330px]">
-                              <span className="text-xs break-words  font-medium">
-                                {attachment.name}
-                              </span>
-                              <p className="text-xs dark:text-[#d2e5f5]/70 text-gray-300">
-                                {formatFileSize(attachment.size)}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )} */}
-                    {message?.body || "no text found" }
-                  </div>
-                  <div
-                    className={`${
-                      message?.isMe ? "text-right" : "text-left"
-                    } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70 mt`}
-                  >
-                    {/* {message.timestamp} */}time 
-                  </div>
-                </div>
-                {message?.isMe && (
-                  <img
-                    src={user?.avatar || placeholderUser }
-                    alt={user?.name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                )}
+          {Object.entries(groupedMessages).map(([date, messages]) => (
+            <div key={date} className="relative">
+              {/* Sticky Date Label with Motion */}
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="sticky top-0 z-10 w-fit mx-auto px-4 py-1 text-xs font-medium rounded-full shadow-sm text-gray-600 bg-white dark:bg-slate-800 dark:text-slate-300"
+              >
+                {date}
+              </motion.div>
 
-                
-              </div>
-            </motion.div>
+              {/* Messages under this date group */}
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  variants={messageVariants}
+                  custom={message}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  layout
+                  className={`mb-4 flex ${
+                    message?.isMe ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div className="relative max-w-md flex items-end gap-2">
+                    {!message.isMe && (
+                      <img
+                        src={currentUser?.avatar || placeholderUser}
+                        alt=""
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+                    <div>
+                      <div
+                        className={`p-3 rounded-high rounded-2xl dark:text-[#d2e5f5] text-sm ${
+                          message?.isMe
+                            ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
+                            : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
+                        }`}
+                      >
+                        {message?.body || "no text found"}
+                      </div>
+                      <div
+                        className={`${
+                          message?.isMe ? "text-right" : "text-left"
+                        } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70`}
+                      >
+                        {formatMessageTime(message.created_at)}
+                      </div>
+                    </div>
+                    {message?.isMe && (
+                      <img
+                        src={user?.avatar || placeholderUser}
+                        alt=""
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           ))}
         </AnimatePresence>
         <div ref={messagesEndRef} />
@@ -398,9 +424,14 @@ const MessageBox = (currentUser, currentMessages, loading) => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handleSendMessage}
+            disabled={sendMessageMutation.isLoading || !newMessage.trim()}
             className="bg-[#0FABCA]/80 text-white min-w-[30px] p-2.5 rounded-full hover:bg-[#0FABCA] flex items-center justify-center focus:outline-none"
           >
-            <LuSend size={18} />
+            {sendMessageMutation.isPending ? (
+              <Tailspin size="18" stroke="3" speed="0.9" color="white" />
+            ) : (
+              <LuSend size={18} />
+            )}
           </motion.button>
         </div>
       </div>

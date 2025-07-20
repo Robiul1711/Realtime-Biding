@@ -157,7 +157,7 @@ const router = createBrowserRouter([
         path: "/seller-dashboard/messages",
         element: (
           <SellerPrivateRoute>
-            <SellerMessaging />
+            <UserMessaging />
           </SellerPrivateRoute>
         ),
       },
