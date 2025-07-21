@@ -32,21 +32,21 @@ const ProductCard = ({ products, isLoading }) => {
     },
   });
 
-  const UnbookmarkMutation = useMutation({
-    mutationFn: async (data) => {
-      // const response = await axiosSecure.post("/bookmark", data); // Adjust endpoint if it's DELETE
-      return data.product_id;
-    },
-    onSuccess: (productId) => {
-      toast.success("Bookmark removed successfully");
-      setLikedItems((prev) => prev.filter((id) => id !== productId));
-    },
-    onError: (error) => {
-      const errorMessage =
-        error.response?.data?.message || "Failed to remove bookmark.";
-      toast.error(errorMessage);
-    },
-  });
+  // const UnbookmarkMutation = useMutation({
+  //   mutationFn: async (data) => {
+  //     // const response = await axiosSecure.post("/bookmark", data); // Adjust endpoint if it's DELETE
+  //     return data.product_id;
+  //   },
+  //   onSuccess: (productId) => {
+  //     toast.success("Bookmark removed successfully");
+  //     setLikedItems((prev) => prev.filter((id) => id !== productId));
+  //   },
+  //   onError: (error) => {
+  //     const errorMessage =
+  //       error.response?.data?.message || "Failed to remove bookmark.";
+  //     toast.error(errorMessage);
+  //   },
+  // });
 
   // const totalItems = dummyItems.length;
   // const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -80,14 +80,13 @@ const ProductCard = ({ products, isLoading }) => {
       value: "next bid",
     },
   ];
-   useEffect(() => {
+  useEffect(() => {
     // Ensure we have an array before proceeding
-
 
     const calculateTimeLeft = () => {
       const newTimeLeft = {};
 
-     products?.data?.data?.forEach((item) => {
+      products?.data?.data?.forEach((item) => {
         if (item?.auction_end_at) {
           const endDate = new Date(item.auction_end_at);
           const now = new Date();
@@ -176,12 +175,11 @@ const ProductCard = ({ products, isLoading }) => {
           : products?.data?.data?.map((item) => (
               <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
                 <div className="h-[200px]">
-
-                <img
-                  className="w-full  h-full object-cover rounded-xl"
-                  src={VITE_IMG_URL + item.images[0]}
-                  alt="image"
-                />
+                  <img
+                    className="w-full  h-full object-cover rounded-xl"
+                    src={VITE_IMG_URL + item.images[0]}
+                    alt="image"
+                  />
                 </div>
                 <div className="p-4">
                   <div className="flex justify-between items-center">
@@ -197,12 +195,15 @@ const ProductCard = ({ products, isLoading }) => {
                       </div>
                     </div>
                     <button
+                      // onClick={() => {
+                      //   if (likedItems.includes(item.id)) {
+                      //     UnbookmarkMutation.mutate({ product_id: item.id });
+                      //   } else {
+                      //     BookmarkMutation.mutate({ product_id: item.id });
+                      //   }
+                      // }}
                       onClick={() => {
-                        if (likedItems.includes(item.id)) {
-                          UnbookmarkMutation.mutate({ product_id: item.id });
-                        } else {
-                          BookmarkMutation.mutate({ product_id: item.id });
-                        }
+                        BookmarkMutation.mutate({ product_id: item.id });
                       }}
                       className="transition-all"
                     >
@@ -216,13 +217,13 @@ const ProductCard = ({ products, isLoading }) => {
                   {/* <p className="text-[12px] text-[#161515] my-1">
                     +$19.15 delivery
                   </p> */}
-                     {item?.auction_end_at && (
-                  <div className="pb-1">
-                    <p className="text-[#001AFF]">
-                      Time left: {timeLeft[item.id] || "Over"}
-                    </p>
-                  </div>
-                )}
+                  {item?.auction_end_at && (
+                    <div className="pb-1">
+                      <p className="text-[#001AFF]">
+                        Time left: {timeLeft[item.id] || "Over"}
+                      </p>
+                    </div>
+                  )}
                   <p className="text-[12px] text-[#161515] my-1">
                     From {item.country}
                   </p>

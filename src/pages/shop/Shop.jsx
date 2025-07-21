@@ -12,8 +12,10 @@ const Shop = () => {
   const axiosPublic = useAxiosPublic();
   const { data: products, isLoading } = useQuery({
     queryKey: ["products"],
-    queryFn: () => axiosPublic.get("/products"),
+    queryFn: () => axiosPublic.get("/sales"),
   });
+
+  console.log(products?.data?.data)
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -53,7 +55,7 @@ const Shop = () => {
           <FilterCard />
         </div>
         <div className="w-full md:flex-1">
-          <SimpleProdcutCard products={products} isLoading={isLoading} />
+          <SimpleProdcutCard products={products?.data?.data} isLoading={isLoading} />
         </div>
       </div>
 
