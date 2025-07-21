@@ -192,6 +192,17 @@ body {
   }
 }
 
+.hide-scrollbar {
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+
 .section-padding-x {
   padding-left: 16px;
   padding-right: 16px;

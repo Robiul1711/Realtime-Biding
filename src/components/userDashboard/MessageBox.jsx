@@ -263,7 +263,7 @@ const MessageBox = ({
 
   return (
     <div className="flex flex-col w-full h-full text-black">
-      <div className="flex-1 p-2 md:p-4 overflow-y-auto">
+      <div className="flex-1 p-2 md:p-4 hide-scrollbar overflow-y-auto">
         <AnimatePresence>
           {Object.entries(groupedMessages).map(([date, messages]) => (
             <div key={date} className="relative">

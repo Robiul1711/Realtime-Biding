@@ -69,7 +69,8 @@ const UserMessaging = () => {
   });
 
   useEffect(() => {
-    createChatMutation.mutate({ user_id: currentUser?.id || 15 });
+    if(!currentUser?.id) return;
+    createChatMutation.mutate({ user_id: currentUser?.id });
   }, [currentUser?.id]);
 
   console.log("conversationId", conversationId);
@@ -211,7 +212,7 @@ const UserMessaging = () => {
               className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
             >
               <div className="flex gap-3 items-center">
-                <img src={user} alt="" className="w-10 h-10 rounded-full" />
+                <img src={chat?.participants[0]?.participantable?.avatar || placeholderUser} alt="" className="w-10 h-10 rounded-full" />
                 <div className="flex-1">
                   <div className="flex gap-x-2 flex-wrap justify-between items-center">
                     <p className="font-semibold">
@@ -269,7 +270,7 @@ const UserMessaging = () => {
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 w-full overflow-y-auto">
+          <div className="flex-1 w-full hide-scrollbar overflow-y-auto">
             <MessageBox
               loading={isSingleChatLoading}
               currentUser={currentUser}
