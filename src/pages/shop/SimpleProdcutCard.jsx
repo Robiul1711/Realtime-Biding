@@ -13,7 +13,7 @@ import { useCart } from "@/hooks/useCart";
 
 const SimpleProductCard = ({ products, isLoading }) => {
   const [likedItems, setLikedItems] = useState([]);
-  const { addToCart, cart,removeFromCart } = useCart();
+  const { addToCart, cart, removeFromCart } = useCart();
   const axiosSecure = useAxiosSecure();
   const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
   const { user } = useAuth();
@@ -34,37 +34,6 @@ const SimpleProductCard = ({ products, isLoading }) => {
       toast.error(errorMessage);
     },
   });
-
-  const UnbookmarkMutation = useMutation({
-    mutationFn: async (data) => {
-      // const response = await axiosSecure.post("/bookmark", data); // Adjust endpoint if it's DELETE
-      return data.product_id;
-    },
-    onSuccess: (productId) => {
-      toast.success("Bookmark removed successfully");
-      setLikedItems((prev) => prev.filter((id) => id !== productId));
-    },
-    onError: (error) => {
-      const errorMessage =
-        error.response?.data?.message || "Failed to remove bookmark.";
-      toast.error(errorMessage);
-    },
-  });
-
-  const options = [
-    {
-      label: "Current Bid",
-      value: "current bid",
-    },
-    {
-      label: "Previous Bid",
-      value: "previous bid",
-    },
-    {
-      label: "Next Bid",
-      value: "next bid",
-    },
-  ];
 
   const isInCart = (productId) => {
     return cart.some((item) => item.id === productId);
@@ -123,15 +92,16 @@ const SimpleProductCard = ({ products, isLoading }) => {
                   </div>
                 </div>
               ))
-          : products?.data?.data?.data?.map((item) => (
-              <div
+          : products?.map((item) => (
+              <Link
+                to={`/search-product-details/${item?.slug}`}
                 key={item.id}
                 className="border border-[#CAC3C3] rounded-xl hover:shadow-md transition-shadow"
               >
                 <div className="h-[200px]">
                   <img
                     className="w-full h-full object-cover rounded-t-xl"
-                    src={VITE_IMG_URL + item.first_image}
+                    src={VITE_IMG_URL + item?.images[0]}
                     alt={item.title}
                   />
                 </div>
@@ -142,9 +112,7 @@ const SimpleProductCard = ({ products, isLoading }) => {
                         {item.title}
                       </p>
                       <div className="flex items-center gap-2">
-                        <p className="text-[14px] text-[#A8A8A8]">
-                          Price
-                        </p>
+                        <p className="text-[14px] text-[#A8A8A8]">Price</p>
                         <p className="text-[15px] font-semibold text-[#0C0D19]">
                           ${item.price}
                         </p>
@@ -152,15 +120,11 @@ const SimpleProductCard = ({ products, isLoading }) => {
                     </div>
                     <button
                       onClick={() => {
-                        if (likedItems.includes(item.id)) {
-                          UnbookmarkMutation.mutate({ product_id: item.id });
-                        } else {
-                          BookmarkMutation.mutate({ product_id: item.id });
-                        }
+                        BookmarkMutation.mutate({ product_id: item.id });
                       }}
                       className="transition-all"
                     >
-                      <HeartShape filled={likedItems.includes(item.id)} />
+                      <HeartShape filled={false} />
                     </button>
                   </div>
 
@@ -168,10 +132,15 @@ const SimpleProductCard = ({ products, isLoading }) => {
                     From {item.country}
                   </p>
                   <button
-                    onClick={() =>
-                      isInCart(item.id)
+                    onClick={(e) =>
+                      
+                     {
+                       isInCart(item.id)
                         ? removeFromCart(item.id)
                         : addToCart(item)
+                           e.preventDefault();
+                     }
+                        
                     }
                     className={`block text-center py-2 lg:py-3 rounded-2xl w-full cursor-pointer transition-all duration-300 font-medium my-2 ${
                       isInCart(item.id)
@@ -182,7 +151,7 @@ const SimpleProductCard = ({ products, isLoading }) => {
                     {isInCart(item.id) ? "Remove from Cart" : "Add to Cart"}
                   </button>
                 </div>
-              </div>
+              </Link>
             ))}
       </div>
     </div>

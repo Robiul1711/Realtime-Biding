@@ -11,19 +11,17 @@ import "swiper/css/thumbs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
-const SearchProductImages = () => {
+const SearchProductImages = ({ product }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const images = [product, product3, product2, product3, product2];
-  const images1 = [product3, product2, product3, product2];
 
   return (
     <div>
       <div className="flex items-center gap-1 text-gray-500 my-4">
         <span>Home</span>
         <FaAngleRight />
-        <span>Search Results</span>
-        <FaAngleRight />
-        <span className="font-semibold">Product Name</span>
+
+        {/* <FaAngleRight /> */}
+        <span className="font-semibold">{product?.title}</span>
       </div>
       <Swiper
         loop
@@ -33,11 +31,11 @@ const SearchProductImages = () => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="overflow-hidden rounded-lg"
       >
-        {images.map((img, index) => (
+        {product?.images?.map((img, index) => (
           <SwiperSlide key={index}>
             <img
               className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[260px] sm:h-[300px] md:h-[400px] xl:h-[540px] object-cover cursor-pointer"
-              src={img}
+              src={`${import.meta.env.VITE_IMG_URL + img}`}
               alt={`Product ${index}`}
             />
           </SwiperSlide>
@@ -54,11 +52,11 @@ const SearchProductImages = () => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
       >
-        {images1.map((img, i) => (
+        {product?.images?.map((img, i) => (
           <SwiperSlide key={i}>
             <img
               className="hover:scale-105 transition-transform duration-300 ease-in-out w-full h-[60px] md:h-[110px] object-cover cursor-pointer rounded-lg"
-              src={img}
+              src={`${import.meta.env.VITE_IMG_URL + img}`}
               alt={`Thumbnail ${i}`}
             />
           </SwiperSlide>
