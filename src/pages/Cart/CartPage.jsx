@@ -8,6 +8,8 @@ const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } =
     useCart();
 
+    console.log(cart)
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl md:text-3xl font-bold mb-8">
@@ -36,7 +38,7 @@ const CartPage = () => {
                 >
                   <div className="sm:w-1/3 mb-4 sm:mb-0">
                     <img
-                      src={`${import.meta.env.VITE_IMG_URL}${item.first_image}`}
+                      src={`${import.meta.env.VITE_IMG_URL}${item.images[0]}`}
                       alt={item.title}
                       className="w-full h-40 object-cover rounded-lg"
                     />

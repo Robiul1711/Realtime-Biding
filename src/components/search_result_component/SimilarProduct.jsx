@@ -9,6 +9,8 @@ import today from "../../assets/images/cap.png";
 import product2 from "../../assets/images/product2.png";
 import { Cart, HeartShape } from "../common/CustomIcon";
 import Title from "../common/Title";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 
 const data = [
   {
@@ -92,28 +94,32 @@ const data = [
     ratting: 4.5,
   },
 ];
-const renderStars = (rating) => {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (rating >= i) {
-      stars.push(<FaStar key={i} className="text-black" />);
-    } else if (rating >= i - 0.5) {
-      stars.push(<FaStarHalfAlt key={i} className="text-black" />);
-    } else {
-      stars.push(<FaRegStar key={i} className="text-black" />);
-    }
-  }
-  return stars;
-};
+// const renderStars = (rating) => {
+//   const stars = [];
+//   for (let i = 1; i <= 5; i++) {
+//     if (rating >= i) {
+//       stars.push(<FaStar key={i} className="text-black" />);
+//     } else if (rating >= i - 0.5) {
+//       stars.push(<FaStarHalfAlt key={i} className="text-black" />);
+//     } else {
+//       stars.push(<FaRegStar key={i} className="text-black" />);
+//     }
+//   }
+//   return stars;
+// };
 
-const SimilarProduct = () => {
-  const [likedItems, setLikedItems] = useState([]);
+const SimilarProduct = ({ id }) => {
+  const axiosPublic = useAxiosPublic();
 
-  const toggleLike = (id) => {
-    setLikedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
+  const { data:SimilarProducts, isLoading } = useQuery({
+    queryKey: ["similar-products"],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/categories/${id}/products`);
+      return res.data;
+    },
+  });
+
+
   return (
     <div className="section-padding-x">
       <div className="bg-[#F9F9F9] py-8 lg:py-12 mb-6 px-2 lg:px-6">
@@ -139,11 +145,10 @@ const SimilarProduct = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      toggleLike(item.id);
                     }}
                     className="transition-all"
                   >
-                    <HeartShape filled={likedItems.includes(item.id)} />
+                    <HeartShape filled={false} />
                   </button>
                 </div>
 
@@ -174,12 +179,12 @@ const SimilarProduct = () => {
                       {item.price}
                     </Title>
                   </div>
-                  <div className="flex items-center gap-1">
+                  {/* <div className="flex items-center gap-1">
                     <div className="flex">{renderStars(item.ratting)}</div>
                     <Title level="title12" className="text-sm text-[#7E7E7E]">
                       {item.review}
                     </Title>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </SwiperSlide>

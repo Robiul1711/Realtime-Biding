@@ -3,34 +3,50 @@ import React, { useState } from "react";
 // react icons
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
-const Accordion = () => {
-  const accordingData = [
-    {
-      title: "Description",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. ",
-    },
-    {
-      title: "Core feature",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. ",
-    },
-    {
-      title: "Shipping & return",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. ",
-    },
-    {
-      title: "Care guide",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. ",
-    },
-  ];
-
+const Accordion = ({ product }) => {
   const [isPlusAccording, setIsPlusAccording] = useState(null);
 
   const handleBorderClick = (index) =>
     setIsPlusAccording((prevIndex) => (prevIndex === index ? null : index));
+
+  // Prepare the accordion data based on product props
+  const accordingData = [
+    {
+      title: "Description",
+      description: product?.description 
+        ? <div dangerouslySetInnerHTML={{ __html: product.description }} /> 
+        : "No description available",
+    },
+    {
+      title: "Core features",
+      description: product?.properties?.length > 0 ? (
+        <ul className="list-disc pl-5">
+          {product.properties.map((prop, index) => (
+            <li key={index}>
+              <span className="font-medium">{prop.title}: </span>
+              {prop.value}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        "No features specified"
+      ),
+    },
+    {
+      title: "Shipping & return",
+      description: `
+        This item ships within ${product?.ship_within || '5'} days. 
+        Buyer is responsible for return shipping costs. 
+        Returns accepted within 14 days of delivery.
+      `,
+    },
+    {
+      title: "Care guide",
+      description: product?.care_guide 
+        ? product.care_guide 
+        : "No specific care instructions provided",
+    },
+  ];
 
   return (
     <div className="border-t dark:border-slate-800 my-8">
@@ -63,9 +79,9 @@ const Accordion = () => {
                   : "grid-rows-[0fr] opacity-0"
               }`}
             >
-              <p className="text-[#707070] dark:text-[#abc2d3] text-sm md:text-[0.9rem] overflow-hidden">
+              <div className="text-[#707070] dark:text-[#abc2d3] text-sm md:text-[0.9rem] overflow-hidden">
                 {according.description}
-              </p>
+              </div>
             </div>
           </article>
         ))}
