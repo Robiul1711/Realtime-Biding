@@ -23,46 +23,51 @@ const BidsTable = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["action-history"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/bids/user/${user?.id}`);
+      const res = await axiosSecure.get(`/auth/auctions`);
       return res.data;
     },
   });
 
   // Process and filter data
   const [processedBids, setProcessedBids] = useState([]);
-  
+
   useEffect(() => {
     if (data?.data) {
       let filteredData = [...data.data];
-      
+
       // Apply search filter
       if (searchTerm) {
-        filteredData = filteredData.filter(bid => 
-          bid.product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          bid.product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        filteredData = filteredData.filter(
+          (bid) =>
+            bid.product.title
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()) ||
+            bid.product.description
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
         );
       }
-      
+
       // Apply sorting
       filteredData.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'asc' ? -1 : 1;
+          return sortConfig.direction === "asc" ? -1 : 1;
         }
         if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'asc' ? 1 : -1;
+          return sortConfig.direction === "asc" ? 1 : -1;
         }
         return 0;
       });
-      
+
       setProcessedBids(filteredData);
     }
   }, [data, searchTerm, sortConfig]);
 
   // Handle sort request
   const requestSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
     }
     setSortConfig({ key, direction });
   };
@@ -155,38 +160,53 @@ const BidsTable = () => {
                 <input type="checkbox" />
               </th>
               <th className="p-3">
-                <div 
+                <div
                   className="flex items-center gap-1 cursor-pointer"
-                  onClick={() => requestSort('title')}
+                  onClick={() => requestSort("title")}
                 >
-                  Product Name 
-                  <ChevronDown className={`w-4 h-4 transition-transform ${
-                    sortConfig.key === 'title' && sortConfig.direction === 'asc' ? 'rotate-180' : ''
-                  }`} />
+                  Product Name
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      sortConfig.key === "title" &&
+                      sortConfig.direction === "asc"
+                        ? "rotate-180"
+                        : ""
+                    }`}
+                  />
                 </div>
               </th>
               <th className="p-3">
-                <div 
+                <div
                   className="flex items-center gap-1 cursor-pointer"
-                  onClick={() => requestSort('amount')}
+                  onClick={() => requestSort("amount")}
                 >
                   Bid Amount
-                  <ChevronDown className={`w-4 h-4 transition-transform ${
-                    sortConfig.key === 'amount' && sortConfig.direction === 'asc' ? 'rotate-180' : ''
-                  }`} />
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      sortConfig.key === "amount" &&
+                      sortConfig.direction === "asc"
+                        ? "rotate-180"
+                        : ""
+                    }`}
+                  />
                 </div>
               </th>
               <th className="p-3">Status</th>
               <th className="p-3">Location</th>
               <th className="p-3">
-                <div 
+                <div
                   className="flex items-center gap-1 cursor-pointer"
-                  onClick={() => requestSort('created_at')}
+                  onClick={() => requestSort("created_at")}
                 >
                   Date
-                  <ChevronDown className={`w-4 h-4 transition-transform ${
-                    sortConfig.key === 'created_at' && sortConfig.direction === 'asc' ? 'rotate-180' : ''
-                  }`} />
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      sortConfig.key === "created_at" &&
+                      sortConfig.direction === "asc"
+                        ? "rotate-180"
+                        : ""
+                    }`}
+                  />
                 </div>
               </th>
               <th className="p-3">Product Image</th>
@@ -249,17 +269,19 @@ const BidsTable = () => {
       {processedBids.length > 0 && (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 text-sm text-gray-600 gap-3">
           <div>
-            Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, processedBids.length)} of {processedBids.length} entries
+            Showing {indexOfFirstItem + 1} to{" "}
+            {Math.min(indexOfLastItem, processedBids.length)} of{" "}
+            {processedBids.length} entries
           </div>
           <div className="flex items-center gap-1">
-            <button 
+            <button
               className="px-2 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
               onClick={() => paginate(currentPage - 1)}
               disabled={currentPage === 1}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            
+
             {/* Always show first page */}
             <button
               className={`px-3 py-1 border rounded ${
@@ -271,12 +293,10 @@ const BidsTable = () => {
             >
               1
             </button>
-            
+
             {/* Show ellipsis if needed */}
-            {currentPage > 3 && (
-              <span className="px-2">...</span>
-            )}
-            
+            {currentPage > 3 && <span className="px-2">...</span>}
+
             {/* Show previous page if not first */}
             {currentPage > 2 && (
               <button
@@ -286,16 +306,14 @@ const BidsTable = () => {
                 {currentPage - 1}
               </button>
             )}
-            
+
             {/* Show current page if not first or last */}
             {currentPage > 1 && currentPage < totalPages && (
-              <button
-                className="px-3 py-1 border rounded bg-blue-600 text-white"
-              >
+              <button className="px-3 py-1 border rounded bg-blue-600 text-white">
                 {currentPage}
               </button>
             )}
-            
+
             {/* Show next page if not last */}
             {currentPage < totalPages - 1 && (
               <button
@@ -305,12 +323,10 @@ const BidsTable = () => {
                 {currentPage + 1}
               </button>
             )}
-            
+
             {/* Show ellipsis if needed */}
-            {currentPage < totalPages - 2 && (
-              <span className="px-2">...</span>
-            )}
-            
+            {currentPage < totalPages - 2 && <span className="px-2">...</span>}
+
             {/* Always show last page if there is more than one page */}
             {totalPages > 1 && (
               <button
@@ -324,8 +340,8 @@ const BidsTable = () => {
                 {totalPages}
               </button>
             )}
-            
-            <button 
+
+            <button
               className="px-2 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
               onClick={() => paginate(currentPage + 1)}
               disabled={currentPage === totalPages}

@@ -114,7 +114,7 @@ const LiveAuctions = () => {
                     </p>
                   )}
 
-                  <Link to={`/auction-details/${item?.id}`} className="bg-red-600  w-[140px] hover:bg-red-700 text-white py-3 px-6 rounded-full flex items-center gap-2 transition-colors">
+                  <Link to={`/auction-details/${item?.slug}`} className="bg-red-600  w-[140px] hover:bg-red-700 text-white py-3 px-6 rounded-full flex items-center gap-2 transition-colors">
                     Bid Now <FiArrowUpRight className="text-lg" />
                   </Link>
                 </div>

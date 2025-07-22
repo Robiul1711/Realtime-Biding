@@ -6,16 +6,18 @@ import React, { useEffect, useState } from "react";
 import { FiFilter, FiX } from "react-icons/fi";
 import { ScrollRestoration } from "react-router-dom";
 import SimpleProdcutCard from "./SimpleProdcutCard";
-
+import ReactPaginate from "react-paginate";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 const Shop = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const axiosPublic = useAxiosPublic();
+  const [page,setPage] =useState(1)
+  const axiosSecure= useAxiosSecure();
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => axiosPublic.get("/sales"),
+    queryKey: ["products",page],
+    queryFn: () => axiosSecure.get(`/products?page=${page}`),
   });
 
-  console.log(products?.data?.data)
+  console.log(products?.data?.data?.data)
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -55,7 +57,7 @@ const Shop = () => {
           <FilterCard />
         </div>
         <div className="w-full md:flex-1">
-          <SimpleProdcutCard products={products?.data?.data} isLoading={isLoading} />
+          <SimpleProdcutCard isLoading={isLoading} products={products?.data?.data?.data} page={page} setPage={setPage} totalPage ={products?.data?.data?.last_page}  />
         </div>
       </div>
 

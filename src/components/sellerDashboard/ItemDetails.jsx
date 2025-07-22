@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
@@ -14,11 +14,23 @@ const ItemDetails = () => {
     register,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useFormContext();
 
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [customProperties, setCustomProperties] = useState([]);
   const additionalInputs = useWatch({ name: "product_properties", control }) || [];
+
   const axiosPublic = useAxiosPublic();
+
+  // Property options data
+  const propertyOptions = [
+    { id: 1, label: "Condition", values: ["New", "Used", "Refurbished"] },
+    { id: 2, label: "Material", values: ["Wood", "Metal", "Plastic", "Fabric"] },
+    { id: 3, label: "Color", values: ["Red", "Blue", "Green", "Black", "White"] },
+    { id: 4, label: "Size", values: ["Small", "Medium", "Large", "XL"] },
+  ];
 
   useEffect(() => {
     const defaultImages = control._defaultValues?.images || [];
@@ -31,6 +43,7 @@ const ItemDetails = () => {
     setFileList(formatted);
   }, [control]);
 
+  // Fetch categories
   const { data: allCategories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
@@ -39,16 +52,57 @@ const ItemDetails = () => {
     },
   });
 
+  // Fetch subcategories based on selected category
   const { data: allSubcategories } = useQuery({
-    queryKey: ["subcategories"],
+    queryKey: ["subcategories", selectedCategory],
     queryFn: async () => {
-      const res = await axiosPublic.get("/subcategories");
+      if (!selectedCategory) return { data: [] };
+      const res = await axiosPublic.get(`/subcategories?category_id=${selectedCategory}`);
       return res.data;
     },
+    enabled: !!selectedCategory,
   });
+  console.log(allSubcategories)
 
   const handleAddProperty = () => {
-    setValue("product_properties", [...additionalInputs, { title: "", value: "" }]);
+    setValue("product_properties", [
+      ...additionalInputs,
+      { title: "", value: "" },
+    ]);
+    setCustomProperties([...customProperties, false]);
+  };
+
+  const handleRemoveProperty = (index) => {
+    const updatedProperties = [...additionalInputs];
+    updatedProperties.splice(index, 1);
+    setValue("product_properties", updatedProperties);
+
+    const updatedCustom = [...customProperties];
+    updatedCustom.splice(index, 1);
+    setCustomProperties(updatedCustom);
+  };
+
+  const handlePropertySelect = (index, property) => {
+    if (property === "add-new") {
+      const updatedCustom = [...customProperties];
+      updatedCustom[index] = true;
+      setCustomProperties(updatedCustom);
+      setValue(`product_properties.${index}.title`, "");
+      setValue(`product_properties.${index}.value`, "");
+    } else {
+      const updatedCustom = [...customProperties];
+      updatedCustom[index] = false;
+      setCustomProperties(updatedCustom);
+      setValue(`product_properties.${index}.title`, property);
+      setValue(`product_properties.${index}.value`, "");
+    }
+  };
+
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    setSelectedCategory(categoryId);
+    setValue("category_id", categoryId);
+    setValue("subcategory_id", ""); // Reset subcategory when category changes
   };
 
   return (
@@ -82,7 +136,9 @@ const ItemDetails = () => {
             )}
           />
           {errors.images && (
-            <span className="text-red-500 text-sm">{errors.images.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.images.message}
+            </span>
           )}
         </div>
 
@@ -127,7 +183,7 @@ const ItemDetails = () => {
         </div>
 
         {/* Care Guide */}
-        <div className=" mt-20">
+        <div className="mt-20">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Care Guide <span className="text-red-500">*</span>
           </label>
@@ -160,6 +216,7 @@ const ItemDetails = () => {
               <select
                 {...register("category_id", {
                   required: "Category is required",
+                  onChange: handleCategoryChange,
                 })}
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
               >
@@ -189,10 +246,11 @@ const ItemDetails = () => {
                   required: "Subcategory is required",
                 })}
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
+                disabled={!selectedCategory}
               >
                 <option value="">Select sub category</option>
                 {allSubcategories?.data?.map((subcategory) => (
-                  <option  key={subcategory.id} value={subcategory.id}>
+                  <option key={subcategory.id} value={subcategory.id}>
                     {subcategory.title}
                   </option>
                 ))}
@@ -223,30 +281,88 @@ const ItemDetails = () => {
             </button>
           </div>
 
-          {additionalInputs.map((_, index) => (
-            <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {additionalInputs.map((field, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 relative"
+            >
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Property Name
                 </label>
-                <input
-                  type="text"
-                  {...register(`product_properties.${index}.title`)}
-                  placeholder="e.g. Condition"
-                  className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"
-                />
+                {customProperties[index] ? (
+                  <input
+                    type="text"
+                    {...register(`product_properties.${index}.title`, {
+                      required: "Property name is required",
+                    })}
+                    placeholder="Enter property name"
+                    className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"
+                  />
+                ) : (
+                  <div className="relative">
+                    <select
+                      {...register(`product_properties.${index}.title`, {
+                        required: "Property name is required",
+                      })}
+                      onChange={(e) => handlePropertySelect(index, e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
+                    >
+                      <option value="">Select property</option>
+                      {propertyOptions.map((prop) => (
+                        <option key={prop.id} value={prop.label}>
+                          {prop.label}
+                        </option>
+                      ))}
+                      <option value="add-new">Add new property...</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                )}
               </div>
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Property Value
                 </label>
-                <input
-                  type="text"
-                  {...register(`product_properties.${index}.value`)}
-                  placeholder="e.g. Excellent"
-                  className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"
-                />
+                {customProperties[index] || !getValues(`product_properties.${index}.title`) ? (
+                  <input
+                    type="text"
+                    {...register(`product_properties.${index}.value`, {
+                      required: "Property value is required",
+                    })}
+                    placeholder="Enter property value"
+                    className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg"
+                  />
+                ) : (
+                  <div className="relative">
+                    <select
+                      {...register(`product_properties.${index}.value`, {
+                        required: "Property value is required",
+                      })}
+                      className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
+                    >
+                      <option value="">Select value</option>
+                      {propertyOptions
+                        .find(prop => prop.label === getValues(`product_properties.${index}.title`))
+                        ?.values.map((value, i) => (
+                          <option key={i} value={value}>
+                            {value}
+                          </option>
+                        ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  </div>
+                )}
               </div>
+
+              <button
+                type="button"
+                onClick={() => handleRemoveProperty(index)}
+                className="absolute -right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-500"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
           ))}
         </div>

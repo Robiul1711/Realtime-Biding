@@ -7,10 +7,15 @@ import { useQuery } from "@tanstack/react-query";
 
 const FilterCard = () => {
   const axiosPublic = useAxiosPublic();
-  const [isOpen, setIsOpen] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [priceOpen, setPriceOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [checkedOptions, setCheckedOptions] = useState({});
+  const [priceRange, setPriceRange] = useState({
+    min: "",
+    max: ""
+  });
 
   // Fetch categories
   const { data: categoriesData } = useQuery({
@@ -56,9 +61,34 @@ const FilterCard = () => {
     }));
   };
 
+  const handlePriceRangeChange = (e) => {
+    const { name, value } = e.target;
+    setPriceRange(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handlePricePresetSelect = (preset) => {
+    switch(preset) {
+      case 'under4000':
+        setPriceRange({ min: "", max: "4000" });
+        break;
+      case '4000to20000':
+        setPriceRange({ min: "4000", max: "20000" });
+        break;
+      case 'over20000':
+        setPriceRange({ min: "20000", max: "" });
+        break;
+      default:
+        setPriceRange({ min: "", max: "" });
+    }
+  };
+
   const resetFilters = () => {
     setCheckedOptions({});
     setSelectedSubcategory(null);
+    setPriceRange({ min: "", max: "" });
   };
 
   return (
@@ -74,10 +104,10 @@ const FilterCard = () => {
         <div className="border border-gray-200 rounded-lg">
           <div
             className="flex items-center justify-between p-4 cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setCategoryOpen(!categoryOpen)}
           >
             <Title level="title24">Category</Title>
-            {isOpen ? (
+            {categoryOpen ? (
               <Minus size={20} className="text-gray-500" />
             ) : (
               <Plus size={20} className="text-gray-500" />
@@ -86,7 +116,7 @@ const FilterCard = () => {
 
           <div
             className={`overflow-hidden transition-all duration-300 ${
-              isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              categoryOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
             <div className="p-4 pt-0 space-y-3">
@@ -142,6 +172,84 @@ const FilterCard = () => {
               onChange={(value) => handleOptionChange(filterName, value)}
             />
           ))}
+
+        {/* Price Filter Section */}
+        <div className="border border-gray-200 rounded-lg">
+          <div
+            className="flex items-center justify-between p-4 cursor-pointer"
+            onClick={() => setPriceOpen(!priceOpen)}
+          >
+            <Title level="title24">Price</Title>
+            {priceOpen ? (
+              <Minus size={20} className="text-gray-500" />
+            ) : (
+              <Plus size={20} className="text-gray-500" />
+            )}
+          </div>
+          
+          <div
+            className={`overflow-hidden transition-all duration-300 ${
+              priceOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="p-4 pt-0 space-y-3">
+              <div className="space-y-2">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox accent-blue-600"
+                    checked={priceRange.max === "4000" && !priceRange.min}
+                    onChange={() => handlePricePresetSelect('under4000')}
+                  />
+                  <span>Under $4,000</span>
+                </label>
+
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox accent-blue-600"
+                    checked={priceRange.min === "4000" && priceRange.max === "20000"}
+                    onChange={() => handlePricePresetSelect('4000to20000')}
+                  />
+                  <span>$4,000 to $20,000</span>
+                </label>
+
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox accent-blue-600"
+                    checked={priceRange.min === "20000" && !priceRange.max}
+                    onChange={() => handlePricePresetSelect('over20000')}
+                  />
+                  <span>Over $20,000</span>
+                </label>
+              </div>
+
+              <div className="pt-2">
+                <p className="text-sm text-gray-600 mb-2">Custom Range</p>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="number"
+                    name="min"
+                    placeholder="$ Min"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    value={priceRange.min}
+                    onChange={handlePriceRangeChange}
+                  />
+                  <span className="text-gray-500 text-sm">To</span>
+                  <input
+                    type="number"
+                    name="max"
+                    placeholder="$ Max"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    value={priceRange.max}
+                    onChange={handlePriceRangeChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Footer with Reset Button */}
