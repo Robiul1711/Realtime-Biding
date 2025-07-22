@@ -2,6 +2,7 @@ import FilterCard from "@/components/auctionComponents/FilterCard";
 import ProductCard from "@/components/auctionComponents/ProductCard";
 import BigDeal from "@/components/home_components/BigDeal";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FiFilter, FiX } from "react-icons/fi";
@@ -9,11 +10,17 @@ import { ScrollRestoration } from "react-router-dom";
 
 const AuctionList = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const axiosPublic = useAxiosPublic();
+  const [page, setPage] = useState(1);
+  const axiosSecure = useAxiosSecure();
   const { data: products, isLoading } = useQuery({
-    queryKey: ["auction-products"],
-    queryFn: () => axiosPublic.get("/auctions/active"),
+    queryKey: ["auction-products", page],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/auctions/active?page=${page}`);
+      return res?.data;
+    },
   });
+
+  console.log(page);
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -34,7 +41,7 @@ const AuctionList = () => {
     };
   }, [isFilterOpen]);
 
-  console.log(products);
+  console.log(products?.data?.data);
 
   return (
     <div
@@ -55,7 +62,13 @@ const AuctionList = () => {
           <FilterCard />
         </div>
         <div className="w-full md:flex-1">
-          <ProductCard products={products} isLoading={isLoading} />
+          <ProductCard
+            page={page}
+            setPage={setPage}
+            products={products?.data?.data}
+            isLoading={isLoading}
+            totalPage={products?.data?.last_page}
+          />
         </div>
       </div>
 

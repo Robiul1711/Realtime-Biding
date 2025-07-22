@@ -7,6 +7,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 
 const ItemDetails = () => {
   const [fileList, setFileList] = useState([]);
@@ -20,15 +21,25 @@ const ItemDetails = () => {
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [customProperties, setCustomProperties] = useState([]);
-  const additionalInputs = useWatch({ name: "product_properties", control }) || [];
+  const additionalInputs =
+    useWatch({ name: "product_properties", control }) || [];
 
   const axiosPublic = useAxiosPublic();
+  const axiosSecure =useAxiosSecure()
 
   // Property options data
   const propertyOptions = [
     { id: 1, label: "Condition", values: ["New", "Used", "Refurbished"] },
-    { id: 2, label: "Material", values: ["Wood", "Metal", "Plastic", "Fabric"] },
-    { id: 3, label: "Color", values: ["Red", "Blue", "Green", "Black", "White"] },
+    {
+      id: 2,
+      label: "Material",
+      values: ["Wood", "Metal", "Plastic", "Fabric"],
+    },
+    {
+      id: 3,
+      label: "Color",
+      values: ["Red", "Blue", "Green", "Black", "White"],
+    },
     { id: 4, label: "Size", values: ["Small", "Medium", "Large", "XL"] },
   ];
 
@@ -57,12 +68,33 @@ const ItemDetails = () => {
     queryKey: ["subcategories", selectedCategory],
     queryFn: async () => {
       if (!selectedCategory) return { data: [] };
-      const res = await axiosPublic.get(`/subcategories?category_id=${selectedCategory}`);
+      const res = await axiosPublic.get(
+        `/subcategories?category_id=${selectedCategory}`
+      );
       return res.data;
     },
     enabled: !!selectedCategory,
   });
-  console.log(allSubcategories)
+
+  const {data:propertyName} =useQuery({
+    queryKey:["property-name"],
+    queryFn:async()=>{
+      const res =  await axiosSecure.get(`/seller/product/all/propertys`)
+      return res?.data
+    }
+  })
+
+
+
+  const {data:propertyValue} =useQuery({
+    queryKey:["property-value"],
+    queryFn:async()=>{
+      const res =  await axiosSecure.get(`/seller/product/propertys/3`)
+      return res?.data
+    }
+  })
+
+  console.log(propertyValue)
 
   const handleAddProperty = () => {
     setValue("product_properties", [
@@ -305,7 +337,9 @@ const ItemDetails = () => {
                       {...register(`product_properties.${index}.title`, {
                         required: "Property name is required",
                       })}
-                      onChange={(e) => handlePropertySelect(index, e.target.value)}
+                      onChange={(e) =>
+                        handlePropertySelect(index, e.target.value)
+                      }
                       className="w-full px-4 py-3 border border-gray-300 text-gray-800 rounded-lg bg-white appearance-none"
                     >
                       <option value="">Select property</option>
@@ -320,12 +354,13 @@ const ItemDetails = () => {
                   </div>
                 )}
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Property Value
                 </label>
-                {customProperties[index] || !getValues(`product_properties.${index}.title`) ? (
+                {customProperties[index] ||
+                !getValues(`product_properties.${index}.title`) ? (
                   <input
                     type="text"
                     {...register(`product_properties.${index}.value`, {
@@ -344,7 +379,11 @@ const ItemDetails = () => {
                     >
                       <option value="">Select value</option>
                       {propertyOptions
-                        .find(prop => prop.label === getValues(`product_properties.${index}.title`))
+                        .find(
+                          (prop) =>
+                            prop.label ===
+                            getValues(`product_properties.${index}.title`)
+                        )
                         ?.values.map((value, i) => (
                           <option key={i} value={value}>
                             {value}

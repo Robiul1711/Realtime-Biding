@@ -4,31 +4,42 @@ import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
+import ReactPaginate from "react-paginate";
+import { Loader2 } from "lucide-react";
 
-const ProductCard = ({ products, isLoading }) => {
+const ProductCard = ({ products, isLoading, page, setPage, totalPage }) => {
   const [likedItems, setLikedItems] = useState([]);
+  const [bookmarkLoadingId, setBookmarkLoadingId] = useState(null);
   const [timeLeft, setTimeLeft] = useState({});
   const axiosSecure = useAxiosSecure();
   const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const BookmarkMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axiosSecure.post("/bookmark", data); // expects { product_id: ... }
       return { ...response.data, productId: data.product_id }; // attach productId so you can access it in onSuccess
     },
     onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["auction-products"] });
       toast.success(response?.message || "Bookmark added successfully");
       setLikedItems((prev) => [...prev, response.productId]);
+    },
+    onMutate: (data) => {
+      setBookmarkLoadingId(data.product_id);
     },
     onError: (error) => {
       const errorMessage =
         error.response?.data?.message ||
         "Something went wrong, try again later!!";
       toast.error(errorMessage);
+    },
+    onSettled: () => {
+      setBookmarkLoadingId(null);
     },
   });
 
@@ -119,7 +130,7 @@ const ProductCard = ({ products, isLoading }) => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
         <div className="flex items-center gap-4 w-full sm:w-[65%]">
           <p className="text-sm t sm:text-base">Sort By :</p>
 
@@ -145,7 +156,7 @@ const ProductCard = ({ products, isLoading }) => {
         </div>
 
         <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xmd:grid-cols-2 lg:grid-cols-2 xlg:grid-cols-3 gap-4 mt-8">
         {isLoading
@@ -172,7 +183,7 @@ const ProductCard = ({ products, isLoading }) => {
                   </div>
                 </div>
               ))
-          : products?.data?.data?.map((item) => (
+          : products?.map((item) => (
               <div key={item.id} className="border border-[#CAC3C3] rounded-xl">
                 <div className="h-[200px]">
                   <img
@@ -207,7 +218,11 @@ const ProductCard = ({ products, isLoading }) => {
                       }}
                       className="transition-all"
                     >
-                      <HeartShape filled={likedItems.includes(item.id)} />
+                      {bookmarkLoadingId === item.id ? (
+                        <Loader2 className="animate-spin text-gray-600 w-5 h-5" />
+                      ) : (
+                        <HeartShape filled={item?.bookmark ? true : false} />
+                      )}
                     </button>
                   </div>
                   {/* <p className="text-[12px] text-[#161515] my-1">
@@ -305,6 +320,28 @@ const ProductCard = ({ products, isLoading }) => {
           </button>
         </div>
       </div> */}
+      <div className="flex justify-end items-end mt-6">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel={""}
+          previousLabel={""}
+          pageCount={totalPage}
+          pageRangeDisplayed={1}
+          marginPagesDisplayed={2}
+          onPageChange={(event) => {
+            setPage(event.selected + 1);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          containerClassName="flex items-center md:gap-3 gap-1 flex-wrap"
+          previousClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
+          nextClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
+          activeLinkClassName="font-[700] bg-[#4275F6] rounded-full !text-white border-none"
+          disabledClassName="bg-none cursor-not-allowed"
+          breakClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700"
+          pageLinkClassName="w-[42px] cursor-pointer h-[42px] border-[1px] border-primary flex justify-center items-center text-black rounded-xl"
+          forcePage={page - 1}
+        />
+      </div>
     </div>
   );
 };
