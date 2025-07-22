@@ -58,7 +58,7 @@ const SearchProductDetails = () => {
           <SearchProductText product={productDetails.data} />
         </div>
       </div>
-      <SimilarProduct id={productDetails?.data?.category_id} />
+      <SimilarProduct id={productDetails?.data?.sub_category_id} />
     </div>
   );
 };

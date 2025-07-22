@@ -71,8 +71,8 @@ const EditPricingAndAuction = ({ isEditMode }) => {
             type="number"
             step="0.01"
             {...register("price", {
-              required: buyNowEnabled ? "Price is required" : false,
-              min: { value: 0.01, message: "Price must be greater than 0" },
+              // required: buyNowEnabled ? "Price is required" : false,
+              // min: { value: 0.01, message: "Price must be greater than 0" },
             })}
             placeholder="Enter buy now price"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -95,8 +95,8 @@ const EditPricingAndAuction = ({ isEditMode }) => {
               type="number"
               step="0.01"
               {...register("starting_price", {
-                required: !buyNowEnabled ? "Starting price is required" : false,
-                min: { value: 0.01, message: "Price must be greater than 0" },
+                // required: !buyNowEnabled ? "Starting price is required" : false,
+                // min: { value: 0.01, message: "Price must be greater than 0" },
               })}
               placeholder="Enter starting price"
               className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -117,7 +117,7 @@ const EditPricingAndAuction = ({ isEditMode }) => {
               control={control}
               name="auction_end_at"
               rules={{
-                required: !buyNowEnabled ? "Auction end date is required" : false,
+                // required: !buyNowEnabled ? "Auction end date is required" : false,
               }}
               render={({ field }) => (
                 <DatePicker
@@ -155,8 +155,8 @@ const EditPricingAndAuction = ({ isEditMode }) => {
         <input
           type="number"
           {...register("ship_within", {
-            required: "Shipping days is required",
-            min: { value: 1, message: "Must be at least 1 day" },
+            // required: "Shipping days is required",
+            // min: { value: 1, message: "Must be at least 1 day" },
           })}
           placeholder="e.g. 3"
           className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -176,7 +176,7 @@ const EditPricingAndAuction = ({ isEditMode }) => {
           </label>
           <input
             type="text"
-            {...register("country", { required: "Country is required" })}
+            {...register("country", )}
             placeholder="Enter country"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
           />
@@ -193,7 +193,7 @@ const EditPricingAndAuction = ({ isEditMode }) => {
           </label>
           <input
             type="text"
-            {...register("city", { required: "City is required" })}
+            {...register("city", )}
             placeholder="Enter city"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
           />
@@ -208,7 +208,7 @@ const EditPricingAndAuction = ({ isEditMode }) => {
           </label>
           <input
             type="text"
-            {...register("address", { required: "Address is required" })}
+            {...register("address", )}
             placeholder="Enter address"
             className="w-full border border-gray-300 rounded-md px-3 py-2"
           />

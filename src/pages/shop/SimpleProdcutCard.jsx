@@ -1,31 +1,42 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { HeartShape } from "@/components/common/CustomIcon";
-import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
-
 import { useCart } from "@/hooks/useCart";
+import ReactPaginate from "react-paginate";
+import { Loader2 } from "lucide-react"; // Spinner icon from lucide-react
 
-const SimpleProductCard = ({ products, isLoading }) => {
-  const [likedItems, setLikedItems] = useState([]);
+const SimpleProductCard = ({
+  products,
+  isLoading,
+  page,
+  setPage,
+  totalPage,
+}) => {
   const { addToCart, cart, removeFromCart } = useCart();
   const axiosSecure = useAxiosSecure();
-  const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
   const { user } = useAuth();
+  const VITE_IMG_URL = import.meta.env.VITE_IMG_URL;
+  const queryClient = useQueryClient();
+
+  const [bookmarkLoadingId, setBookmarkLoadingId] = useState(null); // Track which item is loading
 
   const BookmarkMutation = useMutation({
     mutationFn: async (data) => {
       const response = await axiosSecure.post("/bookmark", data);
       return { ...response.data, productId: data.product_id };
     },
+    onMutate: (data) => {
+      setBookmarkLoadingId(data.product_id);
+    },
     onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success(response?.message || "Bookmark added successfully");
-      setLikedItems((prev) => [...prev, response.productId]);
     },
     onError: (error) => {
       const errorMessage =
@@ -33,115 +44,113 @@ const SimpleProductCard = ({ products, isLoading }) => {
         "Something went wrong, try again later!!";
       toast.error(errorMessage);
     },
+    onSettled: () => {
+      setBookmarkLoadingId(null);
+    },
   });
 
   const isInCart = (productId) => {
     return cart.some((item) => item.id === productId);
   };
 
+  const productList = Array.isArray(products) ? products : [];
+
   return (
     <div>
-      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-2 border-[#cac3c3] px-4 py-3 rounded-md w-full gap-4 md:gap-0">
-        <div className="flex items-center gap-4 w-full sm:w-[65%]">
-          <p className="text-sm sm:text-base">Sort By :</p>
-          <div className="relative w-full max-w-[180px]">
-            <select
-              className="appearance-none w-full px-4 py-2 md:py-3 border-none outline-none text-gray-700 bg-[#F0F0F0] rounded"
-              defaultValue=""
-            >
-              {options.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                  className="text-black text-sm md:text-base"
-                >
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-              <ChevronDown size={20} />
-            </div>
-          </div>
-        </div>
-        <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
-      </div> */}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xmd:grid-cols-2 lg:grid-cols-2 xlg:grid-cols-3 gap-4 mt-8">
-        {isLoading
-          ? Array(6)
-              .fill()
-              .map((_, index) => (
-                <div key={index} className="border border-[#CAC3C3] rounded-xl">
-                  <Skeleton height={240} className="w-full rounded-t-xl" />
-                  <div className="p-4">
-                    <div className="flex justify-between items-center">
-                      <div className="my-1 w-full">
-                        <Skeleton width="80%" height={16} className="mb-2" />
-                        <div className="flex items-center gap-2">
-                          <Skeleton width={60} height={14} />
-                          <Skeleton width={40} height={14} />
-                        </div>
-                      </div>
-                      <Skeleton circle width={24} height={24} />
-                    </div>
-                    <Skeleton width="70%" height={12} className="my-1" />
-                    <Skeleton width="60%" height={12} className="my-1" />
-                    <Skeleton width="50%" height={12} className="my-1" />
-                    <Skeleton height={40} className="rounded-2xl mt-2" />
-                  </div>
-                </div>
-              ))
-          : products?.map((item) => (
-              <Link
-                to={`/search-product-details/${item?.slug}`}
-                key={item.id}
-                className="border border-[#CAC3C3] rounded-xl hover:shadow-md transition-shadow"
-              >
-                <div className="h-[200px]">
-                  <img
-                    className="w-full h-full object-cover rounded-t-xl"
-                    src={VITE_IMG_URL + item?.images[0]}
-                    alt={item.title}
-                  />
-                </div>
+        {isLoading ? (
+          Array(6)
+            .fill()
+            .map((_, index) => (
+              <div key={index} className="border border-[#CAC3C3] rounded-xl">
+                <Skeleton height={240} className="w-full rounded-t-xl" />
                 <div className="p-4">
                   <div className="flex justify-between items-center">
-                    <div className="my-1">
-                      <p className="text-[14px] text-[#0C0D19] font-medium">
-                        {item.title}
-                      </p>
+                    <div className="my-1 w-full">
+                      <Skeleton width="80%" height={16} className="mb-2" />
+                      <div className="flex items-center gap-2">
+                        <Skeleton width={60} height={14} />
+                        <Skeleton width={40} height={14} />
+                      </div>
+                    </div>
+                    <Skeleton circle width={24} height={24} />
+                  </div>
+                  <Skeleton width="70%" height={12} className="my-1" />
+                  <Skeleton width="60%" height={12} className="my-1" />
+                  <Skeleton width="50%" height={12} className="my-1" />
+                  <Skeleton height={40} className="rounded-2xl mt-2" />
+                </div>
+              </div>
+            ))
+        ) : productList.length === 0 ? (
+          <p className="col-span-full text-center text-gray-500"> No Products found</p>
+        ) : (
+          productList.map((item) => (
+            <Link
+              to={`/search-product-details/${item?.slug}`}
+              key={item.id}
+              className="border border-[#CAC3C3] rounded-xl hover:shadow-md transition-shadow"
+            >
+              <div className="h-[200px]">
+                <img
+                  className="w-full h-full object-cover rounded-t-xl"
+                  src={VITE_IMG_URL + item?.images?.[0]}
+                  alt={item.title}
+                />
+              </div>
+              <div className="p-4">
+                <div className="flex justify-between items-center">
+                  <div className="my-1">
+                    <p className="text-[14px] text-[#0C0D19] font-medium">
+                      {item.title}
+                    </p>
+                    {item?.type === `sale` ? (
                       <div className="flex items-center gap-2">
                         <p className="text-[14px] text-[#A8A8A8]">Price</p>
                         <p className="text-[15px] font-semibold text-[#0C0D19]">
                           ${item.price}
                         </p>
                       </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        BookmarkMutation.mutate({ product_id: item.id });
-                      }}
-                      className="transition-all"
-                    >
-                      <HeartShape filled={false} />
-                    </button>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="text-[14px] text-[#A8A8A8]">
+                          Highest Bid
+                        </p>
+                        <p className="text-[15px] font-semibold text-[#0C0D19]">
+                          ${item?.highest_bid}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
-                  <p className="text-[12px] text-[#161515] my-1">
-                    From {item.country}
-                  </p>
                   <button
-                    onClick={(e) =>
-                      
-                     {
-                       isInCart(item.id)
+                    onClick={(e) => {
+                      e.preventDefault();
+                      BookmarkMutation.mutate({ product_id: item.id });
+                    }}
+                    className="transition-all"
+                    title="Bookmark"
+                  >
+                    {bookmarkLoadingId === item.id ? (
+                      <Loader2 className="animate-spin text-gray-600 w-5 h-5" />
+                    ) : (
+                      <HeartShape filled={item?.bookmark ? true : false} />
+                    )}
+                  </button>
+                </div>
+
+                <p className="text-[12px] text-[#161515] my-1">
+                  From {item.country}
+                </p>
+
+                {item?.type === "sale" ? (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      isInCart(item.id)
                         ? removeFromCart(item.id)
-                        : addToCart(item)
-                           e.preventDefault();
-                     }
-                        
-                    }
+                        : addToCart(item);
+                    }}
                     className={`block text-center py-2 lg:py-3 rounded-2xl w-full cursor-pointer transition-all duration-300 font-medium my-2 ${
                       isInCart(item.id)
                         ? "bg-red-500 text-white hover:bg-red-600"
@@ -150,9 +159,41 @@ const SimpleProductCard = ({ products, isLoading }) => {
                   >
                     {isInCart(item.id) ? "Remove from Cart" : "Add to Cart"}
                   </button>
-                </div>
-              </Link>
-            ))}
+                ) : (
+                  <Link
+                    to={`/auction-details/${item?.slug}`}
+                    className="bg-[#4275F6] text-white block text-center py-2 lg:py-3 rounded-2xl w-full hover:bg-[#4278F9] cursor-pointer transition-all duration-300 font-medium my-2"
+                  >
+                    Quick Bid
+                  </Link>
+                )}
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+
+      <div className="flex justify-end items-end mt-6">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel={""}
+          previousLabel={""}
+          pageCount={totalPage}
+          pageRangeDisplayed={1}
+          marginPagesDisplayed={2}
+          onPageChange={(event) => {
+            setPage(event.selected + 1);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          containerClassName="flex items-center md:gap-3 gap-1 flex-wrap"
+          previousClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
+          nextClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
+          activeLinkClassName="font-[700] bg-[#4275F6] rounded-full !text-white border-none"
+          disabledClassName="bg-none cursor-not-allowed"
+          breakClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700"
+          pageLinkClassName="w-[42px] cursor-pointer h-[42px] border-[1px] border-primary flex justify-center items-center text-black rounded-xl"
+          forcePage={page - 1}
+        />
       </div>
     </div>
   );
