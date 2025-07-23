@@ -3,6 +3,8 @@ import { useState } from "react";
 
 const EmailProvider = ({ children }) => {
   const [email, setEmail] = useState("");
+  const [search, setSearch] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
   const [resetToken, setResetToken] = useState("");
   const [product, setProduct] = useState({});
   return (
@@ -14,6 +16,10 @@ const EmailProvider = ({ children }) => {
         setResetToken,
         product,
         setProduct,
+        search,
+        setSearch,
+        searchResults,
+        setSearchResults,
       }}
     >
       {children}

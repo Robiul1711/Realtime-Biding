@@ -15,7 +15,7 @@ const AuctionList = () => {
   const { data: products, isLoading } = useQuery({
     queryKey: ["auction-products", page],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/auctions/active?page=${page}`);
+      const res = await axiosSecure.get(`/auctions?page=${page}`);
       return res?.data;
     },
   });
@@ -58,9 +58,9 @@ const AuctionList = () => {
         </button>
       </div>
       <div className="flex flex-col md:flex-row gap-10 section-padding-x py-4 lg:py-10 xl:py-20">
-        <div className="hidden md:block w-full md:w-[30%]">
+        {/* <div className="hidden md:block w-full md:w-[30%]">
           <FilterCard />
-        </div>
+        </div> */}
         <div className="w-full md:flex-1">
           <ProductCard
             page={page}

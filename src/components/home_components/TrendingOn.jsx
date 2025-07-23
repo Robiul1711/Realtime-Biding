@@ -1,9 +1,4 @@
-import React, { use } from "react";
-import car from "@/assets/images/car.png";
-import car1 from "@/assets/images/car1.png";
-import car2 from "@/assets/images/car3.png";
-import car3 from "@/assets/images/car4.png";
-import car4 from "@/assets/images/car5.png";
+
 import Title from "../common/Title";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -59,9 +54,9 @@ const TrendingOn = () => {
     <div className="section-padding-x py-6 sm:py-10">
       <div className="flex justify-between items-center mb-5">
         <Title level="title40">Trending On</Title>
-        <p className="text-red-500  flex items-center gap-2">
+        {/* <p className="text-red-500  flex items-center gap-2">
           Show All <FiArrowUpRight className="text-2xl" />
-        </p>
+        </p> */}
       </div>
 
       <div>
@@ -82,7 +77,7 @@ const TrendingOn = () => {
         >
           {data?.data?.map((item, index) => (
             <SwiperSlide key={index}>
-              <Link to="/auction-list">
+              
                 <div className="flex justify-center border py-5 px-3 sm:py-10 rounded-2xl items-center flex-col gap-3">
                   <img
                     className=" size-12 sm:size-16 md:size-20 rounded-full object-cover"
@@ -91,7 +86,7 @@ const TrendingOn = () => {
                   />
                   <Title level="title18">{item.title}</Title>
                 </div>
-              </Link>
+              
             </SwiperSlide>
           ))}
         </Swiper>

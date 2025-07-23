@@ -51,11 +51,11 @@ const Navbar = () => {
       //   },
       // ],
     },
-    {
-      id: 7,
-      name: "Contact",
-      path: "/content",
-    },
+    // {
+    //   id: 7,
+    //   name: "Contact",
+    //   path: "/content",
+    // },
   ];
 
   const [openPopover, setOpenPopover] = useState(null);

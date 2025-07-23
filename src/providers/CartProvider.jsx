@@ -12,6 +12,8 @@ const CartProvider = ({ children }) => {
     return [];
   });
 
+  const [filterValue, setFilterValue] = useState({});
+
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -68,6 +70,8 @@ const CartProvider = ({ children }) => {
         updateQuantity,
         clearCart,
         cartTotal,
+        filterValue,
+       setFilterValue,
       }}
     >
       {children}

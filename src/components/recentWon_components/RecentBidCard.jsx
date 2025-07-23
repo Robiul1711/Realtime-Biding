@@ -1,63 +1,53 @@
 import React, { useState } from "react";
-import today from "../../assets/images/today.png";
-import today1 from "../../assets/images/today2.png";
-import today2 from "../../assets/images/today3.png";
-import today3 from "../../assets/images/today4.png";
-import today4 from "../../assets/images/today5.png";
-import today5 from "../../assets/images/today1.png";
-import Title from "../common/Title";
 import { Link } from "react-router-dom";
+import Title from "../common/Title";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-const data = [
-  {
-    image: today,
-    title: "Vintage Collection Item 1",
-    price: "$24,500",
-    location: "from Australia",
-  },
-  {
-    image: today1,
-    title: "Vintage Collection Item 2",
-    price: "$18,300",
-    location: "from USA",
-  },
-  {
-    image: today2,
-    title: "Vintage Collection Item 3",
-    price: "$32,100",
-    location: "from UK",
-  },
-  {
-    image: today3,
-    title: "Vintage Collection Item 4",
-    price: "$25,000",
-    location: "from Germany",
-  },
-  {
-    image: today4,
-    title: "Vintage Collection Item 5",
-    price: "$21,700",
-    location: "from France",
-  },
-  {
-    image: today5,
-    title: "Vintage Collection Item 6",
-    price: "$29,400",
-    location: "from Italy",
-  },
-];
-
-const RecentBidCard = () => {
+const RecentBidCard = ({ data, isLoading = false, isLoading1 = false }) => {
   const [showAll, setShowAll] = useState(false);
 
-  const visibleData = showAll ? data : data.slice(0, 5);
+  // treat any loading flag as loading
+  const loading = isLoading || isLoading1;
+
+  // Show loading skeletons
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array(4)
+          .fill(0)
+          .map((_, index) => (
+            <div key={index} className="border border-[#E5E5E5] rounded-lg p-3">
+              <Skeleton height={200} />
+              <Skeleton height={20} className="mt-3" />
+              <Skeleton width={120} />
+              <Skeleton width={80} />
+            </div>
+          ))}
+      </div>
+    );
+  }
+
+  // Normalize data into an array
+  const visibleData = Array.isArray(data) ? data : [];
+
+  // Show “no data” state
+  if (!visibleData.length) {
+    return (
+      <div className="text-center py-10">
+        <Title level="title14" className="text-gray-500">
+          No recent bids found.
+        </Title>
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {visibleData.map((item, index) => (
           <Link
-            to={"/recent-won-details"}
+            to="/recent-won-details"
             key={index}
             className="border border-[#E5E5E5] rounded-lg"
           >
@@ -78,7 +68,7 @@ const RecentBidCard = () => {
         ))}
       </div>
 
-      {!showAll && data.length > 5 && (
+      {!showAll && visibleData.length > 5 && (
         <div className="mt-4 flex justify-center">
           <button
             onClick={() => setShowAll(true)}
