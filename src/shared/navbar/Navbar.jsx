@@ -8,12 +8,12 @@ import Title from "@/components/common/Title";
 
 const Navbar = () => {
   const navItems = [
-    // {
-    //   id: 1,
-    //   name: "Deals",
-    //   path: "/search-result",
-    //   icon: <FireIcon />,
-    // },
+    {
+      id: 1,
+      name: "Deals",
+      path: "/search-result",
+      icon: <FireIcon />,
+    },
     {
       id: 2,
       name: "Home",
