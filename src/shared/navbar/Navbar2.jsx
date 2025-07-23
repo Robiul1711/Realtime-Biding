@@ -54,17 +54,17 @@ const handleSearch = () => {
 
   return (
     <div className="flex flex-col xmd:flex-row w-full items-start xmd:items-center justify-between section-padding-x mt-20 gap-12">
-      <div className="flex flex-wrap items-center justify-between gap-4 sm:gap-6 w-full">
+      <div className="flex flex-wrap items-center  gap-4 sm:gap-6 ">
         {/* Logo + Search */}
-        <div className="flex flex-wrap items-center gap-4 sm:gap-6 flex-1 min-w-[280px]">
-          <div className="w-[60px] md:w-[80px] lg:w-[126px] xl:w-[166px] h-[65px] sm:h-[85px] hidden md:block shrink-0">
+        <div className="flex  items-center gap-4 sm:gap-6 flex-1 min-w-[280px]">
+          <div className="w-[60px] md:w-[80px] lg:w-[126px] xl:w-[166px]  hidden md:block">
             <Link to={"/"}>
               <img src={Logo} alt="Logo" className="w-full h-full object-contain" />
             </Link>
           </div>
 
           {/* Search */}
-          <div className="flex-1 min-w-[200px]">
+          <div className="">
             <SearchContainer />
           </div>
         </div>
@@ -82,7 +82,7 @@ const handleSearch = () => {
         <div className="w-full sm:w-auto">
 <button
   onClick={handleSearch}
-  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full sm:w-auto flex items-center justify-center gap-2"
+  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded w-full sm:w-auto flex items-center justify-center gap-2"
   disabled={isPending}
 >
   {isPending ? (
