@@ -97,7 +97,7 @@ const ProductCard = ({ products, isLoading, page, setPage, totalPage }) => {
     const calculateTimeLeft = () => {
       const newTimeLeft = {};
 
-      products?.data?.data?.forEach((item) => {
+      products?.forEach((item) => {
         if (item?.auction_end_at) {
           const endDate = new Date(item.auction_end_at);
           const now = new Date();
@@ -158,7 +158,7 @@ const ProductCard = ({ products, isLoading, page, setPage, totalPage }) => {
         <p className="text-[#595858] text-sm sm:text-base">24 items per page</p>
       </div> */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xmd:grid-cols-2 lg:grid-cols-2 xlg:grid-cols-3 gap-4 mt-8">
+      <div className="grid grid-cols-1 xxs:grid-cols-2 md:grid-cols-3  xlg:grid-cols-4 gap-4 mt-8">
         {isLoading
           ? Array(6)
               .fill()
@@ -201,7 +201,7 @@ const ProductCard = ({ products, isLoading, page, setPage, totalPage }) => {
                           Current bid
                         </p>
                         <p className="text-[15px] font-semibold text-[#0C0D19]">
-                          {item.bid}
+                          {item?.highest_bid ? item?.highest_bid : 0}
                         </p>
                       </div>
                     </div>

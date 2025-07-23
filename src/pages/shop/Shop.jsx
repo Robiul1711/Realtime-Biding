@@ -1,23 +1,29 @@
 import FilterCard from "@/components/auctionComponents/FilterCard";
 import BigDeal from "@/components/home_components/BigDeal";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { FiFilter, FiX } from "react-icons/fi";
 import { ScrollRestoration } from "react-router-dom";
 import SimpleProdcutCard from "./SimpleProdcutCard";
 import ReactPaginate from "react-paginate";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useCart } from "@/hooks/useCart";
 const Shop = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [page,setPage] =useState(1)
-  const axiosSecure= useAxiosSecure();
+  const [page, setPage] = useState(1);
+  const [page2, setPage2] = useState(1);
+  const [totalPage2,setTotalPage2] =useState()
+  const axiosSecure = useAxiosSecure();
+  const [filterProducts, setFilterProducts] = useState([]);
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products",page],
+    queryKey: ["products", page],
     queryFn: () => axiosSecure.get(`/products?page=${page}`),
   });
 
-  console.log(products?.data?.data?.data)
+  const { data } = useMutation({});
+
+  // console.log(products?.data?.data?.data)
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -38,6 +44,8 @@ const Shop = () => {
     };
   }, [isFilterOpen]);
 
+  console.log(filterProducts);
+
   return (
     <div
       className={`relative ${isFilterOpen ? "overflow-hidden h-screen" : ""}`}
@@ -54,10 +62,27 @@ const Shop = () => {
       </div>
       <div className="flex flex-col md:flex-row gap-10 section-padding-x py-4 lg:py-10 xl:py-20">
         <div className="hidden md:block w-full md:w-[30%]">
-          <FilterCard />
+          <FilterCard
+            filterProducts={filterProducts}
+            setFilterProducts={setFilterProducts}
+            page2={page2}
+            setPage2={setPage2}
+            setTotalPage2={setTotalPage2}
+          />
         </div>
         <div className="w-full md:flex-1">
-          <SimpleProdcutCard isLoading={isLoading} products={products?.data?.data?.data} page={page} setPage={setPage} totalPage ={products?.data?.data?.last_page}  />
+          <SimpleProdcutCard
+            filterProducts={filterProducts}
+            isLoading={isLoading}
+            products={products?.data?.data?.data}
+            page={page}
+            setPage={setPage}
+            totalPage={products?.data?.data?.last_page}
+             totalPage2={totalPage2}
+             setTotalPage2={setTotalPage2}
+             page2={page2}
+             setPage2={setPage2}
+          />
         </div>
       </div>
 
@@ -82,7 +107,12 @@ const Shop = () => {
           </button>
         </div>
         <div className="p-4 overflow-y-auto h-[calc(100%-64px)]">
-          <FilterCard />
+          <FilterCard
+            filterProducts={filterProducts}
+            setFilterProducts={setFilterProducts}
+            page2={page2}
+            setPage2={setPage2}
+          />
         </div>
       </div>
     </div>
