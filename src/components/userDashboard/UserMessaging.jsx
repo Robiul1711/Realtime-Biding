@@ -12,6 +12,8 @@ import { useMatch, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { EmptyMessage } from "./EmptyMessage";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const UserMessaging = () => {
   const [activeUser, setActiveUser] = useState(null); // For mobile view
@@ -69,14 +71,44 @@ const UserMessaging = () => {
   });
 
   useEffect(() => {
-    if(!currentUser?.id) return;
+    if (!currentUser?.id) return;
     createChatMutation.mutate({ user_id: currentUser?.id });
   }, [currentUser?.id]);
 
   console.log("conversationId", conversationId);
 
+  // useEffect(() => {
+  //   if (!conversationId && currentUser?.id) return;
+
+  //   const channelName = `chat.${conversationId}`;
+  //   const channel = echo.private(channelName);
+
+  //   console.log(`Subscribing to chat channel: ${channelName}`);
+
+  //   channel
+  //     .listen(".App\\Events\\MessageCustomEvent", (e) => {
+  //       console.log("📨 New message:", e);
+  //       setCurrentMessages([...currentMessages, { ...e, body: e?.content }]);
+  //     })
+  //     .error((error) => {
+  //       console.error("❌ Echo channel error:", error);
+  //       console.log("error response", error.type);
+  //       // If error status is 401, clear user and localStorage
+  //       if (error.type === "AuthError" || error?.response?.status === 401) {
+  //         localStorage.removeItem("user");
+  //         setUser(null);
+  //         navigate("/sign-in");
+  //         toast.error("Session expired. Please log in again.");
+  //       }
+  //     });
+
+  //   return () => {
+  //     echo.leaveChannel(channelName);
+  //   };
+  // }, [conversationId, currentUser?.id]);
+
   useEffect(() => {
-    if (!conversationId && currentUser?.id ) return;
+    if (!conversationId && currentUser?.id) return;
 
     const channelName = `chat.${conversationId}`;
     const channel = echo.private(channelName);
@@ -86,16 +118,32 @@ const UserMessaging = () => {
     channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
       console.log("listening for messages on channel:", channel.name);
       console.log("📨 New message:", e);
-      setCurrentMessages([
-        ...currentMessages,
-        { ...e, body: e?.content, created_at: "2025-07-20T08:29:44.000000Z" },
+      setCurrentMessages((prevMessages) => [
+        ...prevMessages,
+        { ...e, body: e?.content },
       ]);
     });
 
     return () => {
       echo.leaveChannel(channelName);
     };
-  }, [conversationId, currentMessages, currentUser?.id]);
+  }, [conversationId, currentUser?.id]);
+
+  useEffect(() => {
+    if (!conversationId && !currentUser?.id) return;
+
+    // Global error handler
+    echo.connector.pusher.connection.bind("error", (error) => {
+      if (error.type === "AuthError" || error?.response?.status === 401) {
+        localStorage.removeItem("user");
+        setUser(null);
+        navigate("/sign-in");
+        toast.error("Session expired. Please log in again.");
+      }
+    });
+
+    // Rest of your channel code...
+  }, [conversationId, currentUser?.id]);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (data) => {
@@ -139,7 +187,7 @@ const UserMessaging = () => {
 
   const {
     data: inbox,
-    isLoading,
+    isLoading: isInboxLoading,
     error,
   } = useQuery({
     queryKey: ["my-inbox"],
@@ -166,9 +214,6 @@ const UserMessaging = () => {
   });
 
   console.log("currentMessages", currentMessages);
-
-  if (isSingleChatLoading)
-    return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full text-black rounded-2xl overflow-hidden">
@@ -203,39 +248,66 @@ const UserMessaging = () => {
 
         {/* Contact List */}
         <div className="flex-1 overflow-y-auto">
-          {inbox?.map((chat, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                handleUserClick(chat?.participants[0]?.participantable);
-              }}
-              className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
-            >
-              <div className="flex gap-3 items-center">
-                <img src={chat?.participants[0]?.participantable?.avatar || placeholderUser} alt="" className="w-10 h-10 rounded-full" />
-                <div className="flex-1">
-                  <div className="flex gap-x-2 flex-wrap justify-between items-center">
-                    <p className="font-semibold">
-                      {chat?.participants[0]?.participantable?.name}
-                    </p>
-                    <p className="text-xs text-[#4275F6]">
-                      {chat?.last_message?.created_at &&
-                        formatDistanceToNow(
-                          new Date(chat?.last_message?.created_at),
-                          { addSuffix: true }
-                        )}
-                    </p>
-                  </div>
-                  <div className="flex mt-1 justify-between items-center">
-                    <p className="text-gray-500 text-sm truncate w-[90%]">
-                      {chat?.last_message?.body || "No messages yet"}
-                    </p>
-                    <span className="w-2 h-2 bg-[#4275F6] rounded-full"></span>
+          {isInboxLoading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="py-3 px-4 rounded-l-xl border-b border-gray-100"
+                >
+                  <div className="flex gap-3 items-center">
+                    <Skeleton circle height={40} width={40} />
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <Skeleton width="60%" height={16} />
+                        <Skeleton width={50} height={12} />
+                      </div>
+                      <Skeleton width="90%" height={14} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              ))
+            : inbox?.map((chat, index) => {
+                const participant = chat?.participants?.[0]?.participantable;
+                const name = participant?.name || "Unknown";
+                const avatar = participant?.avatar || placeholderUser;
+                const lastMessage = chat?.last_message;
+
+                return (
+                  <div
+                    key={index}
+                    onClick={() => handleUserClick(participant)}
+                    className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
+                  >
+                    <div className="flex gap-3 items-center">
+                      <img
+                        src={avatar}
+                        alt="User Avatar"
+                        className="w-10 h-10 rounded-full"
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center gap-x-2 flex-wrap">
+                          <p className="font-semibold">{name}</p>
+                          <p className="text-xs text-[#4275F6]">
+                            {lastMessage?.created_at &&
+                              formatDistanceToNow(
+                                new Date(lastMessage.created_at),
+                                {
+                                  addSuffix: true,
+                                }
+                              )}
+                          </p>
+                        </div>
+                        <div className="flex mt-1 justify-between items-center">
+                          <p className="text-gray-500 text-sm truncate w-[90%]">
+                            {lastMessage?.body || "No messages yet"}
+                          </p>
+                          <span className="w-2 h-2 bg-[#4275F6] rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
         </div>
       </div>
 
@@ -271,15 +343,22 @@ const UserMessaging = () => {
 
           {/* Chat Messages */}
           <div className="flex-1 w-full hide-scrollbar overflow-y-auto">
-            <MessageBox
-              loading={isSingleChatLoading}
-              currentUser={currentUser}
-              currentMessages={currentMessages}
-              handleSendMessage={handleSendMessage}
-              sendMessageMutation={sendMessageMutation}
-              newMessage={newMessage}
-              setNewMessage={setNewMessage}
-            />
+            {isSingleChatLoading ? (
+              <div className="flex flex-col items-center justify-center h-full bg-gray-100 text-blue-500">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-opacity-50 mb-4"></div>
+                <p className="text-lg font-semibold">Loading chat...</p>
+              </div>
+            ) : (
+              <MessageBox
+                loading={isSingleChatLoading}
+                currentUser={currentUser}
+                currentMessages={currentMessages}
+                handleSendMessage={handleSendMessage}
+                sendMessageMutation={sendMessageMutation}
+                newMessage={newMessage}
+                setNewMessage={setNewMessage}
+              />
+            )}
           </div>
         </div>
       ) : (

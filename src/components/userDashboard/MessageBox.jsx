@@ -253,13 +253,16 @@ const MessageBox = ({
     sendMessageMutation.mutate({
       to_user_id: currentUser?.id,
       message: newMessage,
+      attachments: [...attachments],
     });
   };
 
   if (loading)
     return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
 
-  console.log("current messages", currentMessages);
+  console.log("current g messages", groupedMessages);
+
+  console.log('attachments', attachments);
 
   return (
     <div className="flex flex-col w-full h-full text-black">
@@ -288,11 +291,11 @@ const MessageBox = ({
                   exit="exit"
                   layout
                   className={`mb-4 flex ${
-                    message?.isMe ? "justify-end" : "justify-start"
+                    message?.sendable_id!==currentUser?.id ? "justify-end" : "justify-start"
                   }`}
                 >
                   <div className="relative max-w-md flex items-end gap-2">
-                    {!message.isMe && (
+                    {message?.sendable_id===currentUser?.id && (
                       <img
                         src={currentUser?.avatar || placeholderUser}
                         alt=""
@@ -302,7 +305,7 @@ const MessageBox = ({
                     <div>
                       <div
                         className={`p-3 rounded-high rounded-2xl dark:text-[#d2e5f5] text-sm ${
-                          message?.isMe
+                          message?.sendable_id!==currentUser?.id
                             ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
                             : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
                         }`}
@@ -311,13 +314,13 @@ const MessageBox = ({
                       </div>
                       <div
                         className={`${
-                          message?.isMe ? "text-right" : "text-left"
+                          message?.sendable_id!==currentUser?.id ? "text-right" : "text-left"
                         } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70`}
                       >
                         {formatMessageTime(message.created_at)}
                       </div>
                     </div>
-                    {message?.isMe && (
+                    {message?.sendable_id!==currentUser?.id && (
                       <img
                         src={user?.avatar || placeholderUser}
                         alt=""
