@@ -196,14 +196,14 @@ const ProductCard = ({ products, isLoading, page, setPage, totalPage }) => {
                   <div className="flex justify-between items-center">
                     <div className="my-1">
                       <p className="text-[14px] text-[#0C0D19]">{item.title}</p>
-                      <div className="flex items-center gap-2">
+                      {/* <div className="flex items-center gap-2">
                         <p className="text-[14px] text-[#A8A8A8]">
                           Current bid
                         </p>
                         <p className="text-[15px] font-semibold text-[#0C0D19]">
                           {item?.highest_bid ? item?.highest_bid : 0}
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                     <button
                       // onClick={() => {

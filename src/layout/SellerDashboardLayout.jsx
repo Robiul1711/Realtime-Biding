@@ -45,14 +45,14 @@ const SellerDashboardLayout = () => {
         activePaths: ["/seller-dashboard/messages"], // all paths that should make this item active
         sublink: false,
       },
-    {
-        id: 1,
-        icon: <MdHistory />,
-        text: "Auction History",
-        path: "/seller-dashboard/auction-history", // main path (optional, if you still want to keep it)
-        activePaths: ["/seller-dashboard/auction-history"], // all paths that should make this item active
-        sublink: false,
-      },
+    // {
+    //     id: 1,
+    //     icon: <MdHistory />,
+    //     text: "Auction History",
+    //     path: "/seller-dashboard/auction-history", // main path (optional, if you still want to keep it)
+    //     activePaths: ["/seller-dashboard/auction-history"], // all paths that should make this item active
+    //     sublink: false,
+    //   },
     {
         id: 1,
         icon: <IoMdSettings />,

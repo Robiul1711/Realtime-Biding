@@ -21,14 +21,22 @@ const UserDashboardLayout = () => {
         activePaths: ["/user-dashboard"], // all paths that should make this item active
         sublink: false,
       },
-    {
+       {
         id: 1,
-        icon: <RiAuctionFill />,
-        text: "My Auction",
-        path: "/user-dashboard/my-auction", // main path (optional, if you still want to keep it)
-        activePaths: ["/user-dashboard/my-auction"], // all paths that should make this item active
+        icon: <MdHistory />,
+        text: "Bid History",
+        path: "/user-dashboard/bid-history", // main path (optional, if you still want to keep it)
+        activePaths: ["/user-dashboard/bid-history"], // all paths that should make this item active
         sublink: false,
       },
+    // {
+    //     id: 1,
+    //     icon: <RiAuctionFill />,
+    //     text: "My Auction",
+    //     path: "/user-dashboard/my-auction", // main path (optional, if you still want to keep it)
+    //     activePaths: ["/user-dashboard/my-auction"], // all paths that should make this item active
+    //     sublink: false,
+    //   },
     {
         id: 1,
         icon: <FaRegHeart />,
@@ -45,14 +53,7 @@ const UserDashboardLayout = () => {
         activePaths: ["/user-dashboard/messages"], // all paths that should make this item active
         sublink: false,
       },
-    {
-        id: 1,
-        icon: <MdHistory />,
-        text: "Bid History",
-        path: "/user-dashboard/bid-history", // main path (optional, if you still want to keep it)
-        activePaths: ["/user-dashboard/bid-history"], // all paths that should make this item active
-        sublink: false,
-      },
+   ,
     {
         id: 1,
         icon: <IoMdSettings />,

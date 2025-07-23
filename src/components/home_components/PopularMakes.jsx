@@ -131,7 +131,7 @@ const PopularMakes = () => {
                       <img
                         src={`${import.meta.env.VITE_IMG_URL}${product.first_image || product.images?.[0]}`}
                         alt={product.title}
-                        className="w-full h-48 object-fill rounded-t-lg"
+                        className="w-full h-48 object-cover rounded-t-lg"
                         onError={(e) => {
                           e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
                         }}
