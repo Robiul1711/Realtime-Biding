@@ -468,25 +468,25 @@ const FilterCard = ({
 
   // Auto-refetch when page2 changes if filters are applied
   useEffect(() => {
-    if (hasFiltersApplied && Object.keys(filterValue).length > 0 && !showAllProducts) {
+    if (
+      hasFiltersApplied &&
+      Object.keys(filterValue).length > 0 &&
+      !showAllProducts
+    ) {
       filerMutation.mutate(filterValue);
     }
   }, [page2]);
 
   // Handle "All Products" checkbox change
   const handleAllProductsChange = (e) => {
-   
-      resetFilters();
-      setFilterProducts([]); // Empty array means show all products
-      setHasFiltersApplied(false);
-  
- 
-    
+    resetFilters();
+    setFilterProducts([]); // Empty array means show all products
+    setHasFiltersApplied(false);
   };
   // const handleAllProductsChange = (e) => {
   //   const isChecked = e.target.checked;
   //   setShowAllProducts(isChecked);
-    
+
   //   if (isChecked) {
   //     // Reset all filters and show all products
   //     resetFilters();
@@ -649,7 +649,10 @@ const FilterCard = ({
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-5">
         {/* All Products Checkbox */}
-        <div onClick={handleAllProductsChange} className="border !cursor-pointer border-gray-200 rounded-lg p-4">
+        <div
+          onClick={handleAllProductsChange}
+          className="border !cursor-pointer border-gray-200 rounded-lg p-4"
+        >
           <label className="flex items-center space-x-2 !cursor-pointer">
             {/* <input
               type="checkbox"
@@ -657,7 +660,11 @@ const FilterCard = ({
               checked={showAllProducts}
               onChange={}
             /> */}
-            <span className={`font-medium ${showAllProducts ? "text-blue-600" : ""}`}>
+            <span
+              className={`font-medium ${
+                showAllProducts ? "text-blue-600" : ""
+              }`}
+            >
               Show All Products
             </span>
           </label>
@@ -779,7 +786,9 @@ const FilterCard = ({
                     onChange={() => handlePricePresetSelect("under4000")}
                     disabled={showAllProducts}
                   />
-                  <span className={showAllProducts ? "opacity-50" : ""}>Under $4,000</span>
+                  <span className={showAllProducts ? "opacity-50" : ""}>
+                    Under $4,000
+                  </span>
                 </label>
 
                 <label className="flex items-center space-x-2">
@@ -792,7 +801,9 @@ const FilterCard = ({
                     onChange={() => handlePricePresetSelect("4000to20000")}
                     disabled={showAllProducts}
                   />
-                  <span className={showAllProducts ? "opacity-50" : ""}>$4,000 to $20,000</span>
+                  <span className={showAllProducts ? "opacity-50" : ""}>
+                    $4,000 to $20,000
+                  </span>
                 </label>
 
                 <label className="flex items-center space-x-2">
@@ -805,12 +816,20 @@ const FilterCard = ({
                     onChange={() => handlePricePresetSelect("over20000")}
                     disabled={showAllProducts}
                   />
-                  <span className={showAllProducts ? "opacity-50" : ""}>Over $20,000</span>
+                  <span className={showAllProducts ? "opacity-50" : ""}>
+                    Over $20,000
+                  </span>
                 </label>
               </div>
 
               <div className="pt-2">
-                <p className={`text-sm text-gray-600 mb-2 ${showAllProducts ? "opacity-50" : ""}`}>Custom Range</p>
+                <p
+                  className={`text-sm text-gray-600 mb-2 ${
+                    showAllProducts ? "opacity-50" : ""
+                  }`}
+                >
+                  Custom Range
+                </p>
                 <div className="flex items-center space-x-2">
                   <input
                     type="number"
@@ -823,7 +842,13 @@ const FilterCard = ({
                     onChange={handlePriceRangeChange}
                     disabled={showAllProducts}
                   />
-                  <span className={`text-gray-500 text-sm ${showAllProducts ? "opacity-50" : ""}`}>To</span>
+                  <span
+                    className={`text-gray-500 text-sm ${
+                      showAllProducts ? "opacity-50" : ""
+                    }`}
+                  >
+                    To
+                  </span>
                   <input
                     type="number"
                     name="max"

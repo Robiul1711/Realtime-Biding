@@ -9,14 +9,33 @@ import { ScrollRestoration } from "react-router-dom";
 const RecentWonBids = () => {
   const axiosPublic = useAxiosPublic();
 
-  const { data } = useQuery({
-    queryKey: ["recent-won-bids"],
+  // 1. Today’s Data
+  const { data: todayData, isLoading } = useQuery({
+    queryKey: ["recent-won-bids-today"],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/bids/leatest/won/today`);
-      return res.data;
+      const res = await axiosPublic.get("/bids/leatest/won/today");
+      return res.data?.data;
     },
   });
-  console.log(data);
+
+  // 2. Yesterday’s Data
+  const { data: yesterdayData, isLoading1 } = useQuery({
+    queryKey: ["recent-won-bids-yesterday"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/bids/leatest/won/yesterday");
+      return res.data?.data;
+    },
+  });
+
+  // 3. Category-wise Data
+  const { data: categoryData, isLoading2 } = useQuery({
+    queryKey: ["recent-won-bids-category"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/bids/recent/won/with-category");
+      return res.data?.data;
+    },
+  });
+  console.log(todayData, yesterdayData, categoryData);
   return (
     <>
       <div className="section-padding-x space-y-16">
@@ -27,7 +46,7 @@ const RecentWonBids = () => {
             <p className="text-[#607080]">Today</p>
             <span className="h-px bg-[#E1E6EF] w-full"></span>
           </div>
-          <RecentBidCard />
+          <RecentBidCard data={todayData} isLoading={isLoading} />
         </div>
         <div>
           <div className="flex items-center justify-center my-6 w-full gap-2">
@@ -35,10 +54,10 @@ const RecentWonBids = () => {
             <p className="text-[#607080]">Yesterday</p>
             <span className="h-px bg-[#E1E6EF] w-full"></span>
           </div>
-          <RecentBidCard />
+          <RecentBidCard data={yesterdayData} isLoading1={isLoading1} />
         </div>
       </div>
-      <RelatedAuctionCard />
+      <RelatedAuctionCard data={categoryData} isLoading2={isLoading2} />
       <BigDeal />
     </>
   );
