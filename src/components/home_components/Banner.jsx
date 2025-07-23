@@ -93,12 +93,12 @@ const Banner = () => {
                     <p className="text-[20px] mb-6 md:text-[24px] lg:text-[28px] xl:text-[30px] mt-3 sm:mt-5 text-white">
                       {slide.sub_title}
                     </p>
-                    <Link
+                    {/* <Link
                       to={`#`}
                       className="bg-white text-black py-2 px-4 rounded-full cursor-pointer hover:bg-gray-100 transition-colors"
                     >
                       Learn More
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </SwiperSlide>
