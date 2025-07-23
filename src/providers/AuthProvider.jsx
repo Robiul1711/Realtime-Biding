@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const stored = localStorage.getItem("user");
   const parsed = stored ? JSON.parse(stored) : null;
   const token = parsed?.token;
