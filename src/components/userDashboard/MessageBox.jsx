@@ -89,7 +89,7 @@ const MessageBox = ({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -238,23 +238,23 @@ const MessageBox = ({
 
   console.log("current user", currentUser);
   // send message mutation
-  
+
   const handleSendMessage = async () => {
     // Allow sending if either message or attachments exist
     if (!newMessage.trim() && attachments.length === 0) return;
 
     const formData = new FormData();
-    
+
     // Only append message if it exists
     if (newMessage.trim()) {
-        formData.append("message", newMessage);
+      formData.append("message", newMessage);
     }
 
     // Append each file with proper FormData handling
     attachments.forEach((file) => {
-        if (file.raw instanceof File) {
-            formData.append("files[]", file.raw, file.name);
-        }
+      if (file.raw instanceof File) {
+        formData.append("files[]", file.raw, file.name);
+      }
     });
 
     formData.append("to_user_id", currentUser?.id);
@@ -262,22 +262,22 @@ const MessageBox = ({
     // Debug check - improved logging
     console.log("FormData contents:");
     for (let [key, value] of formData.entries()) {
-        console.log(key, value instanceof File ? `${value.name} (File)` : value);
+      console.log(key, value instanceof File ? `${value.name} (File)` : value);
     }
 
     try {
-        await sendMessageMutation.mutateAsync(formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-        setNewMessage("");
-        setAttachments([]);
-        setTotalAttachments(0);
+      await sendMessageMutation.mutateAsync(formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setNewMessage("");
+      setAttachments([]);
+      setTotalAttachments(0);
     } catch (error) {
-        console.error("Send failed", error);
+      console.error("Send failed", error);
     }
-};
+  };
 
   if (loading)
     return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
@@ -432,7 +432,7 @@ const MessageBox = ({
           />
 
           {/* Hidden file input */}
-          
+
           <input
             type="file"
             name="files[]"
