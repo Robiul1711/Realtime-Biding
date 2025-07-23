@@ -1,10 +1,22 @@
 import BigDeal from "@/components/home_components/BigDeal";
 import RecentBidCard from "@/components/recentWon_components/RecentBidCard";
 import RelatedAuctionCard from "@/components/recentWon_components/RelatedAuctionCard";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { ScrollRestoration } from "react-router-dom";
 
 const RecentWonBids = () => {
+  const axiosPublic = useAxiosPublic();
+
+  const { data } = useQuery({
+    queryKey: ["recent-won-bids"],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/bids/leatest/won/today`);
+      return res.data;
+    },
+  });
+  console.log(data);
   return (
     <>
       <div className="section-padding-x space-y-16">

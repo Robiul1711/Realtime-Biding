@@ -5,9 +5,7 @@ const SellerPrivateRoute = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
 
-  console.log(user)
-
-  if (user && user?.token && user?.email && user?.type==="seller" ) {
+  if (user && user?.token && user?.email && user?.type === "seller") {
     return children;
   }
 
