@@ -1,9 +1,4 @@
-import React, { use } from "react";
-import car from "@/assets/images/car.png";
-import car1 from "@/assets/images/car1.png";
-import car2 from "@/assets/images/car3.png";
-import car3 from "@/assets/images/car4.png";
-import car4 from "@/assets/images/car5.png";
+
 import Title from "../common/Title";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
