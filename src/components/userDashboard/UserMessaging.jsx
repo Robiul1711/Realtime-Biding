@@ -145,45 +145,63 @@ const UserMessaging = () => {
     // Rest of your channel code...
   }, [conversationId, currentUser?.id]);
 
-  const sendMessageMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await axiosSecure.post(`/messages`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data;
-    },
-    onSuccess: (response) => {
-      console.log("Message sent successfully:", response);
-      toast.success("Message sent!");
-      setNewMessage(""); // Clear the message input after sending
-    },
-    onError: (error) => {
-      console.error("Send message error:", error);
-      if (error?.response?.status === 401) {
-        setUser(null);
-        toast.error("Session expired. Please log in again.");
-        navigate("/sign-in");
-      } else {
-        toast.error(
-          error?.response?.data?.message || "Failed to send message."
-        );
-      }
-    },
-  });
+  // const sendMessageMutation = useMutation({
+  //   mutationFn: async (data) => {
+  //     const response = await axiosSecure.post(`/messages`, data, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     return response.data;
+  //   },
+  //   onSuccess: (response) => {
+  //     console.log("Message sent successfully:", response);
+  //     toast.success("Message sent!");
+  //     setNewMessage(""); // Clear the message input after sending
+  //   },
+  //   onError: (error) => {
+  //     console.error("Send message error:", error);
+  //     if (error?.response?.status === 401) {
+  //       setUser(null);
+  //       toast.error("Session expired. Please log in again.");
+  //       navigate("/sign-in");
+  //     } else {
+  //       toast.error(
+  //         error?.response?.data?.message || "Failed to send message."
+  //       );
+  //     }
+  //   },
+  // });
 
   // Usage function
-  const handleSendMessage = () => {
-    // if (!message.trim()) {
-    //   return toast.error("Message cannot be empty.");
-    // }
-
-    sendMessageMutation.mutate({
-      to_user_id: 15,
-      message: "Hello, this is a new test message!",
-    });
-  };
+  
+  const sendMessageMutation = useMutation({
+    mutationFn: async (formData) => {
+        const response = await axiosSecure.post(`/messages`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data", // Changed from application/json
+            },
+        });
+        return response.data;
+    },
+    onSuccess: (response) => {
+        console.log("Message sent successfully:", response);
+        toast.success("Message sent!");
+        setNewMessage("");
+    },
+    onError: (error) => {
+        console.error("Send message error:", error);
+        if (error?.response?.status === 401) {
+            setUser(null);
+            toast.error("Session expired. Please log in again.");
+            navigate("/sign-in");
+        } else {
+            toast.error(
+                error?.response?.data?.message || "Failed to send message."
+            );
+        }
+    },
+});
 
   const {
     data: inbox,
@@ -225,18 +243,9 @@ const UserMessaging = () => {
       >
         {/* Header */}
         <div className="p-4">
-          {sellerId ? (
-            <p>Messaging with seller ID: {sellerId}</p>
-          ) : (
-            <p>All messages</p>
-          )}
-          <h1 className="sm:text-xl font-bold text-[#4275F6]">Messages (04)</h1>
-          <div
-            onClick={handleSendMessage}
-            className="p-4 bg-red-800 cursor-pointer text-white "
-          >
-            submit
-          </div>
+          
+          <h1 className="sm:text-xl font-bold text-[#4275F6]">Messages ({inbox?.length || '--'})</h1>
+          
           <div className="mt-4">
             <input
               type="text"
@@ -353,7 +362,6 @@ const UserMessaging = () => {
                 loading={isSingleChatLoading}
                 currentUser={currentUser}
                 currentMessages={currentMessages}
-                handleSendMessage={handleSendMessage}
                 sendMessageMutation={sendMessageMutation}
                 newMessage={newMessage}
                 setNewMessage={setNewMessage}

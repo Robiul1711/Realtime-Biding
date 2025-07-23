@@ -89,40 +89,7 @@ const MessageBox = ({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  // const handleSendMessage = () => {
-  //   if (newMessage.trim() === "" && attachments.length === 0) return;
-
-  //   const newId = messages.length
-  //     ? Math.max(...messages.map((m) => m.id)) + 1
-  //     : 1;
-
-  //   setMessages([
-  //     ...messages,
-  //     {
-  //       id: newId,
-  //       text: newMessage,
-  //       sender: "me",
-  //       senderProfile: {
-  //         name: "You",
-  //         avatar: "https://i.pravatar.cc/40?img=1",
-  //       },
-  //       timestamp: new Date().toLocaleTimeString([], {
-  //         hour: "2-digit",
-  //         minute: "2-digit",
-  //       }),
-  //       reaction: null,
-  //       attachments: [...attachments],
-  //     },
-  //   ]);
-
-  //   setNewMessage("");
-  //   setAttachments([]);
-  //   if (inputRef.current) {
-  //     inputRef.current.focus();
-  //   }
-  // };
-
+  
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -130,15 +97,40 @@ const MessageBox = ({
     }
   };
 
+  // const handleFileUpload = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files.length === 0) return;
+
+  //   setTotalAttachments(files.length);
+
+  //   setIsUploading(true);
+
+  //   // Simulate file upload with timeout
+  //   setTimeout(() => {
+  //     const newAttachments = files.map((file) => ({
+  //       id: Math.random().toString(36).substring(2, 9),
+  //       name: file.name,
+  //       size: file.size,
+  //       type: file.type,
+  //       url: URL.createObjectURL(file),
+  //     }));
+
+  //     setAttachments([...attachments, ...newAttachments]);
+  //     setIsUploading(false);
+  //   }, 1500);
+
+  //   if (fileInputRef.current) {
+  //     fileInputRef.current.value = "";
+  //   }
+  // };
+
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     setTotalAttachments(files.length);
-
     setIsUploading(true);
 
-    // Simulate file upload with timeout
     setTimeout(() => {
       const newAttachments = files.map((file) => ({
         id: Math.random().toString(36).substring(2, 9),
@@ -146,9 +138,10 @@ const MessageBox = ({
         size: file.size,
         type: file.type,
         url: URL.createObjectURL(file),
+        raw: file, // ✅ this MUST be the actual File object
       }));
 
-      setAttachments([...attachments, ...newAttachments]);
+      setAttachments((prev) => [...prev, ...newAttachments]);
       setIsUploading(false);
     }, 1500);
 
@@ -245,24 +238,53 @@ const MessageBox = ({
 
   console.log("current user", currentUser);
   // send message mutation
-  const handleSendMessage = () => {
-    if (!newMessage?.trim()) {
-      return toast.error("Message cannot be empty.");
+  
+  const handleSendMessage = async () => {
+    // Allow sending if either message or attachments exist
+    if (!newMessage.trim() && attachments.length === 0) return;
+
+    const formData = new FormData();
+    
+    // Only append message if it exists
+    if (newMessage.trim()) {
+        formData.append("message", newMessage);
     }
 
-    sendMessageMutation.mutate({
-      to_user_id: currentUser?.id,
-      message: newMessage,
-      attachments: [...attachments],
+    // Append each file with proper FormData handling
+    attachments.forEach((file) => {
+        if (file.raw instanceof File) {
+            formData.append("files[]", file.raw, file.name);
+        }
     });
-  };
+
+    formData.append("to_user_id", currentUser?.id);
+
+    // Debug check - improved logging
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+        console.log(key, value instanceof File ? `${value.name} (File)` : value);
+    }
+
+    try {
+        await sendMessageMutation.mutateAsync(formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        setNewMessage("");
+        setAttachments([]);
+        setTotalAttachments(0);
+    } catch (error) {
+        console.error("Send failed", error);
+    }
+};
 
   if (loading)
     return <div className="bg-gray-100 py-20 text-center">Loading...</div>;
 
   console.log("current g messages", groupedMessages);
 
-  console.log('attachments', attachments);
+  console.log("attachments", attachments);
 
   return (
     <div className="flex flex-col w-full h-full text-black">
@@ -291,11 +313,13 @@ const MessageBox = ({
                   exit="exit"
                   layout
                   className={`mb-4 flex ${
-                    message?.sendable_id!==currentUser?.id ? "justify-end" : "justify-start"
+                    message?.sendable_id !== currentUser?.id
+                      ? "justify-end"
+                      : "justify-start"
                   }`}
                 >
                   <div className="relative max-w-md flex items-end gap-2">
-                    {message?.sendable_id===currentUser?.id && (
+                    {message?.sendable_id === currentUser?.id && (
                       <img
                         src={currentUser?.avatar || placeholderUser}
                         alt=""
@@ -305,7 +329,7 @@ const MessageBox = ({
                     <div>
                       <div
                         className={`p-3 rounded-high rounded-2xl dark:text-[#d2e5f5] text-sm ${
-                          message?.sendable_id!==currentUser?.id
+                          message?.sendable_id !== currentUser?.id
                             ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
                             : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
                         }`}
@@ -314,13 +338,15 @@ const MessageBox = ({
                       </div>
                       <div
                         className={`${
-                          message?.sendable_id!==currentUser?.id ? "text-right" : "text-left"
+                          message?.sendable_id !== currentUser?.id
+                            ? "text-right"
+                            : "text-left"
                         } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70`}
                       >
                         {formatMessageTime(message.created_at)}
                       </div>
                     </div>
-                    {message?.sendable_id!==currentUser?.id && (
+                    {message?.sendable_id !== currentUser?.id && (
                       <img
                         src={user?.avatar || placeholderUser}
                         alt=""
@@ -406,8 +432,10 @@ const MessageBox = ({
           />
 
           {/* Hidden file input */}
+          
           <input
             type="file"
+            name="files[]"
             ref={fileInputRef}
             onChange={handleFileUpload}
             className="hidden"
@@ -427,7 +455,7 @@ const MessageBox = ({
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handleSendMessage}
-            disabled={sendMessageMutation.isLoading || !newMessage.trim()}
+            disabled={sendMessageMutation.isLoading}
             className="bg-[#0FABCA]/80 text-white min-w-[30px] p-2.5 rounded-full hover:bg-[#0FABCA] flex items-center justify-center focus:outline-none"
           >
             {sendMessageMutation.isPending ? (
