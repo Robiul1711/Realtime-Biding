@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Settings, LogOut } from "lucide-react";
 import { PiUserSwitch } from "react-icons/pi";
@@ -72,14 +72,31 @@ const UserDropdown = ({
     // Show loading toast and save the toast ID
     toastId.current = toast.loading("Switching account...");
   },
-  onSuccess: (response) => {
-    toast.success(response?.message || "Account switched successfully", {
-      id: toastId.current,
-    });
+onSuccess: (response) => {
+  toast.success(response?.message || "Account switched successfully", {
+    id: toastId.current,
+  });
 
-    setUser({ ...user, type: response?.data?.type });
-    navigate("/");
-  },
+  const updatedUser = { ...user, type: response?.data?.type };
+
+  // ✅ Update React state
+  setUser(updatedUser);
+
+  // ✅ Also update localStorage
+  localStorage.setItem("user", JSON.stringify(updatedUser));
+
+
+  if (user?.type === "buyer" && user?.card_attributes === false) {
+    
+      navigate("/profile-setup-1");
+    
+  } 
+  else if (user?.type === "seller") {
+    navigate("/seller-dashboard");
+  }
+
+
+},
   onError: (error) => {
     toast.error(
       error.response?.data?.message ||

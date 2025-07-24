@@ -7,7 +7,7 @@ const BuyerPrivateRoute = ({ children }) => {
 
   console.log(user)
 
-  if (user && user?.token && user?.email && user?.type==="buyer" ) {
+  if (user && user?.email && user?.card_attributes===true && user?.type==="buyer" ) {
     return children;
   }
 

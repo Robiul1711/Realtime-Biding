@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
-import man from "../../assets/images/man.png";
 import placeholderUser from "../../assets/images/placeholder-user.png";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -12,10 +11,14 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import echo from "@/utils/echo";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "@/hooks/useAuth";
+import Swal from 'sweetalert2'
+import 'sweetalert2/src/sweetalert2.scss'
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
+  const { user } = useAuth();
+  console.log(user?.type);
   const auctionEndAt = productDetails?.auction_end_at;
   const [bids, setBids] = useState([]);
   const navigate = useNavigate();
@@ -109,11 +112,29 @@ const LiveBid = ({ productDetails, isLoading }) => {
     },
   });
 
-  const handlePlaceBid = () => {
-    const numericValue = getNumericValue(countValue);
-    console.log(`Placing bid of $${numericValue}`);
-    placeBidMutation.mutate({ amount: numericValue });
-  };
+const handlePlaceBid = () => {
+  if (user?.type !== "buyer") {
+    Swal.fire({
+      icon: "warning",
+      title: "Action not allowed!",
+      text: "Only buyers are allowed to place bids.",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Switch to Buyer",
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+if (result.isConfirmed) {
+  navigate('/sign-in');
+}
+});
+    return;
+  }
+
+  const numericValue = getNumericValue(countValue);
+  console.log(`Placing bid of $${numericValue}`);
+  placeBidMutation.mutate({ amount: numericValue });
+};
 
   useEffect(() => {
     const id = productDetails?.id;
@@ -136,7 +157,7 @@ const LiveBid = ({ productDetails, isLoading }) => {
     };
   }, [productDetails?.id]);
 
-  console.log("bids", bids);
+  // console.log("bids", bids);
 
   const handleMessageSeller = (sellerId) => {
   navigate(`/user-dashboard/messages/${sellerId}`);
