@@ -12,8 +12,8 @@ import echo from "@/utils/echo";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import Swal from 'sweetalert2'
-import 'sweetalert2/src/sweetalert2.scss'
+import Swal from "sweetalert2";
+import "sweetalert2/src/sweetalert2.scss";
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
@@ -27,12 +27,18 @@ const LiveBid = ({ productDetails, isLoading }) => {
   // console.log(productDetails)
 
   useEffect(() => {
-  if (productDetails) {
-    const hasBids = productDetails?.bids?.length > 0;
-    setBids(productDetails.bids || []);
-    setCountValue(`$${hasBids ? productDetails.bids[0].amount : productDetails.starting_price}`);
-  }
-}, [productDetails]);
+    if (productDetails) {
+      const hasBids = productDetails?.bids?.length > 0;
+      setBids(productDetails.bids || []);
+      setCountValue(
+        `$${
+          hasBids
+            ? productDetails.bids[0].amount
+            : productDetails.starting_price
+        }`
+      );
+    }
+  }, [productDetails]);
 
   const getNumericValue = (val) => parseInt(val.replace(/[^0-9]/g, "")) || 0;
 
@@ -43,7 +49,10 @@ const LiveBid = ({ productDetails, isLoading }) => {
 
   const handleDecrement = () => {
     const numeric = getNumericValue(countValue);
-    if (countValue + 10 > bids[0]?.amount && countValue + 10> productDetails?.starting_price) {
+    if (
+      countValue + 10 > bids[0]?.amount &&
+      countValue + 10 > productDetails?.starting_price
+    ) {
       setCountValue(`$${Math.max(numeric - 1, 0)}`);
     } else {
       toast.error("You cannot bid less than the current bid amount.");
@@ -112,7 +121,7 @@ const LiveBid = ({ productDetails, isLoading }) => {
     },
   });
 
-const handlePlaceBid = () => {
+ const handlePlaceBid = () => {
   if (user?.type !== "buyer") {
     Swal.fire({
       icon: "warning",
@@ -124,10 +133,14 @@ const handlePlaceBid = () => {
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancel",
     }).then((result) => {
-if (result.isConfirmed) {
-  navigate('/sign-in');
-}
-});
+      if (result.isConfirmed) {
+        if (user?.type === "seller" && user?.card_attributes === true) {
+          navigate("/user-dashboard");
+        } else if (user?.type === "seller" && user?.card_attributes === false) {
+          navigate("/profile-setup-1");
+        }
+      }
+    });
     return;
   }
 
@@ -135,6 +148,7 @@ if (result.isConfirmed) {
   console.log(`Placing bid of $${numericValue}`);
   placeBidMutation.mutate({ amount: numericValue });
 };
+
 
   useEffect(() => {
     const id = productDetails?.id;
@@ -160,8 +174,8 @@ if (result.isConfirmed) {
   // console.log("bids", bids);
 
   const handleMessageSeller = (sellerId) => {
-  navigate(`/user-dashboard/messages/${sellerId}`);
-};
+    navigate(`/user-dashboard/messages/${sellerId}`);
+  };
 
   return (
     <div className="border border-[#D0D0D0] p-5 rounded-lg">
@@ -273,15 +287,17 @@ if (result.isConfirmed) {
                 <div className="flex items-center gap-4">
                   <img
                     className="w-12 h-12 rounded-full"
-                    src={bid?.user?.avatar || placeholderUser }
+                    src={bid?.user?.avatar || placeholderUser}
                     alt="Bidder"
                   />
                   <div>
                     <h2 className="text-[#0C0D19] mb-1 text-[15px]">
                       {bid?.user?.name}
                     </h2>
-                    
-                    {formatDistanceToNow(new Date(bid?.created_at), { addSuffix: true })}
+
+                    {formatDistanceToNow(new Date(bid?.created_at), {
+                      addSuffix: true,
+                    })}
                   </div>
                 </div>
                 <p className="text-[15px] text-[#0C0D19] font-semibold">
@@ -291,8 +307,12 @@ if (result.isConfirmed) {
             ))}
       </div>
 
-      <div onClick={()=>handleMessageSeller(15)} className="bg-[#4275F6] text-white text-center cursor-pointer py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300">Contact to Seller</div>
-
+      <div
+        onClick={() => handleMessageSeller(15)}
+        className="bg-[#4275F6] text-white text-center cursor-pointer py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300"
+      >
+        Contact to Seller
+      </div>
     </div>
   );
 };

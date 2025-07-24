@@ -63,51 +63,43 @@ const UserDropdown = ({
   //   },
   // });
 
-
   const switchAccountMutation = useMutation({
-  mutationFn: async (data) => {
-    return await axiosSecure.post("/switch", data).then(res => res?.data);
-  },
-  onMutate: () => {
-    // Show loading toast and save the toast ID
-    toastId.current = toast.loading("Switching account...");
-  },
-onSuccess: (response) => {
-  toast.success(response?.message || "Account switched successfully", {
-    id: toastId.current,
-  });
-
-  const updatedUser = { ...user, type: response?.data?.type };
-
-  // ✅ Update React state
-  setUser(updatedUser);
-
-  // ✅ Also update localStorage
-  localStorage.setItem("user", JSON.stringify(updatedUser));
-
-
-  if (user?.type === "buyer" && user?.card_attributes === false) {
-    
-      navigate("/profile-setup-1");
-    
-  } 
-  else if (user?.type === "seller") {
-    navigate("/seller-dashboard");
-  }
-
-
-},
-  onError: (error) => {
-    toast.error(
-      error.response?.data?.message ||
-        "Something went wrong, try again later!!",
-      {
+    mutationFn: async (data) => {
+      return await axiosSecure.post("/switch", data).then((res) => res?.data);
+    },
+    onMutate: () => {
+      // Show loading toast and save the toast ID
+      toastId.current = toast.loading("Switching account...");
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Account switched successfully", {
         id: toastId.current,
-      }
-    );
-  },
-});
+      });
 
+      const updatedUser = { ...user, type: response?.data?.type };
+
+      // ✅ Update React state
+      setUser(updatedUser);
+
+      // ✅ Also update localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      if (user?.type === "buyer" && user?.card_attributes === false) {
+        navigate("/profile-setup-1");
+      } else if (user?.type === "seller") {
+        navigate("/seller-dashboard");
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong, try again later!!",
+        {
+          id: toastId.current,
+        }
+      );
+    },
+  });
 
   const defaultItems = [
     // {
