@@ -91,7 +91,7 @@ const Completed = () => {
                   <p className="text-sm text-gray-600">
                     Bidding Price:{" "}
                     <span className="font-semibold text-black">
-                      {item.bid ? `$${item.bid}` : "N/A"}
+                        ${item.highest_bid  ? item?.highest_bid : item?.starting_price}
                     </span>
                   </p>
 
