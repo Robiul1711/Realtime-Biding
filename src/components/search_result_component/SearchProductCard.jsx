@@ -61,9 +61,9 @@ const SearchProductCard = ({ searchResults, isLoading }) => {
                 </Title>
                 <Title level="title14" className="text-sm text-gray-500">
                   {item.type === "sale"
-                    ? formatPrice(item.price)
+                    ? formatPrice(item?.price)
                     : item.type === "auction"
-                    ? formatPrice(item.highest_bid)
+                    ? formatPrice(item?.starting_price)
                     : ""}
                 </Title>
               </div>
