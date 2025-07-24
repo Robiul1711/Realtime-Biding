@@ -30,6 +30,16 @@ const BidsTable = () => {
 
   // Process and filter data
   const [processedBids, setProcessedBids] = useState([]);
+  
+
+  const handleClick = (id) => {
+    const payload = {
+      bid_id: id,
+      payment_method: "stripe",
+    };
+
+    console.log(payload);
+  };
 
   useEffect(() => {
     if (data?.data) {
@@ -175,7 +185,7 @@ const BidsTable = () => {
                   />
                 </div>
               </th>
-              <th className="p-3">Status</th>
+              {/* <th className="p-3">Status</th> */}
               <th className="p-3">Win Status</th>
               <th className="p-3">Location</th>
               <th className="p-3">
@@ -210,7 +220,7 @@ const BidsTable = () => {
                   </td>
                   <td className="p-3 font-medium">{bid.product.title}</td>
                   <td className="p-3">${bid.amount.toLocaleString()}</td>
-                  <td className="p-3">
+                  {/* <td className="p-3">
                     <span
                       className={`px-2 py-1 rounded text-xs ${
                         bid.is_winner
@@ -220,7 +230,7 @@ const BidsTable = () => {
                     >
                       {bid.is_winner ? "Winner" : "Pending"}
                     </span>
-                  </td>
+                  </td> */}
                   <td className="p-3">
                     <span
                       className={`px-2 py-1 rounded text-xs ${
@@ -251,7 +261,10 @@ const BidsTable = () => {
                   </td>
                   <td className="p-3">
                     {bid.is_winner === 1 && (
-                      <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors">
+                      <button
+                        onClick={() => handleClick(bid?.id)}
+                        className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                      >
                         Claim
                       </button>
                     )}
