@@ -44,7 +44,6 @@ const LiveBid = ({ productDetails, isLoading }) => {
       return await axiosSecure.post("/switch", data).then((res) => res?.data);
     },
     onMutate: () => {
-      // Show loading toast and save the toast ID
       toastId.current = toast.loading("Switching account...");
     },
     onSuccess: (response) => {
@@ -53,17 +52,11 @@ const LiveBid = ({ productDetails, isLoading }) => {
       });
 
       const updatedUser = { ...user, type: response?.data?.type };
-
-      // Update React state
       setUser(updatedUser);
-
-      // Also update localStorage
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
       if (updatedUser?.type === "buyer" && updatedUser?.card_attributes === false) {
         navigate("/profile-setup-1");
-      } else if (updatedUser?.type === "buyer") {
-        navigate("/user-dashboard");
       }
     },
     onError: (error) => {
@@ -144,64 +137,78 @@ const LiveBid = ({ productDetails, isLoading }) => {
       return response.data;
     },
     onSuccess: (response) => {
-      console.log(response);
       toast.success("Bid placed successfully!");
     },
     onError: (error) => {
-      console.log(error);
       if (error.status === 401) {
         return false;
       } else {
-        console.log(error);
         toast.error(error?.response?.data?.message);
       }
     },
   });
 
-  const handlePlaceBid = () => {
-    if (user?.type !== "buyer") {
-      Swal.fire({
-        icon: "warning",
-        title: "Action not allowed!",
-        text: "Only buyers are allowed to place bids.",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "Switch to Buyer",
-        showCancelButton: true,
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancel",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          switchAccountMutation.mutate({
-            to_type: "buyer",
-          });
-        }
-      });
-      return;
-    }
+const handlePlaceBid = () => {
+  // Case 1: No user logged in
+  if (!user) {
+    Swal.fire({
+      icon: "warning",
+      title: "Login Required!",
+      text: "You need to login as a buyer to place bids.",
+      showDenyButton: true,
+      denyButtonText: "Login",
+      denyButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      cancelButtonColor: "#d33",
+      showConfirmButton: false, // This hides the default "OK" button
+    }).then((result) => {
+      if (result.isDenied) {
+        navigate("/sign-in");
+      }
+    });
+    return;
+  }
 
-    const numericValue = getNumericValue(countValue);
-    console.log(`Placing bid of $${numericValue}`);
-    placeBidMutation.mutate({ amount: numericValue });
-  };
+  // Case 2: User logged in but not as buyer
+  if (user?.type !== "buyer") {
+    Swal.fire({
+      icon: "warning",
+      title: "Action not allowed!",
+      text: "Only buyers are allowed to place bids.",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "Switch to Buyer",
+      showCancelButton: true,
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        switchAccountMutation.mutate({
+          to_type: "buyer",
+        });
+      }
+    });
+    return;
+  }
 
+  // Case 3: User is logged in as buyer - proceed with bid
+  const numericValue = getNumericValue(countValue);
+  placeBidMutation.mutate({ amount: numericValue });
+};
   useEffect(() => {
     const id = productDetails?.id;
 
     if (!id) return;
 
     const channelName = `auction.${id}.bids`;
-    console.log("Subscribing to:", channelName);
-
     const channel = echo.channel(channelName);
 
     channel.listen(".App\\Events\\BidPlaced", (e) => {
-      console.log("BidPlaced received:", e);
       setBids(e?.top_bids);
     });
 
     return () => {
       echo.leaveChannel(channelName);
-      console.log("Unsubscribed from:", channelName);
     };
   }, [productDetails?.id]);
 
@@ -326,7 +333,6 @@ const LiveBid = ({ productDetails, isLoading }) => {
                     <h2 className="text-[#0C0D19] mb-1 text-[15px]">
                       {bid?.user?.name}
                     </h2>
-
                     {formatDistanceToNow(new Date(bid?.created_at), {
                       addSuffix: true,
                     })}
