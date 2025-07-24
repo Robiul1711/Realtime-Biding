@@ -309,7 +309,7 @@ const handlePlaceBid = () => {
       
       <div className="mt-6 w-full">
             <div
-        onClick={() => handleMessageSeller(15)}
+        onClick={() => handleMessageSeller(productDetails?.user_id)}
         className="bg-[#4275F6] text-white text-center cursor-pointer py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300"
       >
         Contact to Seller
@@ -456,7 +456,7 @@ const handlePlaceBid = () => {
       </div>
 
       <div
-        onClick={() => handleMessageSeller(15)}
+       onClick={() => handleMessageSeller(productDetails?.user_id)}
         className="bg-[#4275F6] text-white text-center cursor-pointer py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300"
       >
         Contact to Seller
