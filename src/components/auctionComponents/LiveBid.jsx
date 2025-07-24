@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import placeholderUser from "../../assets/images/placeholder-user.png";
 import dayjs from "dayjs";
@@ -17,14 +17,13 @@ import "sweetalert2/src/sweetalert2.scss";
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
-  const { user } = useAuth();
-  console.log(user?.type);
+  const { user, setUser } = useAuth();
   const auctionEndAt = productDetails?.auction_end_at;
   const [bids, setBids] = useState([]);
   const navigate = useNavigate();
   const [countValue, setCountValue] = useState(`$0`);
   const axiosSecure = useAxiosSecure();
-  // console.log(productDetails)
+  const toastId = useRef(null);
 
   useEffect(() => {
     if (productDetails) {
@@ -39,6 +38,37 @@ const LiveBid = ({ productDetails, isLoading }) => {
       );
     }
   }, [productDetails]);
+
+  const switchAccountMutation = useMutation({
+    mutationFn: async (data) => {
+      return await axiosSecure.post("/switch", data).then((res) => res?.data);
+    },
+    onMutate: () => {
+      toastId.current = toast.loading("Switching account...");
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Account switched successfully", {
+        id: toastId.current,
+      });
+
+      const updatedUser = { ...user, type: response?.data?.type };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      if (updatedUser?.type === "buyer" && updatedUser?.card_attributes === false) {
+        navigate("/profile-setup-1");
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong, try again later!!",
+        {
+          id: toastId.current,
+        }
+      );
+    },
+  });
 
   const getNumericValue = (val) => parseInt(val.replace(/[^0-9]/g, "")) || 0;
 
@@ -107,21 +137,40 @@ const LiveBid = ({ productDetails, isLoading }) => {
       return response.data;
     },
     onSuccess: (response) => {
-      console.log(response);
       toast.success("Bid placed successfully!");
     },
     onError: (error) => {
-      console.log(error);
       if (error.status === 401) {
         return false;
       } else {
-        console.log(error);
         toast.error(error?.response?.data?.message);
       }
     },
   });
 
- const handlePlaceBid = () => {
+const handlePlaceBid = () => {
+  // Case 1: No user logged in
+  if (!user) {
+    Swal.fire({
+      icon: "warning",
+      title: "Login Required!",
+      text: "You need to login as a buyer to place bids.",
+      showDenyButton: true,
+      denyButtonText: "Login",
+      denyButtonColor: "#3085d6",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      cancelButtonColor: "#d33",
+      showConfirmButton: false, // This hides the default "OK" button
+    }).then((result) => {
+      if (result.isDenied) {
+        navigate("/sign-in");
+      }
+    });
+    return;
+  }
+
+  // Case 2: User logged in but not as buyer
   if (user?.type !== "buyer") {
     Swal.fire({
       icon: "warning",
@@ -134,44 +183,34 @@ const LiveBid = ({ productDetails, isLoading }) => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        if (user?.type === "seller" && user?.card_attributes === true) {
-          navigate("/user-dashboard");
-        } else if (user?.type === "seller" && user?.card_attributes === false) {
-          navigate("/profile-setup-1");
-        }
+        switchAccountMutation.mutate({
+          to_type: "buyer",
+        });
       }
     });
     return;
   }
 
+  // Case 3: User is logged in as buyer - proceed with bid
   const numericValue = getNumericValue(countValue);
-  console.log(`Placing bid of $${numericValue}`);
   placeBidMutation.mutate({ amount: numericValue });
 };
-
-
   useEffect(() => {
     const id = productDetails?.id;
 
     if (!id) return;
 
     const channelName = `auction.${id}.bids`;
-    console.log("Subscribing to:", channelName);
-
     const channel = echo.channel(channelName);
 
     channel.listen(".App\\Events\\BidPlaced", (e) => {
-      console.log("BidPlaced received:", e);
       setBids(e?.top_bids);
     });
 
     return () => {
       echo.leaveChannel(channelName);
-      console.log("Unsubscribed from:", channelName);
     };
   }, [productDetails?.id]);
-
-  // console.log("bids", bids);
 
   const handleMessageSeller = (sellerId) => {
     navigate(`/user-dashboard/messages/${sellerId}`);
@@ -294,7 +333,6 @@ const LiveBid = ({ productDetails, isLoading }) => {
                     <h2 className="text-[#0C0D19] mb-1 text-[15px]">
                       {bid?.user?.name}
                     </h2>
-
                     {formatDistanceToNow(new Date(bid?.created_at), {
                       addSuffix: true,
                     })}

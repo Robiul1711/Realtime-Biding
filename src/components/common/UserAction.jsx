@@ -11,6 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useCart } from "@/hooks/useCart";
+import DummyUser from "@/assets/images/placeholder-user.png";
 
 const UserActions = () => {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -25,10 +26,10 @@ const UserActions = () => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 1025);
     };
-    
+
     checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
+    window.addEventListener("resize", checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
   const LogOutMutation = useMutation({
@@ -52,11 +53,16 @@ const UserActions = () => {
 
   const { cart } = useCart();
 
+  
+
   return (
     <div className="flex flex-row justify-between items-start sm:items-center gap-4 xl:gap-8 w-full xmd:w-auto bg-white py-4 px-8 2xl:px-4">
       {/* Sell */}
       {!user && (
-        <Link to={`/join`} className="relative flex items-center gap-0.5 cursor-pointer">
+        <Link
+          to={`/join`}
+          className="relative flex items-center gap-0.5 cursor-pointer"
+        >
           <MdOutlineSell className="text-[1.2rem] sm:text-[1.5rem]" />
           <p className="text-customSecondary text-[15px] xl:text-base">Sell</p>
         </Link>
@@ -86,8 +92,9 @@ const UserActions = () => {
               <div className="relative">
                 <img
                   src={
-                    user?.avatar ||
-                    "https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg"
+                    user?.avatar
+                      ? `${import.meta.env.VITE_IMG_URL}${user?.avatar}`
+                      : DummyUser
                   }
                   alt="avatar"
                   className="w-[35px] h-[35px] rounded-full object-cover"
@@ -103,11 +110,11 @@ const UserActions = () => {
                 className={`${
                   accountMenuOpen
                     ? "translate-y-0 opacity-100"
-                    : isMobile 
-                      ? "translate-y-[-10px] opacity-0 z-[-1]"
-                      : "translate-y-[10px] opacity-0 z-[-1]"
+                    : isMobile
+                    ? "translate-y-[-10px] opacity-0 z-[-1]"
+                    : "translate-y-[10px] opacity-0 z-[-1]"
                 } bg-white border z-50 w-max rounded-md absolute dark:bg-slate-800 ${
-                  isMobile ? 'bottom-full mb-2' : 'top-[45px]'
+                  isMobile ? "bottom-full mb-2" : "top-[45px]"
                 } right-0 p-[10px] flex flex-col transition-all duration-300 gap-[5px] shadow-md`}
               >
                 <Link
@@ -135,8 +142,8 @@ const UserActions = () => {
                 </Link>
 
                 <div className="mt-3 border-t dark:border-slate-700 border-gray-200 pt-[5px]">
-                  <p 
-                    onClick={() => LogOutMutation.mutate({})} 
+                  <p
+                    onClick={() => LogOutMutation.mutate({})}
                     className="flex items-center gap-[5px] rounded-md p-[8px] pr-[45px] py-[3px] text-[1rem] dark:text-red-500 dark:hover:bg-red-500/20 text-red-500 hover:bg-red-50 cursor-pointer"
                   >
                     Logout
