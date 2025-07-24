@@ -30,7 +30,7 @@ const UserMessaging = () => {
     "Rodger Struck",
     "Ricky Smith",
   ];
-  const [currentUserId, setCurrentUserId] = useState(15);
+  const [currentUserId, setCurrentUserId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
   const queryClient = useQueryClient();
@@ -71,11 +71,12 @@ const UserMessaging = () => {
   });
 
   useEffect(() => {
-    if (!currentUser?.id) return;
-    createChatMutation.mutate({ user_id: currentUser?.id });
-  }, [currentUser?.id]);
+    console.log('working')
+    if (!currentUser?.id && !sellerId ) return;
+    createChatMutation.mutate({ user_id: currentUser?.id || sellerId });
+  }, [currentUser?.id, sellerId]);
 
-  console.log("conversationId", conversationId);
+  console.log("conversationId", sellerId);
 
   // useEffect(() => {
   //   if (!conversationId && currentUser?.id) return;
@@ -105,46 +106,70 @@ const UserMessaging = () => {
   //   return () => {
   //     echo.leaveChannel(channelName);
   //   };
+  // }, [currentUser?.id]);
+
+  // useEffect(() => {
+  //   if (!conversationId && currentUser?.id) return;
+
+  //   const channelName = `chat.${conversationId}`;
+  //   const channel = echo.private(channelName);
+
+  //   console.log(`Subscribing to chat channel: ${channelName}`);
+
+  //   channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
+  //     console.log("listening for messages on channel:", channel.name);
+  //     console.log("📨 New message:", e);
+  //     setCurrentMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       { ...e, body: e?.content },
+  //     ]);
+  //   });
+
+  //   return () => {
+  //     echo.leaveChannel(channelName);
+  //   };
   // }, [conversationId, currentUser?.id]);
 
   useEffect(() => {
-    if (!conversationId && currentUser?.id) return;
+  if (!conversationId || !currentUser?.id) return;
 
-    const channelName = `chat.${conversationId}`;
-    const channel = echo.private(channelName);
+  const channelName = `chat.${conversationId}`;
+  const channel = echo.private(channelName);
 
-    console.log(`Subscribing to chat channel: ${channelName}`);
+  console.log(`Subscribing to chat channel: ${channelName}`);
 
-    channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
-      console.log("listening for messages on channel:", channel.name);
-      console.log("📨 New message:", e);
-      setCurrentMessages((prevMessages) => [
-        ...prevMessages,
-        { ...e, body: e?.content },
-      ]);
-    });
+  channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
+    console.log("listening for messages on channel:", channel.name);
+    console.log("📨 New message:", e);
+    setCurrentMessages((prevMessages) => [
+      ...prevMessages,
+      { ...e, body: e?.content },
+    ]);
+  });
 
-    return () => {
-      echo.leaveChannel(channelName);
-    };
-  }, [conversationId, currentUser?.id]);
+  // Handle auth errors
+  channel.error((error) => {
+    console.error("Echo subscription error:", error);
+    if (
+      error?.type === "AuthError" ||
+      error?.status === 401 ||
+      error?.status === 403 ||
+      error?.response?.status === 401 ||
+      error?.response?.status === 403
+    ) {
+      localStorage.removeItem("user");
+      setUser(null);
+      navigate("/sign-in");
+      toast.error("Session expired. Please log in again.");
+    }
+  });
 
-  useEffect(() => {
-    if (!conversationId && !currentUser?.id) return;
+  return () => {
+    echo.leaveChannel(channelName);
+  };
+}, [conversationId, currentUser?.id]);
 
-    // Global error handler
-    echo.connector.pusher.connection.bind("error", (error) => {
-      if (error.type === "AuthError" || error?.response?.status === 401) {
-        localStorage.removeItem("user");
-        setUser(null);
-        navigate("/sign-in");
-        toast.error("Session expired. Please log in again.");
-      }
-    });
-
-    // Rest of your channel code...
-  }, [conversationId, currentUser?.id]);
-
+  
   // const sendMessageMutation = useMutation({
   //   mutationFn: async (data) => {
   //     const response = await axiosSecure.post(`/messages`, data, {
