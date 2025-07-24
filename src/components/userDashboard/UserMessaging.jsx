@@ -300,7 +300,7 @@ const UserMessaging = () => {
                   </div>
                 </div>
               ))
-            : inbox?.map((chat, index) => {
+            : inbox?.slice()?.reverse()?.map((chat, index) => {
                 const participant = chat?.participants?.[0]?.participantable;
                 const name = participant?.name || "Unknown";
                 const avatar = participant?.avatar || placeholderUser;

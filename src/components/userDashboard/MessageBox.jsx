@@ -303,7 +303,7 @@ const MessageBox = ({
               </motion.div>
 
               {/* Messages under this date group */}
-              {messages.map((message) => (
+              {/* {messages.map((message) => (
                 <motion.div
                   key={message.id}
                   variants={messageVariants}
@@ -346,6 +346,92 @@ const MessageBox = ({
                         {formatMessageTime(message.created_at)}
                       </div>
                     </div>
+                    {message?.sendable_id !== currentUser?.id && (
+                      <img
+                        src={user?.avatar || placeholderUser}
+                        alt=""
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+                  </div>
+                </motion.div>
+              ))} */}
+              {messages.map((message) => (
+                <motion.div
+                  key={message.id}
+                  variants={messageVariants}
+                  custom={message}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  layout
+                  className={`mb-4 flex ${
+                    message?.sendable_id !== currentUser?.id
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  <div className="relative max-w-md flex items-end gap-2">
+                    {message?.sendable_id === currentUser?.id && (
+                      <img
+                        src={currentUser?.avatar || placeholderUser}
+                        alt=""
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+
+                    <div>
+                      <div
+                        className={`p-3 rounded-high rounded-2xl dark:text-[#d2e5f5] text-sm ${
+                          message?.sendable_id !== currentUser?.id
+                            ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
+                            : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
+                        }`}
+                      >
+                        {/* Text content */}
+                        {message?.body || message?.content || "no text found"}
+
+                        {/* Attachments */}
+                        {message?.attachment?.length > 0 && (
+                          <div className="mt-2 space-y-2">
+                            {message.attachment.map((file, index) => {
+                              const isImage =
+                                file.mime_type?.startsWith("image/");
+                              return isImage ? (
+                                <img
+                                  key={index}
+                                  src={`http://nexus.softvencefsd.xyz/${file?.file_path}`}
+                                  alt={file?.original_name}
+                                  className="rounded-lg max-w-[120px] border border-gray-300 dark:border-gray-700 mt-1"
+                                />
+                              ) : (
+                                <a
+                                  key={index}
+                                  href={file.url}
+                                  download={file.original_name}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block text-blue-500 underline break-words mt-1"
+                                >
+                                  📎 {file.original_name}
+                                </a>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+
+                      <div
+                        className={`${
+                          message?.sendable_id !== currentUser?.id
+                            ? "text-right"
+                            : "text-left"
+                        } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70`}
+                      >
+                        {formatMessageTime(message.created_at)}
+                      </div>
+                    </div>
+
                     {message?.sendable_id !== currentUser?.id && (
                       <img
                         src={user?.avatar || placeholderUser}
