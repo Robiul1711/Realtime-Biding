@@ -53,7 +53,7 @@ const UserActions = () => {
 
   const { cart } = useCart();
 
-  console.log(`${import.meta.env.VITE_IMG_URL}${user.avatar}}`)
+  
 
   return (
     <div className="flex flex-row justify-between items-start sm:items-center gap-4 xl:gap-8 w-full xmd:w-auto bg-white py-4 px-8 2xl:px-4">
@@ -92,8 +92,8 @@ const UserActions = () => {
               <div className="relative">
                 <img
                   src={
-                    user.avatar
-                      ? `${import.meta.env.VITE_IMG_URL}${user.avatar}`
+                    user?.avatar
+                      ? `${import.meta.env.VITE_IMG_URL}${user?.avatar}`
                       : DummyUser
                   }
                   alt="avatar"
