@@ -6,6 +6,7 @@ import Title from "../common/Title";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ReactPaginate from "react-paginate";
+import { FiPackage } from "react-icons/fi";
 
 const Completed = () => {
   const axiosSecure = useAxiosSecure();
@@ -22,8 +23,6 @@ const Completed = () => {
       return res.data;
     },
   });
-
-  console.log(CompletedProduct?.data?.data);
 
   if (error) {
     return (
@@ -44,27 +43,32 @@ const Completed = () => {
         Completed Auctions
       </Title>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {isLoading
-          ? // Skeleton loading state
-            Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 bg-white rounded-xl shadow-sm overflow-hidden"
-              >
-                <Skeleton height={220} className="w-full" />
-                <div className="p-4 flex flex-col gap-3">
-                  <Skeleton width="80%" height={20} />
-                  <Skeleton width="60%" height={16} />
-                  <Skeleton width="50%" height={16} />
-                  <Skeleton width="70%" height={14} />
-                  <Skeleton width="50%" height={14} />
-                  <Skeleton width="100%" height={36} className="mt-2" />
-                </div>
-              </div>
-            ))
-          : // Actual content
-            CompletedProduct?.data?.data?.map((item) => (
+      {/* Empty State */}
+      {!isLoading && CompletedProduct?.data?.data?.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="bg-gray-100 p-6 rounded-full mb-4">
+            <FiPackage className="text-gray-400 text-4xl" />
+          </div>
+          <Title level="title18" className="text-gray-600 mb-2">
+            No Completed Auctions Found
+          </Title>
+          {/* <p className="text-gray-500 max-w-md text-center">
+            There are currently no completed auctions available. Check back later or explore our active auctions.
+          </p>
+          <Link
+            to="/auctions"
+            className="mt-4 inline-block text-center text-sm text-white bg-black px-6 py-2 rounded hover:bg-gray-800 transition-colors"
+          >
+            Browse Active Auctions
+          </Link> */}
+        </div>
+      )}
+
+      {/* Grid Content */}
+      {!isLoading && CompletedProduct?.data?.data?.length > 0 && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {CompletedProduct?.data?.data?.map((item) => (
               <div
                 key={item.id}
                 className="border border-gray-200 bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200"
@@ -119,35 +123,55 @@ const Completed = () => {
                 </div>
               </div>
             ))}
-      </div>
+          </div>
 
-      {!isLoading && CompletedProduct?.data?.length === 0 && (
-        <div className="text-center py-10">
-          <p className="text-gray-500">No completed auctions found</p>
+          {/* Pagination */}
+          <div className="flex justify-end items-end mt-6 py-3">
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel={""}
+              previousLabel={""}
+              pageCount={CompletedProduct?.data?.last_page}
+              pageRangeDisplayed={1}
+              marginPagesDisplayed={2}
+              onPageChange={(event) => {
+                setPage(event.selected + 1);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              containerClassName="flex items-center md:gap-3 gap-1 flex-wrap"
+              previousClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
+              nextClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
+              activeLinkClassName="font-[700] bg-[#4275F6] rounded-full !text-white border-none"
+              disabledClassName="bg-none cursor-not-allowed"
+              breakClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700"
+              pageLinkClassName="w-[42px] cursor-pointer h-[42px] border-[1px] border-primary flex justify-center items-center text-black rounded-xl"
+              forcePage={page - 1}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className="border border-gray-200 bg-white rounded-xl shadow-sm overflow-hidden"
+            >
+              <Skeleton height={220} className="w-full" />
+              <div className="p-4 flex flex-col gap-3">
+                <Skeleton width="80%" height={20} />
+                <Skeleton width="60%" height={16} />
+                <Skeleton width="50%" height={16} />
+                <Skeleton width="70%" height={14} />
+                <Skeleton width="50%" height={14} />
+                <Skeleton width="100%" height={36} className="mt-2" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
-      <div className="flex justify-end items-end mt-6 py-3">
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel={""}
-          previousLabel={""}
-          pageCount={CompletedProduct?.data?.last_page}
-          pageRangeDisplayed={1}
-          marginPagesDisplayed={2}
-          onPageChange={(event) => {
-            setPage(event.selected + 1);
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          containerClassName="flex items-center md:gap-3 gap-1 flex-wrap"
-          previousClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
-          nextClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700 bg-white rounded-md cursor-pointer xxs:block hidden"
-          activeLinkClassName="font-[700] bg-[#4275F6] rounded-full !text-white border-none"
-          disabledClassName="bg-none cursor-not-allowed"
-          breakClassName="md:px-4 px-2 py-2 text-sm font-medium text-gray-700"
-          pageLinkClassName="w-[42px] cursor-pointer h-[42px] border-[1px] border-primary flex justify-center items-center text-black rounded-xl"
-          forcePage={page - 1}
-        />
-      </div>
     </div>
   );
 };
