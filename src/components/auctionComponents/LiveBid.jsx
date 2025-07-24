@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import placeholderUser from "../../assets/images/placeholder-user.png";
+import winnerGif from "@/assets/winner.webp"; // Add this import
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import Skeleton from "react-loading-skeleton";
@@ -17,6 +18,7 @@ import "sweetalert2/src/sweetalert2.scss";
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
+  const IMG_URL = import.meta.env.VITE_IMG_URL;
   const { user, setUser } = useAuth();
   const auctionEndAt = productDetails?.auction_end_at;
   const [bids, setBids] = useState([]);
@@ -24,6 +26,8 @@ const LiveBid = ({ productDetails, isLoading }) => {
   const [countValue, setCountValue] = useState(`$0`);
   const axiosSecure = useAxiosSecure();
   const toastId = useRef(null);
+  const [auctionEnded, setAuctionEnded] = useState(false);
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     if (productDetails) {
@@ -36,9 +40,18 @@ const LiveBid = ({ productDetails, isLoading }) => {
             : productDetails.starting_price
         }`
       );
+      
+      // Check if auction has ended
+      const now = dayjs();
+      const end = dayjs(productDetails.auction_end_at);
+      if (now.isAfter(end)) {
+        setAuctionEnded(true);
+        if (hasBids) {
+          setWinner(productDetails.bids[0]);
+        }
+      }
     }
   }, [productDetails]);
-
   const switchAccountMutation = useMutation({
     mutationFn: async (data) => {
       return await axiosSecure.post("/switch", data).then((res) => res?.data);
@@ -217,19 +230,110 @@ const handlePlaceBid = () => {
   };
 
   return (
-    <div className="border border-[#D0D0D0] p-5 rounded-lg">
-      {/* Current Bid Section */}
-      <h2 className="text-lg md:text-2xl lg:text-xl xl:text-2xl font-semibold text-[#A1A1A1] text-center mb-2">
-        {isLoading ? <Skeleton width={120} /> : "Current Bid"}
+    <>
+      {auctionEnded ? (
+<div className="border rounded-lg ">
+  <div className="bg-[#f5f7f9] p-6 rounded-lg border border-[#E2E8F0]">
+    <div className="flex flex-col items-center">
+      {/* Winner badge icon */}
+      <div className="mb-4 p-3 bg-green-100 rounded-full">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-12 w-12 text-green-600" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth={2} 
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" 
+          />
+        </svg>
+      </div>
+      
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+        Auction Closed
       </h2>
-      <p className="text-2xl md:text-4xl lg:text-2xl xl:text-4xl font-semibold text-[#000000] text-center my-3 xl:my-6">
-        {isLoading ? (
-          <Skeleton width={150} />
-        ) : (
-          `$${bids[0]?.amount || productDetails?.starting_price}`
-        )}
-      </p>
+      <p className="text-gray-500 mb-6">This auction has officially ended</p>
+      
+      {winner ? (
+        <div className="w-full bg-white p-6 rounded-lg border border-[#EDF2F7] shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">
+            Winning Bid
+          </h3>
+          
+          <div className="flex flex-col items-center">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <img
+                className="w-16 h-16 rounded-full object-cover border-2 border-green-200"
+                src={IMG_URL + winner?.user?.avatar || placeholderUser}
+                alt="Winner"
+              />
+              <div className="text-left">
+                <p className="text-lg font-medium text-gray-800">{winner?.user?.name}</p>
+                <p className="text-sm text-gray-500">Winning Bidder</p>
+              </div>
+            </div>
+            
+            <div className="mt-4 bg-green-50 px-6 py-3 rounded-lg w-full max-w-xs">
+              <p className="text-sm text-gray-600 text-center">Final Price</p>
+              <p className="text-2xl font-bold text-green-600 text-center">
+                ${winner?.amount.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full bg-white p-6 rounded-lg border border-[#EDF2F7]">
+          <div className="flex flex-col items-center">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-12 w-12 text-gray-400 mb-3" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+              />
+            </svg>
+            <p className="text-gray-600">No bids were placed for this auction</p>
+          </div>
+        </div>
+      )}
+      
+      <div className="mt-6 w-full">
+            <div
+        onClick={() => handleMessageSeller(15)}
+        className="bg-[#4275F6] text-white text-center cursor-pointer py-2 lg:py-3 xl:py-3.5 rounded-xl w-full hover:bg-[#4278F9] transition-all duration-300"
+      >
+        Contact to Seller
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+      ) : (
+        <div className="border border-[#D0D0D0] p-5 rounded-lg">
+          {/* Keep all your existing auction UI here */}
+          {/* Current Bid Section */}
+          <h2 className="text-lg md:text-2xl lg:text-xl xl:text-2xl font-semibold text-[#A1A1A1] text-center mb-2">
+            {isLoading ? <Skeleton width={120} /> : "Current Bid"}
+          </h2>
+          <p className="text-2xl md:text-4xl lg:text-2xl xl:text-4xl font-semibold text-[#000000] text-center my-3 xl:my-6">
+            {isLoading ? (
+              <Skeleton width={150} />
+            ) : (
+              `$${bids[0]?.amount || productDetails?.starting_price}`
+            )}
+          </p>
 
+          {/* Time Left Section */}
       {/* Time Left Section */}
       <div className="bg-[#F3F6FE] p-5 rounded-lg">
         <p className="text-center mb-2 text-[#595858] md:text-[22px]">
@@ -252,6 +356,12 @@ const handlePlaceBid = () => {
           ))}
         </div>
       </div>
+
+          <div className=" mt-10">
+      {/* Current Bid Section */}
+     
+
+
 
       {/* Your Bid Amount Section */}
       <div className="my-3 xl:my-6">
@@ -352,6 +462,9 @@ const handlePlaceBid = () => {
         Contact to Seller
       </div>
     </div>
+        </div>
+      )}
+    </>
   );
 };
 
