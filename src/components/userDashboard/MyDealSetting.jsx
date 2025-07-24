@@ -74,6 +74,8 @@ const MyDealSetting = () => {
   },
 });
 
+console.log(user)
+
 
   const onSubmit = (data) => {
     if (!hasChanges) return;
@@ -147,7 +149,9 @@ const MyDealSetting = () => {
         </div>
 
         {/* Connect Stripe Account */}
-        <div className="mb-5">
+        {
+          user?.type ==='seller' &&(
+            <div className="mb-5">
           <label className="block text-sm font-medium text-gray-700 mb-1">Account Connection</label>
           <button
             type="button"
@@ -189,6 +193,8 @@ const MyDealSetting = () => {
           </button>
           {isError && <p className="text-xs text-red-500 mt-1">Error connecting account.</p>}
         </div>
+          )
+        }
 
         {/* Photo Upload */}
         <div className="mb-5">

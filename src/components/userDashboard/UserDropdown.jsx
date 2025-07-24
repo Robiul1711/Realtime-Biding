@@ -7,6 +7,7 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
+import DummyUser from "@/assets/images/placeholder-user.png"
 const UserDropdown = ({
   user,
   onSignOut,
@@ -160,7 +161,7 @@ const UserDropdown = ({
         >
           {user?.avatar ? (
             <img
-              src={user.avatar}
+              src={user.avatar ? `${import.meta.env.VITE_IMG_URL}${user.avatar}` :DummyUser}
               alt={user.name}
               className="w-full h-full  rounded-xl object-cover"
             />
