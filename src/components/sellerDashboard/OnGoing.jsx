@@ -199,7 +199,6 @@
 
 // export default OnGoing;
 
-
 import React, { useState } from "react";
 import { Modal, Button, Empty } from "antd";
 import Title from "../common/Title";
@@ -346,13 +345,17 @@ const OnGoing = () => {
                   <Title level="title14" className="text-[#A8A8A8]">
                     Current Bid:{" "}
                     <span className="font-bold ml-2 text-black">
-                      ${item.bid || "0"}
+                      $
+                      {item.highest_bid
+                        ? item?.highest_bid
+                        : item?.starting_price}
                     </span>
                   </Title>
                   {item?.auction_end_at && (
                     <div className="pb-1">
                       <p className="text-[#001AFF] text-sm">
-                        Ends: {new Date(item.auction_end_at).toLocaleDateString()}
+                        Ends:{" "}
+                        {new Date(item.auction_end_at).toLocaleDateString()}
                       </p>
                     </div>
                   )}

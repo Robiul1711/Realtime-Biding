@@ -38,8 +38,14 @@ const MyDealSetting = () => {
   } = useMutation({
     mutationFn: () => axiosSecure.get("/stripe/connect"),
     onSuccess: (response) => {
-      const url = response?.data?.data?.onboarding_url;
-      if (url) window.open(url, "_blank");
+    
+      if(response?.data?.data?.onboarding_url){
+        window.open(response?.data?.data?.onboarding_url, "_blank");
+      }
+      else{
+    window.open(response?.data?.data?.dashboard_url, "_blank");
+      }
+      
     },
     onError: (error) => {
       console.error("Stripe Connect Error:", error);
