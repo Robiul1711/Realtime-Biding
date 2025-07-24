@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import placeholderUser from "../../assets/images/placeholder-user.png";
 import dayjs from "dayjs";
@@ -17,14 +17,13 @@ import "sweetalert2/src/sweetalert2.scss";
 dayjs.extend(duration);
 
 const LiveBid = ({ productDetails, isLoading }) => {
-  const { user } = useAuth();
-  console.log(user?.type);
+  const { user, setUser } = useAuth();
   const auctionEndAt = productDetails?.auction_end_at;
   const [bids, setBids] = useState([]);
   const navigate = useNavigate();
   const [countValue, setCountValue] = useState(`$0`);
   const axiosSecure = useAxiosSecure();
-  // console.log(productDetails)
+  const toastId = useRef(null);
 
   useEffect(() => {
     if (productDetails) {
@@ -39,6 +38,44 @@ const LiveBid = ({ productDetails, isLoading }) => {
       );
     }
   }, [productDetails]);
+
+  const switchAccountMutation = useMutation({
+    mutationFn: async (data) => {
+      return await axiosSecure.post("/switch", data).then((res) => res?.data);
+    },
+    onMutate: () => {
+      // Show loading toast and save the toast ID
+      toastId.current = toast.loading("Switching account...");
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Account switched successfully", {
+        id: toastId.current,
+      });
+
+      const updatedUser = { ...user, type: response?.data?.type };
+
+      // Update React state
+      setUser(updatedUser);
+
+      // Also update localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      if (updatedUser?.type === "buyer" && updatedUser?.card_attributes === false) {
+        navigate("/profile-setup-1");
+      } else if (updatedUser?.type === "buyer") {
+        navigate("/user-dashboard");
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong, try again later!!",
+        {
+          id: toastId.current,
+        }
+      );
+    },
+  });
 
   const getNumericValue = (val) => parseInt(val.replace(/[^0-9]/g, "")) || 0;
 
@@ -121,34 +158,31 @@ const LiveBid = ({ productDetails, isLoading }) => {
     },
   });
 
- const handlePlaceBid = () => {
-  if (user?.type !== "buyer") {
-    Swal.fire({
-      icon: "warning",
-      title: "Action not allowed!",
-      text: "Only buyers are allowed to place bids.",
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "Switch to Buyer",
-      showCancelButton: true,
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancel",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (user?.type === "seller" && user?.card_attributes === true) {
-          navigate("/user-dashboard");
-        } else if (user?.type === "seller" && user?.card_attributes === false) {
-          navigate("/profile-setup-1");
+  const handlePlaceBid = () => {
+    if (user?.type !== "buyer") {
+      Swal.fire({
+        icon: "warning",
+        title: "Action not allowed!",
+        text: "Only buyers are allowed to place bids.",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "Switch to Buyer",
+        showCancelButton: true,
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          switchAccountMutation.mutate({
+            to_type: "buyer",
+          });
         }
-      }
-    });
-    return;
-  }
+      });
+      return;
+    }
 
-  const numericValue = getNumericValue(countValue);
-  console.log(`Placing bid of $${numericValue}`);
-  placeBidMutation.mutate({ amount: numericValue });
-};
-
+    const numericValue = getNumericValue(countValue);
+    console.log(`Placing bid of $${numericValue}`);
+    placeBidMutation.mutate({ amount: numericValue });
+  };
 
   useEffect(() => {
     const id = productDetails?.id;
@@ -170,8 +204,6 @@ const LiveBid = ({ productDetails, isLoading }) => {
       console.log("Unsubscribed from:", channelName);
     };
   }, [productDetails?.id]);
-
-  // console.log("bids", bids);
 
   const handleMessageSeller = (sellerId) => {
     navigate(`/user-dashboard/messages/${sellerId}`);
