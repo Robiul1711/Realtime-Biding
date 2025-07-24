@@ -8,8 +8,8 @@ import NotificationSetting from './NotificationSetting';
 const TABS = [
   { label: 'My details', component: <MyDealSetting /> },
   { label: 'Password', component: <PasswordSetting /> },
-  { label: 'Billing', component: <BillingSetting /> },
-  { label: 'Notifications', component: <NotificationSetting /> },
+  // { label: 'Billing', component: <BillingSetting /> },
+  // { label: 'Notifications', component: <NotificationSetting /> },
 ];
 
 const UserSetting = () => {
