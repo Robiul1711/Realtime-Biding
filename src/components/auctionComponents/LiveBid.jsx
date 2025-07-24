@@ -85,47 +85,49 @@ const LiveBid = ({ productDetails, isLoading }) => {
 
   const getNumericValue = (val) => parseInt(val.replace(/[^0-9]/g, "")) || 0;
 
-  const handleIncrement = () => {
-    const numeric = getNumericValue(countValue);
-    setCountValue(`$${numeric + 10}`);
-  };
 
-  const handleDecrement = () => {
-    const numeric = getNumericValue(countValue);
-    if (
-      countValue + 10 > bids[0]?.amount &&
-      countValue + 10 > productDetails?.starting_price
-    ) {
-      setCountValue(`$${Math.max(numeric - 1, 0)}`);
-    } else {
-      toast.error("You cannot bid less than the current bid amount.");
-    }
-  };
 
+const handleIncrement = () => {
+  console.log(countValue);
+  const numeric = getNumericValue(countValue);
+  setCountValue(`$${numeric + 10}`);
+};
+
+const handleDecrement = () => {
+  const numeric = getNumericValue(countValue);
+  const currentBid = bids[0]?.amount || productDetails?.starting_price;
+  
+  if (numeric - 1 >= currentBid) {
+    setCountValue(`$${numeric - 1}`);
+  } else {
+    toast.error("You cannot bid less than the current bid amount.");
+  }
+};
   const handleInputChange = (e) => {
     const val = e.target.value;
     const numeric = getNumericValue(val);
     setCountValue(val.startsWith("$") ? `$${numeric}` : `$${numeric}`);
   };
 
-  const calculateTimeLeft = () => {
-    if (isLoading) return { hours: "00", minutes: "00", seconds: "00" };
+const calculateTimeLeft = () => {
+  if (isLoading) return { days: "00", hours: "00", minutes: "00", seconds: "00" };
 
-    const now = dayjs();
-    const end = dayjs(auctionEndAt);
-    const diff = end.diff(now);
+  const now = dayjs();
+  const end = dayjs(auctionEndAt);
+  const diff = end.diff(now);
 
-    if (diff <= 0 || !auctionEndAt) {
-      return { hours: "00", minutes: "00", seconds: "00" };
-    }
+  if (diff <= 0 || !auctionEndAt) {
+    return { days: "00", hours: "00", minutes: "00", seconds: "00" };
+  }
 
-    const d = dayjs.duration(diff);
-    return {
-      hours: String(d.hours()).padStart(2, "0"),
-      minutes: String(d.minutes()).padStart(2, "0"),
-      seconds: String(d.seconds()).padStart(2, "0"),
-    };
+  const duration = dayjs.duration(diff);
+  return {
+    days: String(Math.floor(duration.asDays())).padStart(2, "0"),
+    hours: String(duration.hours()).padStart(2, "0"),
+    minutes: String(duration.minutes()).padStart(2, "0"),
+    seconds: String(duration.seconds()).padStart(2, "0"),
   };
+};
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
@@ -335,27 +337,29 @@ const handlePlaceBid = () => {
 
           {/* Time Left Section */}
       {/* Time Left Section */}
-      <div className="bg-[#F3F6FE] p-5 rounded-lg">
-        <p className="text-center mb-2 text-[#595858] md:text-[22px]">
-          {isLoading ? <Skeleton width={100} /> : "Time Left"}
-        </p>
-        <div className="flex justify-between w-full items-center italic xl:px-16 py-2 text-[#242424]">
-          {["hours", "minutes", "seconds"].map((key, idx) => (
-            <div key={idx}>
-              <p className="text-[20px] md:text-[30px] xl:text-[40px]">
-                {isLoading ? <Skeleton width={40} /> : timeLeft[key]}
-              </p>
-              <p className="text-[14px] text-[#222222]">
-                {isLoading ? (
-                  <Skeleton width={60} />
-                ) : (
-                  key.charAt(0).toUpperCase() + key.slice(1)
-                )}
-              </p>
-            </div>
-          ))}
+<div className="bg-[#F3F6FE] p-5 rounded-lg">
+  <p className="text-center mb-2 text-[#595858] md:text-[22px]">
+    {isLoading ? <Skeleton width={100} /> : "Time Left"}
+  </p>
+  <div className="flex justify-between w-full items-center italic xl:px-16 py-2 text-[#242424]">
+    {["days", "hours", "minutes", "seconds"]
+      .filter(key => key !== "days" || timeLeft.days !== "00")
+      .map((key, idx) => (
+        <div key={idx}>
+          <p className="text-[20px] md:text-[30px] xl:text-[40px]">
+            {isLoading ? <Skeleton width={40} /> : timeLeft[key]}
+          </p>
+          <p className="text-[14px] text-[#222222]">
+            {isLoading ? (
+              <Skeleton width={60} />
+            ) : (
+              key.charAt(0).toUpperCase() + key.slice(1)
+            )}
+          </p>
         </div>
-      </div>
+      ))}
+  </div>
+</div>
 
           <div className=" mt-10">
       {/* Current Bid Section */}
