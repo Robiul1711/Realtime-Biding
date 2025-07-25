@@ -647,7 +647,7 @@ const FilterCard = ({
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {/* All Products Checkbox */}
         <div
           onClick={handleAllProductsChange}
@@ -673,10 +673,10 @@ const FilterCard = ({
         {/* Category Filter Section */}
         <div className="border border-gray-200 rounded-lg">
           <div
-            className="flex items-center justify-between p-4 cursor-pointer"
+            className="flex items-center justify-between p-3 cursor-pointer"
             onClick={() => setCategoryOpen(!categoryOpen)}
           >
-            <Title level="title24">Category</Title>
+            <Title level="title20">Category</Title>
             {categoryOpen ? (
               <Minus size={20} className="text-gray-500" />
             ) : (
@@ -758,10 +758,10 @@ const FilterCard = ({
         {/* Price Filter Section */}
         <div className="border border-gray-200 rounded-lg">
           <div
-            className="flex items-center justify-between p-4 cursor-pointer"
+            className="flex items-center justify-between p-3 cursor-pointer"
             onClick={() => setPriceOpen(!priceOpen)}
           >
-            <Title level="title24">Price</Title>
+            <Title level="title20">Price</Title>
             {priceOpen ? (
               <Minus size={20} className="text-gray-500" />
             ) : (

@@ -9,16 +9,16 @@ const SearchResult = () => {
   return (
     <div className="section-padding-x pb-6 ">
       <ScrollRestoration />
-      <div className="flex flex-col gap-2 my-4 md:my-6 lg:my-10">
+      <div className="flex md:flex-col items-center md:items-start gap-2 my-4 md:my-6 lg:my-10">
         <div className="flex items-center gap-1 text-gray-500">
           <span>Home</span>
           <FaAngleRight />
           <span>Search Results</span>
         </div>
-        <h1 className="sm:text-lg md:text-xl lg:text-2xl font-bold mb-4 text-[#C3C3C3]">
+        <h1 className="sm:text-lg md:text-xl lg:text-2xl font-bold  text-[#C3C3C3]">
           Showing <span className="text-black">{searchResults.length}</span>{" "}
           results for
-          <span className="text-black"> {search?.q}</span>
+          <span className="text-black"> {search?.q} {search?.q==="" ? "" : search?.country && ","}  {search?.country}</span>
         </h1>
       </div>
       {searchResults.length > 0 ? (
@@ -30,7 +30,7 @@ const SearchResult = () => {
             No results found
           </h2>
           <p className="text-gray-500">
-            We couldn’t find anything for "<span className="font-medium">{search?.q}</span>".
+            We couldn’t find anything for "<span className="font-medium">{search?.q} </span>".
             <br />
             Try checking your spelling or using different keywords.
           </p>

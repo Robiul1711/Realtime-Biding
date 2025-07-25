@@ -51,16 +51,16 @@ const Shop = () => {
       className={`relative ${isFilterOpen ? "overflow-hidden h-screen" : ""}`}
     >
       <ScrollRestoration />
-      <div className="md:hidden flex justify-end px-4 mt-4">
+      <div className="md:hidden flex justify-end mt-5">
         <button
           onClick={() => setIsFilterOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md"
+          className="flex items-center gap-2 px-4 py-1.5 bg-blue-600 text-white rounded-md"
         >
-          <FiFilter className="text-xl" />
+          <FiFilter />
           Filter
         </button>
       </div>
-      <div className="flex flex-col md:flex-row gap-10 section-padding-x py-4 lg:py-10 xl:py-20">
+      <div className="flex flex-col md:flex-row gap-10 section-padding-x md:py-10">
         <div className="hidden md:block w-full md:w-[30%]">
           <FilterCard
             filterProducts={filterProducts}

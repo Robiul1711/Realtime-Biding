@@ -33,12 +33,12 @@ const CommonNavbar = ({ open, setOpen }) => {
           </span>
         </div>
         <div className="flex items-center md:gap-4 gap-2">
-          <span>
+          {/* <span>
             <LuMessageCircleMore className="sm:text-2xl text-xl text-[#6D6E75]" />
           </span>
           <span>
             <IoNotificationsOutline className="sm:text-2xl text-xl text-[#6D6E75]" />
-          </span>
+          </span> */}
           <UserDropdown user={user} />
         </div>
       </div>

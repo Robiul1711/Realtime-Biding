@@ -23,19 +23,16 @@ const SelectComponent = ({
 
   return (
     <div
-      className={`flex items-center px-2 md:py-0.5 rounded-[5px] shadow-[5px_5px_15px_0px_rgba(0,0,0,0.05)] border border-[#ECECEC] bg-white ${className}`}
+      className={`w-full sm:w-auto flex items-center gap-2 px-3 py-1 rounded-[5px] shadow-[0_0_8px_0_rgba(0,0,0,0.05)] border border-[#ECECEC] bg-white ${className}`}
     >
       {icon && <div className="text-gray-500">{icon}</div>}
       <select
-        className="bg-transparent outline-none text-gray-700 px-3"
+        className="w-full sm:w-auto flex-1 bg-transparent outline-none text-gray-700 text-sm px-1 py-1"
         defaultValue=""
         onChange={handleChange}
         {...props}
       >
-        <option value="" >
-          Select an option
-        </option>
-
+        <option value="">Select</option>
         {optionEntries.map(([key, label]) => (
           <option key={key} value={key} className="text-black">
             {label}

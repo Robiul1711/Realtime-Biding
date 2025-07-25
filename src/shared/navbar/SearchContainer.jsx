@@ -29,43 +29,44 @@ const SearchContainer = () => {
   }, [selectedCategory, keyword, setSearch]);
 
   return (
-    <div className="w-full pr-3 py-2  flex items-center gap-2 border border-[#ddd] rounded-[5px]">
-      {/* Category Dropdown */}
-      <select
-        className="bg-transparent px-2 text-sm border-none cursor-pointer outline-none text-gray-700 w-[80px] md:w-[200px]"
-        value={selectedCategory?.id || ""}
-        onChange={(e) => {
-          const found = categories.find(
-            (cat) => cat.id === parseInt(e.target.value)
-          );
-          setSelectedCategory(found || null);
-        }}
-      >
-        <option value="" >
-          {isLoading ? "Loading..." : "Select Category"}
-        </option>
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id} className="text-black">
-            {cat.title}
-          </option>
-        ))}
-      </select>
+<div className="w-full border border-[#ddd] rounded-[5px] px-3 py-2 flex flex-col xxs:flex-row sm:items-center gap-3 sm:gap-2">
+  {/* Category Dropdown */}
+  <select
+    className="bg-transparent text-sm border-none cursor-pointer outline-none text-gray-700 w-full sm:w-[200px] px-2 py-1"
+    value={selectedCategory?.id || ""}
+    onChange={(e) => {
+      const found = categories.find(
+        (cat) => cat.id === parseInt(e.target.value)
+      );
+      setSelectedCategory(found || null);
+    }}
+  >
+    <option value="">{isLoading ? "Loading..." : "Category"}</option>
+    {categories.map((cat) => (
+      <option key={cat.id} value={cat.id} className="text-black">
+        {cat.title}
+      </option>
+    ))}
+  </select>
 
-      <div className="h-6 border-l border-[#9e9595]"></div>
+  {/* Vertical divider for desktop */}
+  <div className=" md:h-6 border  sm:border-l border-[#9e9595]"></div>
 
-      {/* Keyword Input */}
-      <input
-        type="text"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        className=" text-sm text-custom-black placeholder-[#838383] bg-transparent border-none outline-none px-2"
-        placeholder="Search for items..."
-      />
+  {/* Keyword Input + Icon Wrapper */}
+  <div className="flex items-center w-full">
+    <input
+      type="text"
+      value={keyword}
+      onChange={(e) => setKeyword(e.target.value)}
+      className="flex-1 text-sm text-custom-black placeholder-[#838383] bg-transparent border-none outline-none px-2 py-1"
+      placeholder="Search for items..."
+    />
+    <span className="text-gray-700">
+      <IoSearch size={20} />
+    </span>
+  </div>
+</div>
 
-      <span className="text-gray-700">
-        <IoSearch size={20} />
-      </span>
-    </div>
   );
 };
 

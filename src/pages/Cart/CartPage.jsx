@@ -1,14 +1,49 @@
-import React, { useContext } from "react";
-
+import React from "react";
 import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const CartPage = () => {
-  const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } =
-    useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
+  const axiosSecure = useAxiosSecure();
 
-    console.log(cart)
+  const CheckoutMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await axiosSecure.post("/stripe/checkout", data);
+      return response?.data;
+    },
+    onSuccess: (response) => {
+      toast.success(response?.message || "Opening checkout...");
+      window.open(response.data.checkout_url);
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong, try again later!!";
+      toast.error(errorMessage);
+    },
+  });
+
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    const checkoutData = {
+      payment_method: "stripe",
+      items: cart.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity
+      }))
+    };
+
+    CheckoutMutation.mutate(checkoutData);
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -117,8 +152,12 @@ const CartPage = () => {
                   </div>
                 </div>
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 transition-colors">
-                Proceed to Checkout
+              <button 
+                onClick={handleCheckout}
+                disabled={CheckoutMutation.isPending}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {CheckoutMutation.isPending ? "Processing..." : "Proceed to Checkout"}
               </button>
               <Link
                 to="/shop"
