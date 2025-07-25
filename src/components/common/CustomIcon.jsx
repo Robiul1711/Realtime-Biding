@@ -43,7 +43,7 @@ export const FireIcon = ({ className }) => {
 
 export const HeadphoneIcon = ({ className }) => {
   return (
-    <svg className="size-6 lg:size-auto"
+    <svg className="size-4 lg:size-6"
       xmlns="http://www.w3.org/2000/svg"
       width="36"
       height="35"

@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import logo from "@/assets/images/logo.png";
 
 const navItems = [
-  { id: 1, name: "Deals", path: "/search-result" },
+  // { id: 1, name: "Deals", path: "/search-result" },
   { id: 2, name: "Home", path: "/" },
   { id: 3, name: "About", path: "/about" },
   { id: 4, name: "Shop", path: "/shop" },
@@ -12,21 +12,21 @@ const navItems = [
   {
     id: 6,
     name: "Auction",
-    path: "",
-    sublinks: [
-      {
-        id: 1,
-        name: "Fashion",
-        path: "/auction-list",
-      },
-      {
-        id: 2,
-        name: "Video Games",
-        path: "/auction-list",
-      },
-    ],
+    path: "/auction-list",
+    // sublinks: [
+    //   {
+    //     id: 1,
+    //     name: "Fashion",
+    //     path: "/auction-list",
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Video Games",
+    //     path: "/auction-list",
+    //   },
+    // ],
   },
-  { id: 7, name: "Contact", path: "/content" },
+  // { id: 7, name: "Contact", path: "/content" },
 ];
 
 const MobileNavbar = () => {
@@ -56,7 +56,7 @@ const MobileNavbar = () => {
       {/* Top bar */}
       <div className="flex justify-between items-center px-4 py-3">
         <Link to="/">
-          <img src={logo} alt="Logo" className="h-8 sm:h-10" />
+          <img src={logo} alt="Logo" className="h-10" />
         </Link>
         <button onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={24} /> : <Menu size={24} />}

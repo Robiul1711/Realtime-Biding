@@ -54,12 +54,12 @@ const SideBar = ({ sidebar, open, setOpen }) => {
         {/* Logo */}
         <Link to={"/"}>
           <div className="flex justify-center items-center">
-            <img src={logo} alt="Safe" className="h-24 object-contain" />
+            <img src={logo} alt="Safe" className="h-20 object-contain" />
             
           </div>
         </Link>
 
-<Link className="border border-[#4275F6] p-2 sm:p-3 rounded-lg flex items-center gap-2 justify-center text-center text-[#4275F6] font-semibold" to="/">
+<Link className="border border-[#4275F6] p-2  rounded-lg flex items-center gap-2 justify-center text-center text-[#4275F6] font-semibold" to="/">
 <FaArrowLeftLong />
 Back to website
 </Link>

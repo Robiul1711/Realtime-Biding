@@ -37,6 +37,8 @@ import SellerMessaging from "@/components/sellerDashboard/SellerMessaging";
 import Shop from "@/pages/shop/Shop";
 
 import CartPage from "@/pages/Cart/CartPage";
+import PaymentSuccess from "@/pages/Cart/PaymentSuccess";
+import PaymentCancel from "@/pages/Cart/PaymentCancel";
 
 const router = createBrowserRouter([
   {
@@ -228,6 +230,19 @@ const router = createBrowserRouter([
         <ProfileSetup2 />
       </PrivateRoute>
     ),
+  },
+  {
+    path: "/success",
+
+    element: (
+      <PrivateRoute>
+        <PaymentSuccess />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/error",
+    element: <PaymentCancel />,
   },
 ]);
 

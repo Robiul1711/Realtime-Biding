@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 const PopularMakes = () => {
   const axiosPublic = useAxiosPublic();
@@ -126,7 +127,7 @@ const PopularMakes = () => {
             {displayedProducts.length > 0 ? (
               displayedProducts.map((product) => (
                 <SwiperSlide key={product.id}>
-                  <div className="bg-[#FFFFFF29]/50 rounded-lg shadow h-full flex flex-col">
+                  <Link to={`/search-product-details/${product.slug}`} className="bg-[#FFFFFF29]/50 rounded-lg shadow h-full flex flex-col">
                     <div className="relative flex-grow">
                       <img
                         src={`${import.meta.env.VITE_IMG_URL}${product.first_image || product.images?.[0]}`}
@@ -173,7 +174,7 @@ const PopularMakes = () => {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </SwiperSlide>
               ))
             ) : (

@@ -164,7 +164,7 @@ const ProductCard = ({ products, isLoading, page, setPage, totalPage }) => {
               .fill()
               .map((_, index) => (
                 <div key={index} className="border border-[#CAC3C3] rounded-xl">
-                  <Skeleton height={240} className="w-full rounded-t-xl" />
+                  <Skeleton height={150} className="w-full rounded-t-xl" />
                   <div className="p-4">
                     <div className="flex justify-between items-center">
                       <div className="my-1 w-full">

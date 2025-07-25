@@ -1,11 +1,11 @@
 import { FireIcon, HeadphoneIcon } from "@/components/common/CustomIcon";
 import { Popover } from "antd";
 import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import SubLinkSection from "./SubLinkSection";
 import { IoMdArrowDropdown } from "react-icons/io";
 import Title from "@/components/common/Title";
-
+import logo from "../../assets/images/logo.png";
 const Navbar = () => {
   const navItems = [
     // {
@@ -67,8 +67,13 @@ const Navbar = () => {
   //   ?.sublinks.some((link) => location.pathname.startsWith(link.path));
 
   return (
-    <header className="section-padding-x w-full fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white shadow z-50">
+    <header className="section-padding-x w-full fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white/80 backdrop-blur-sm shadow z-50">
       <div className="hidden md:flex justify-between items-center gap-4">
+        <Link to="/">
+        <img src={logo} alt="Logo" className="h-8 sm:h-14 xl:hidden" />
+        </Link>
+
+        
         <nav className="flex items-center xl:gap-8 gap-4 whitespace-nowrap">
           {navItems.map((item, index) => {
             const isActive = location.pathname === item.path;
@@ -108,6 +113,8 @@ const Navbar = () => {
                 </div>
               </Popover>
             ) : (
+              <>
+              
               <NavLink
                 key={index}
                 to={item.path}
@@ -121,6 +128,7 @@ const Navbar = () => {
               >
                 {item.name}
               </NavLink>
+              </>
             );
           })}
         </nav>

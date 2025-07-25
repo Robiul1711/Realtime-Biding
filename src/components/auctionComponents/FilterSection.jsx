@@ -6,12 +6,12 @@ const FilterSection = ({ title, options, checkedOptions, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border border-[#D0D0D0] p-5 rounded-lg">
+    <div className="border border-[#D0D0D0] p-3 rounded-lg">
       <div
         className="flex items-center justify-between cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Title level="title24">{title}</Title>
+        <Title level="title20">{title}</Title>
         {isOpen ? (
           <Minus size={22} className="transition duration-400" />
         ) : (
