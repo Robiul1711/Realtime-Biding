@@ -5,11 +5,14 @@ import PricingAndAuction from "./PricingAndAuction";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const CreateListingForm = () => {
   const axiosSecure = useAxiosSecure();
   const [step, setStep] = useState(1);
   const totalSteps = 2;
+
+  const navigate = useNavigate();
 
   const methods = useForm({
     defaultValues: {
@@ -28,6 +31,7 @@ const CreateListingForm = () => {
     },
     onSuccess: (response) => {
       toast.success(response?.message || "Product created successfully");
+      navigate("/seller-dashboard/my-auction");
     },
     onError: (error) => {
       const errorMessage =

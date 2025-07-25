@@ -303,59 +303,7 @@ const MessageBox = ({
               </motion.div>
 
               {/* Messages under this date group */}
-              {/* {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  variants={messageVariants}
-                  custom={message}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                  className={`mb-4 flex ${
-                    message?.sendable_id !== currentUser?.id
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
-                >
-                  <div className="relative max-w-md flex items-end gap-2">
-                    {message?.sendable_id === currentUser?.id && (
-                      <img
-                        src={currentUser?.avatar || placeholderUser}
-                        alt=""
-                        className="w-8 h-8 rounded-full"
-                      />
-                    )}
-                    <div>
-                      <div
-                        className={`p-3 rounded-high rounded-2xl dark:text-[#d2e5f5] text-sm ${
-                          message?.sendable_id !== currentUser?.id
-                            ? "bg-[#4275F6] dark:bg-blue-900/90 text-white rounded-br-none"
-                            : "bg-gray-50 dark:bg-slate-800 rounded-bl-none"
-                        }`}
-                      >
-                        {message?.body || "no text found"}
-                      </div>
-                      <div
-                        className={`${
-                          message?.sendable_id !== currentUser?.id
-                            ? "text-right"
-                            : "text-left"
-                        } mt-1 text-xs text-gray-500 dark:text-[#abc2d3]/70`}
-                      >
-                        {formatMessageTime(message.created_at)}
-                      </div>
-                    </div>
-                    {message?.sendable_id !== currentUser?.id && (
-                      <img
-                        src={user?.avatar || placeholderUser}
-                        alt=""
-                        className="w-8 h-8 rounded-full"
-                      />
-                    )}
-                  </div>
-                </motion.div>
-              ))} */}
+
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
@@ -374,9 +322,15 @@ const MessageBox = ({
                   <div className="relative max-w-md flex items-end gap-2">
                     {message?.sendable_id === currentUser?.id && (
                       <img
-                        src={currentUser?.avatar || placeholderUser}
+                        src={
+                          currentUser?.avatar
+                            ? `${import.meta.env.VITE_IMG_URL}/${
+                                currentUser?.avatar
+                              }`
+                            : placeholderUser
+                        }
                         alt=""
-                        className="w-8 h-8 rounded-full"
+                        className="w-8 h-8 object-cover rounded-full"
                       />
                     )}
 
@@ -389,7 +343,10 @@ const MessageBox = ({
                         }`}
                       >
                         {/* Text content */}
-                        {message?.body || message?.content || "no text found"}
+                        {(message?.type === "text" || message?.attachment.length===0) &&
+                          (message?.body ||
+                            message?.content ||
+                            "no text found")}
 
                         {/* Attachments */}
                         {message?.attachment?.length > 0 && (
@@ -400,9 +357,11 @@ const MessageBox = ({
                               return isImage ? (
                                 <img
                                   key={index}
-                                  src={`http://nexus.softvencefsd.xyz/${file?.file_path}`}
+                                  src={`${import.meta.env.VITE_IMG_URL}/${
+                                    file?.file_path
+                                  }`}
                                   alt={file?.original_name}
-                                  className="rounded-lg max-w-[120px] border border-gray-300 dark:border-gray-700 mt-1"
+                                  className="rounded-lg max-w-xs border border-gray-300 dark:border-gray-700 mt-1"
                                 />
                               ) : (
                                 <a
@@ -434,8 +393,12 @@ const MessageBox = ({
 
                     {message?.sendable_id !== currentUser?.id && (
                       <img
-                        src={user?.avatar || placeholderUser}
-                        alt=""
+                        src={
+                          user?.avatar
+                            ? `${import.meta.env.VITE_IMG_URL}/${user?.avatar}`
+                            : placeholderUser
+                        }
+                        alt="User Avatar"
                         className="w-8 h-8 rounded-full"
                       />
                     )}
@@ -509,8 +472,9 @@ const MessageBox = ({
         <div className="flex gap-2">
           <input
             ref={inputRef}
+            readOnly={attachments?.length > 0}
             type="text"
-            value={newMessage}
+            value={attachments?.length > 0 ? "" : newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."

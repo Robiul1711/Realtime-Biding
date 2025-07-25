@@ -31,7 +31,7 @@ const ProfileSetup2 = () => {
   },
   onSuccess: () => {
     toast.success("Card added successfully!");
-    navigate('/user-dashboard');
+    navigate('/');
   },
   onError: (error) => {
     console.log("Stripe Card Error:", error);

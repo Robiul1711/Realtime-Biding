@@ -32,6 +32,8 @@ const UserMessaging = () => {
   ];
   const [currentUserId, setCurrentUserId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [filteredInbox, setFilteredInbox] = useState([]); // for filtered results
+  const [searchTerm, setSearchTerm] = useState("");
   const [conversationId, setConversationId] = useState(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -71,162 +73,80 @@ const UserMessaging = () => {
   });
 
   useEffect(() => {
-    console.log('working')
-    if (!currentUser?.id && !sellerId ) return;
+    console.log("working");
+    if (!currentUser?.id && !sellerId) return;
     createChatMutation.mutate({ user_id: currentUser?.id || sellerId });
   }, [currentUser?.id, sellerId]);
 
   console.log("conversationId", sellerId);
 
-  // useEffect(() => {
-  //   if (!conversationId && currentUser?.id) return;
-
-  //   const channelName = `chat.${conversationId}`;
-  //   const channel = echo.private(channelName);
-
-  //   console.log(`Subscribing to chat channel: ${channelName}`);
-
-  //   channel
-  //     .listen(".App\\Events\\MessageCustomEvent", (e) => {
-  //       console.log("📨 New message:", e);
-  //       setCurrentMessages([...currentMessages, { ...e, body: e?.content }]);
-  //     })
-  //     .error((error) => {
-  //       console.error("❌ Echo channel error:", error);
-  //       console.log("error response", error.type);
-  //       // If error status is 401, clear user and localStorage
-  //       if (error.type === "AuthError" || error?.response?.status === 401) {
-  //         localStorage.removeItem("user");
-  //         setUser(null);
-  //         navigate("/sign-in");
-  //         toast.error("Session expired. Please log in again.");
-  //       }
-  //     });
-
-  //   return () => {
-  //     echo.leaveChannel(channelName);
-  //   };
-  // }, [currentUser?.id]);
-
-  // useEffect(() => {
-  //   if (!conversationId && currentUser?.id) return;
-
-  //   const channelName = `chat.${conversationId}`;
-  //   const channel = echo.private(channelName);
-
-  //   console.log(`Subscribing to chat channel: ${channelName}`);
-
-  //   channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
-  //     console.log("listening for messages on channel:", channel.name);
-  //     console.log("📨 New message:", e);
-  //     setCurrentMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       { ...e, body: e?.content },
-  //     ]);
-  //   });
-
-  //   return () => {
-  //     echo.leaveChannel(channelName);
-  //   };
-  // }, [conversationId, currentUser?.id]);
-
   useEffect(() => {
-  if (!conversationId || !currentUser?.id) return;
+    if (!conversationId || !currentUser?.id) return;
 
-  const channelName = `chat.${conversationId}`;
-  const channel = echo.private(channelName);
+    const channelName = `chat.${conversationId}`;
+    const channel = echo.private(channelName);
 
-  console.log(`Subscribing to chat channel: ${channelName}`);
+    console.log(`Subscribing to chat channel: ${channelName}`);
 
-  channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
-    console.log("listening for messages on channel:", channel.name);
-    console.log("📨 New message:", e);
-    setCurrentMessages((prevMessages) => [
-      ...prevMessages,
-      { ...e, body: e?.content },
-    ]);
-  });
+    channel.listen(".App\\Events\\MessageCustomEvent", (e) => {
+      console.log("listening for messages on channel:", channel.name);
+      console.log("📨 New message:", e);
+      setCurrentMessages((prevMessages) => [
+        ...prevMessages,
+        { ...e, body: e?.content },
+      ]);
+    });
 
-  // Handle auth errors
-  channel.error((error) => {
-    console.error("Echo subscription error:", error);
-    if (
-      error?.type === "AuthError" ||
-      error?.status === 401 ||
-      error?.status === 403 ||
-      error?.response?.status === 401 ||
-      error?.response?.status === 403
-    ) {
-      localStorage.removeItem("user");
-      setUser(null);
-      navigate("/sign-in");
-      toast.error("Session expired. Please log in again.");
-    }
-  });
+    // Handle auth errors
+    channel.error((error) => {
+      console.error("Echo subscription error:", error);
+      if (
+        error?.type === "AuthError" ||
+        error?.status === 401 ||
+        error?.status === 403 ||
+        error?.response?.status === 401 ||
+        error?.response?.status === 403
+      ) {
+        localStorage.removeItem("user");
+        setUser(null);
+        navigate("/sign-in");
+        toast.error("Session expired. Please log in again.");
+      }
+    });
 
-  return () => {
-    echo.leaveChannel(channelName);
-  };
-}, [conversationId, currentUser?.id]);
-
+    return () => {
+      echo.leaveChannel(channelName);
+    };
+  }, [conversationId, currentUser?.id]);
   
-  // const sendMessageMutation = useMutation({
-  //   mutationFn: async (data) => {
-  //     const response = await axiosSecure.post(`/messages`, data, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     return response.data;
-  //   },
-  //   onSuccess: (response) => {
-  //     console.log("Message sent successfully:", response);
-  //     toast.success("Message sent!");
-  //     setNewMessage(""); // Clear the message input after sending
-  //   },
-  //   onError: (error) => {
-  //     console.error("Send message error:", error);
-  //     if (error?.response?.status === 401) {
-  //       setUser(null);
-  //       toast.error("Session expired. Please log in again.");
-  //       navigate("/sign-in");
-  //     } else {
-  //       toast.error(
-  //         error?.response?.data?.message || "Failed to send message."
-  //       );
-  //     }
-  //   },
-  // });
 
-  // Usage function
-  
   const sendMessageMutation = useMutation({
     mutationFn: async (formData) => {
-        const response = await axiosSecure.post(`/messages`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data", // Changed from application/json
-            },
-        });
-        return response.data;
+      const response = await axiosSecure.post(`/messages`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Changed from application/json
+        },
+      });
+      return response.data;
     },
     onSuccess: (response) => {
-        console.log("Message sent successfully:", response);
-        toast.success("Message sent!");
-        setNewMessage("");
+      console.log("Message sent successfully:", response);
+      toast.success("Message sent!");
+      setNewMessage("");
     },
     onError: (error) => {
-        console.error("Send message error:", error);
-        if (error?.response?.status === 401) {
-            setUser(null);
-            toast.error("Session expired. Please log in again.");
-            navigate("/sign-in");
-        } else {
-            toast.error(
-                error?.response?.data?.message || "Failed to send message."
-            );
-        }
+      console.error("Send message error:", error);
+      if (error?.response?.status === 401) {
+        setUser(null);
+        toast.error("Session expired. Please log in again.");
+        navigate("/sign-in");
+      } else {
+        toast.error(
+          error?.response?.data?.message || "Failed to send message."
+        );
+      }
     },
-});
+  });
 
   const {
     data: inbox,
@@ -242,6 +162,10 @@ const UserMessaging = () => {
 
   console.log("inbox data", inbox);
 
+  useEffect(()=>{
+    setFilteredInbox(inbox);
+  },[inbox])
+
   // get chat for a particular user
   const {
     data: singleChatInfo,
@@ -256,6 +180,19 @@ const UserMessaging = () => {
     enabled: !!currentUser?.id, // Prevents firing until ID is available
   });
 
+  const handleSearch = (term) => {
+  setSearchTerm(term);
+  
+  const filtered = inbox.filter((chat) =>
+    chat?.participants?.[0]?.participantable?.name
+      ?.toLowerCase()
+      ?.includes(term.toLowerCase())
+  );
+
+  setFilteredInbox(filtered);
+};
+
+
   console.log("currentMessages", currentMessages);
 
   return (
@@ -268,12 +205,15 @@ const UserMessaging = () => {
       >
         {/* Header */}
         <div className="p-4">
-          
-          <h1 className="sm:text-xl font-bold text-[#4275F6]">Messages ({inbox?.length || '--'})</h1>
-          
+          <h1 className="sm:text-xl font-bold text-[#4275F6]">
+            Messages ({inbox?.length || "--"})
+          </h1>
+
           <div className="mt-4">
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search"
               className="w-full py-2 px-4 rounded-full bg-white border border-gray-300 text-sm focus:outline-none"
             />
@@ -300,48 +240,60 @@ const UserMessaging = () => {
                   </div>
                 </div>
               ))
-            : inbox?.slice()?.reverse()?.map((chat, index) => {
-                const participant = chat?.participants?.[0]?.participantable;
-                const name = participant?.name || "Unknown";
-                const avatar = participant?.avatar || placeholderUser;
-                const lastMessage = chat?.last_message;
+            : filteredInbox
+                ?.slice()
+                ?.reverse()
+                ?.map((chat, index) => {
+                  const participant = chat?.participants?.[0]?.participantable;
+                  const name = participant?.name || "Unknown";
+                  const lastMessage = chat?.last_message;
 
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleUserClick(participant)}
-                    className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
-                  >
-                    <div className="flex gap-3 items-center">
-                      <img
-                        src={avatar}
-                        alt="User Avatar"
-                        className="w-10 h-10 rounded-full"
-                      />
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center gap-x-2 flex-wrap">
-                          <p className="font-semibold">{name}</p>
-                          <p className="text-xs text-[#4275F6]">
-                            {lastMessage?.created_at &&
-                              formatDistanceToNow(
-                                new Date(lastMessage.created_at),
-                                {
-                                  addSuffix: true,
-                                }
-                              )}
-                          </p>
-                        </div>
-                        <div className="flex mt-1 justify-between items-center">
-                          <p className="text-gray-500 text-sm truncate w-[90%]">
-                            {lastMessage?.body || "No messages yet"}
-                          </p>
-                          <span className="w-2 h-2 bg-[#4275F6] rounded-full" />
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => handleUserClick(participant)}
+                      className="py-3 px-4 rounded-l-xl border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition"
+                    >
+                      <div className="flex gap-3 items-center">
+                        <img
+                          src={
+                            participant?.avatar
+                              ? `${import.meta.env.VITE_IMG_URL}/${
+                                  participant?.avatar
+                                }`
+                              : placeholderUser
+                          }
+                          alt="User Avatar"
+                          className="w-10 h-10 object-cover rounded-full"
+                        />
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center gap-x-2 flex-wrap">
+                            <p className="font-semibold">{name}</p>
+                            <p className="text-xs text-[#4275F6]">
+                              {lastMessage?.created_at &&
+                                formatDistanceToNow(
+                                  new Date(lastMessage.created_at),
+                                  {
+                                    addSuffix: true,
+                                  }
+                                )}
+                            </p>
+                          </div>
+                          <div className="flex mt-1 justify-between items-center">
+                            <p className="text-gray-500 text-sm truncate w-[90%]">
+                              {!lastMessage
+                                ? "No messages yet"
+                                : lastMessage.type === "attachment"
+                                ? "📎Attachment"
+                                : lastMessage.body}
+                            </p>
+                            <span className="w-2 h-2 bg-[#4275F6] rounded-full" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
         </div>
       </div>
 
@@ -361,9 +313,13 @@ const UserMessaging = () => {
                 </button>
               )}
               <img
-                src={currentUser?.avatar || placeholderUser}
+                src={
+                  currentUser?.avatar
+                    ? `${import.meta.env.VITE_IMG_URL}/${currentUser?.avatar}`
+                    : placeholderUser
+                }
                 alt="user"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 object-cover rounded-full"
               />
               <div>
                 <h2 className="font-semibold text-[#4275F6]">
