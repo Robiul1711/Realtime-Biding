@@ -109,7 +109,8 @@ const UserMessaging = () => {
       ) {
         localStorage.removeItem("user");
         setUser(null);
-        navigate("/sign-in");
+        // navigate("/sign-in");
+        window.location.href = "/sign-in";
         toast.error("Session expired. Please log in again.");
       }
     });
