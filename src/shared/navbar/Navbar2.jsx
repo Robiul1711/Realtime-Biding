@@ -53,14 +53,14 @@ const handleSearch = () => {
 
 
   return (
-<div className="flex  gap-6 lg:gap-8 w-full section-padding-x mt-20 md:mt-24">
+<div className="flex  gap-6 lg:gap-8 w-full section-padding-x mt-20 md:mt-28">
   {/* Top Row: Logo + Search + Country + Button */}
   <div className="flex flex-col md:flex-row  items-start md:items-center justify-between gap-2 sm:gap-4  w-full">
     
     {/* Logo + Search Bar */}
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-1 w-full">
       {/* Logo */}
-      <div className="w-[60px]  lg:w-[126px] xl:w-[166px] hidden xl:block">
+      {/* <div className="w-[60px]  lg:w-[126px] xl:w-[166px] hidden xl:block">
         <Link to="/">
           <img
             src={Logo}
@@ -68,7 +68,7 @@ const handleSearch = () => {
             className="w-full h-full object-contain"
           />
         </Link>
-      </div>
+      </div> */}
 
       {/* Search */}
       <div className="w-full">

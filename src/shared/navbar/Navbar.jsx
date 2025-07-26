@@ -6,72 +6,80 @@ import SubLinkSection from "./SubLinkSection";
 import { IoMdArrowDropdown } from "react-icons/io";
 import Title from "@/components/common/Title";
 import logo from "../../assets/images/logo.png";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
+import { useQuery } from "@tanstack/react-query";
+const navItems = [
+  // {
+  //   id: 1,
+  //   name: "Deals",
+  //   path: "/search-result",
+  //   icon: <FireIcon />,
+  // },
+  {
+    id: 2,
+    name: "Home",
+    path: "/",
+  },
+  {
+    id: 3,
+    name: "About",
+    path: "/about",
+  },
+  {
+    id: 4,
+    name: "Shop",
+    path: "/shop",
+  },
+  {
+    id: 5,
+    name: "Recent Won Bids",
+    path: "/recent-won-bids",
+  },
+  {
+    id: 6,
+    name: "Auction",
+    path: "/auction-list", // use first sublink path for detection
+    // sublinks: [
+    //   {
+    //     id: 1,
+    //     name: "Fashion",
+    //     path: "/auction-list",
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Video Games",
+    //     path: "/auction-list",
+    //   },
+    // ],
+  },
+  // {
+  //   id: 7,
+  //   name: "Contact",
+  //   path: "/content",
+  // },
+];
 const Navbar = () => {
-  const navItems = [
-    // {
-    //   id: 1,
-    //   name: "Deals",
-    //   path: "/search-result",
-    //   icon: <FireIcon />,
-    // },
-    {
-      id: 2,
-      name: "Home",
-      path: "/",
-    },
-    {
-      id: 3,
-      name: "About",
-      path: "/about",
-    },
-    {
-      id: 4,
-      name: "Shop",
-      path: "/shop",
-    },
-    {
-      id: 5,
-      name: "Recent Won Bids",
-      path: "/recent-won-bids",
-    },
-    {
-      id: 6,
-      name: "Auction",
-      path: "/auction-list", // use first sublink path for detection
-      // sublinks: [
-      //   {
-      //     id: 1,
-      //     name: "Fashion",
-      //     path: "/auction-list",
-      //   },
-      //   {
-      //     id: 2,
-      //     name: "Video Games",
-      //     path: "/auction-list",
-      //   },
-      // ],
-    },
-    // {
-    //   id: 7,
-    //   name: "Contact",
-    //   path: "/content",
-    // },
-  ];
+  const IMG_URL = import.meta.env.VITE_IMG_URL;
+const axiosPublic = useAxiosPublic();
+const {data}=useQuery({
+  queryKey:["headerdata"],
+  queryFn:()=>axiosPublic.get("/settings")
 
+})
+const settings=data?.data?.data
   const [openPopover, setOpenPopover] = useState(null);
   const location = useLocation();
 
-;
-  // const isAuctionActive = navItems
-  //   .find((item) => item.name === "Auction")
-  //   ?.sublinks.some((link) => location.pathname.startsWith(link.path));
+console.log(settings)
 
   return (
     <header className="section-padding-x w-full fixed top-0 left-0 py-4 border-b border-[#ECECEC] bg-white/80 backdrop-blur-sm shadow z-50">
       <div className="hidden md:flex justify-between items-center gap-4">
-        <Link to="/">
-        <img src={logo} alt="Logo" className="h-8 sm:h-14 xl:hidden" />
-        </Link>
+        {settings?.logo && (
+            <Link to="/">
+              <img className="h-8 sm:h-14 md:h-16"  src={IMG_URL + settings.logo} alt="logo" />
+            </Link>
+          )}
 
         
         <nav className="flex items-center xl:gap-8 gap-4 whitespace-nowrap">
@@ -138,7 +146,9 @@ const Navbar = () => {
             <HeadphoneIcon />
           </span>
           <div className="flex flex-col items-start gap-1">
-            <Title level="title12">1900 - 888</Title>
+            {settings?.support_number && (
+              <Title level="title12"> {settings?.support_number}</Title>
+            )}
             <Title level="title12">24/7 Support Center</Title>
           </div>
         </div>
